@@ -1,12 +1,13 @@
 from django.contrib import admin
 from staff.models import Employee, Employee_Status, Employee_Type, Team, TeamMate
+from django.utils.translation import gettext_lazy as _
 
 class EmployeeStatusInline(admin.TabularInline):
     model = Employee_Status
     extra = 0
     
 class EmployeeAdmin(admin.ModelAdmin):
-    list_display = ('get_last_name', 'get_first_name', 'entry_date' , 'exit_date', 'get_is_valid')
+    list_display = ('get_first_name', 'get_last_name',  'entry_date' , 'exit_date', 'get_is_valid')
     fieldsets = (
         (None, {
             'fields': ('user', 'birth_date')
@@ -20,12 +21,12 @@ class EmployeeAdmin(admin.ModelAdmin):
      
     def get_last_name(self, obj):
         return obj.user.last_name
-    get_last_name.short_description = 'Last Name'
+    get_last_name.short_description = _('Last Name')
     get_last_name.admin_order_field = 'user__last_name'
     
     def get_first_name(self, obj):
         return obj.user.first_name
-    get_first_name.short_description = 'First Name'
+    get_first_name.short_description = _('First Name')
     get_first_name.admin_order_field = 'user__first_name'
     
     def get_is_valid(self, obj):

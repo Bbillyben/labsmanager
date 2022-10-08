@@ -1,0 +1,129 @@
+{% load static %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<!-- Favicon -->
+<!-- exemple : TO BE IMPLEMENTED
+<link rel="manifest" href="{% static 'img/favicon/manifest.json' %}">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="msapplication-TileImage" content="{% static 'img/favicon/ms-icon-144x144.png' %}">
+<meta name="theme-color" content="#ffffff">
+-->
+
+<!-- exemple : TO BE IMPLEMENTED
+<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+-->
+<!-- CSS -->
+<link rel="stylesheet" href="{% static 'css/labsmanager.css' %}">
+<link rel="stylesheet" href="{% static 'css/bootstrap-treeview.css' %}">
+
+<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'bootstrap-table/bootstrap-table.css' %}">
+<link rel="stylesheet" href="{% static 'bootstrap-table/extensions/group-by-v2/bootstrap-table-group-by.css' %}">
+<link rel="stylesheet" href="{% static 'bootstrap-table/extensions/filter-control/bootstrap-table-filter-control.css' %}">
+<link rel='stylesheet' href='{% static "treegrid/css/jquery.treegrid.css" %}'>
+<link rel="stylesheet" href="{% static 'fontawesome/css/brands.min.css' %}">
+<link rel="stylesheet" href="{% static 'fontawesome/css/solid.min.css' %}">
+<link rel="stylesheet" href="{% static 'script/jquery-ui/jquery-ui.min.css' %}"
+
+<link rel="stylesheet" href="{% static 'css/color-themes/default.css' %}">
+
+<!-- exemple 
+<link rel="stylesheet" href="{% static 'subfolder/css/stylesheet.css' %}">
+-->
+
+    <style>
+        {% block css %}
+        <!-- Custom CSS style goes here -->
+        {% endblock %}
+    </style>
+        {% block head %}
+        {% endblock %}
+    <title>
+        {% block page_title %}
+        {% endblock %}
+    </title>
+</head>
+{% include "navbar.html" %}
+
+<div class='main body wrapper container-fluid labmanager-body'>
+    <div class='row flex-nowrap labsmanager-body'>
+        <div class='col-auto px-1 sidebar-wrapper'>
+            <div id='sidebar' class='collapse collapse-horizontal show' style='display: none;'>
+                <div id='sidebar-nav' class='list-group text-sm-start'>
+                    <ul id='sidebar-list-group' class='list-group sidebar-list-group'>
+                        {% block sidebar %}
+                        <!-- Sidebar goes here -->
+                        {% endblock %}
+                       
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <main class='col ps-md-2 pt-2 pe-2'>
+            {% block alerts %}
+            <div class='notification-area' id='alerts'>
+                <!-- Div for displayed alerts 
+                {% if server_restart_required %}
+                <div id='alert-restart-server' class='alert alert-danger' role='alert'>
+                    <span class='fas fa-server'></span>
+                    <strong>{% trans "Server Restart Required" %}</strong>
+                    <small>
+                        <br>
+                        {% trans "A configuration option has been changed which requires a server restart" %}. {% trans "Contact your system administrator for further information" %}
+                    </small>
+                </div>
+                {% endif %}
+                -->
+            </div>
+            {% endblock %}
+            {% block breadcrumb_list %}
+            <div class='container-fluid navigation' id='breadcrumb-div'>
+                <nav aria-label='breadcrumb'>
+                    <ol class='breadcrumb' id='breadcrumb-list'>
+                        {% block breadcrumbs %}
+                        {% endblock %}
+                    </ol>
+                </nav>
+
+                <div id='breadcrumb-tree-collapse' class='collapse collapse-horizontal show border' style='display: none;'>
+                    {% block breadcrumb_tree %}
+                    {% endblock %}
+                </div>
+            </div>
+
+            {% endblock %}
+            
+            {% block content %}
+                <!-- Each view fills in here.. -->
+            {% endblock %}
+        </main>
+    </div>
+
+</div>
+
+<!-- Scripts -->
+<!-- base jquery -->
+<script type="text/javascript" src="{% static 'script/jquery_3.3.1_jquery.min.js' %}"></script>
+<script type='text/javascript' src="{% static 'script/jquery.form.min.js' %}"></script>
+<script type='text/javascript' src="{% static 'script/jquery-ui/jquery-ui.min.js' %}"></script>
+
+<script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script type='text/javascript' src="{% static 'script/bootstrap/bootstrap-treeview.js' %}"></script>
+<script type='text/javascript' src="{% static 'bootstrap-table/bootstrap-table.js' %}"></script>
+
+{% block js_load %}
+{% endblock %}  
+
+{% block js %}
+{% endblock %}
+
+</body>
+</html>
