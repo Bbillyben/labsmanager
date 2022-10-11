@@ -1,10 +1,12 @@
 from django.contrib import admin
 from staff.models import Employee, Employee_Status, Employee_Type, Team, TeamMate
 from django.utils.translation import gettext_lazy as _
+from .forms import TeamMateForm
 
 class EmployeeStatusInline(admin.TabularInline):
     model = Employee_Status
     extra = 0
+    
     
 class EmployeeAdmin(admin.ModelAdmin):
     list_display = ('get_first_name', 'get_last_name',  'entry_date' , 'exit_date', 'get_is_valid')
@@ -42,6 +44,7 @@ class EmployeeTypeAdmin(admin.ModelAdmin):
 class TeamMateInline(admin.TabularInline):
     model = TeamMate
     extra=0
+    #form = TeamMateForm
     
 class TeamAdmin(admin.ModelAdmin):
     list_display = ('name', 'leader' )

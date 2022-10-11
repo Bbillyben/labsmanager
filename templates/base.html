@@ -1,5 +1,6 @@
 {% load static %}
 {% load i18n %}
+{% load customs_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -12,11 +13,13 @@
 <!-- Favicon -->
 <!-- exemple : TO BE IMPLEMENTED
 <link rel="manifest" href="{% static 'img/favicon/manifest.json' %}">
+<meta name="msapplication-TileImage" content="{% static 'img/labsmanager/labsmanager_icon_fav.png' %}">
 <meta name="msapplication-TileColor" content="#ffffff">
 <meta name="msapplication-TileImage" content="{% static 'img/favicon/ms-icon-144x144.png' %}">
 <meta name="theme-color" content="#ffffff">
 -->
 
+<link rel="icon" type="image/png" href="{% static 'img/labsmanager/labsmanager_icon_fav.png' %}" />
 <!-- exemple : TO BE IMPLEMENTED
 <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
 -->
@@ -25,7 +28,10 @@
 <link rel="stylesheet" href="{% static 'css/bootstrap-treeview.css' %}">
 
 <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'bootstrap-table/bootstrap-table.min.css' %}">
 <link rel="stylesheet" href="{% static 'bootstrap-table/bootstrap-table.css' %}">
+<link rel="stylesheet" href="{% static 'bootstrap-table/extensions/group-by-v2/bootstrap-table-group-by.min.css' %}">
+<link rel="stylesheet" href="{% static 'bootstrap-table/extensions/filter-control/bootstrap-table-filter-control.css' %}">
 <link rel="stylesheet" href="{% static 'bootstrap-table/extensions/group-by-v2/bootstrap-table-group-by.css' %}">
 <link rel="stylesheet" href="{% static 'bootstrap-table/extensions/filter-control/bootstrap-table-filter-control.css' %}">
 <link rel='stylesheet' href='{% static "treegrid/css/jquery.treegrid.css" %}'>
@@ -56,7 +62,7 @@
 <div class='main body wrapper container-fluid labmanager-body'>
     <div class='row flex-nowrap labsmanager-body'>
         <div class='col-auto px-1 sidebar-wrapper'>
-            <div id='sidebar' class='collapse collapse-horizontal show' style='display: none;'>
+            <div id='sidebar' class='collapse collapse-horizontal show' >
                 <div id='sidebar-nav' class='list-group text-sm-start'>
                     <ul id='sidebar-list-group' class='list-group sidebar-list-group'>
                         {% block sidebar %}
@@ -118,6 +124,15 @@
 <script type="text/javascript" src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 <script type='text/javascript' src="{% static 'script/bootstrap/bootstrap-treeview.js' %}"></script>
 <script type='text/javascript' src="{% static 'bootstrap-table/bootstrap-table.js' %}"></script>
+<script type='text/javascript' src="{% static 'bootstrap-table/bootstrap-table.min.js' %}"></script>
+<script type='text/javascript' src="{% static 'bootstrap-table/bootstrap-table-toolbar.min.js' %}"></script>
+
+
+<script type='text/javascript' src="{% static 'fontawesome/js/solid.min.js' %}"></script>
+<script type='text/javascript' src="{% static 'fontawesome/js/regular.min.js' %}"></script>
+<script type='text/javascript' src="{% static 'fontawesome/js/brands.min.js' %}"></script>
+<script type='text/javascript' src="{% static 'fontawesome/js/fontawesome.min.js' %}"></script>
+
 
 {% block js_load %}
 {% endblock %}  

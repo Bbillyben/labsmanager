@@ -3,7 +3,6 @@ from statistics import mode
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from fund.models import Fund, Cost_Type
-from project.models import Project
 from staff.models import Employee
 from django.core.validators import MinValueValidator, MaxValueValidator
         

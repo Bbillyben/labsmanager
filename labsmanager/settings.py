@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     'project.apps.ProjectConfig',
     'fund.apps.FundConfig',
     'expense.apps.ExpenseConfig',
+    'crispy_forms',                         # Improved form rendering
+    'django.contrib.sites',
+    "view_breadcrumbs",
 ]
 
 MIDDLEWARE = [
@@ -69,6 +72,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                 'django.template.context_processors.request',
             ],
         },
     },
@@ -138,3 +142,13 @@ STATIC_COLOR_THEMES_DIR = os.path.join(STATIC_URL, 'css', 'color-themes')
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+
+# crispy forms use the bootstrap templates
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+SITE_ID=1
+
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/" 

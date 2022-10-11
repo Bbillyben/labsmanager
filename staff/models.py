@@ -2,7 +2,11 @@ from time import altzone
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
+from django.core.exceptions import ValidationError
+from django.db.models import Q
 
+
+### Models 
 class Employee(models.Model):
     
     class Meta:
@@ -16,12 +20,27 @@ class Employee(models.Model):
     entry_date = models.DateField(null=True, blank=True, verbose_name=_('Entry Date'))
     exit_date = models.DateField(null=True, blank=True, verbose_name=_('Exit Date'))
     
-
+    @property
+    def is_team_leader(self):
+        teams=Team.objects.filter(leader=self.pk)
+        if teams:
+            return True
+        return False
+    
+    @property
+    def is_team_mate(self):
+        teams=TeamMate.objects.filter(employee=self.pk)
+        if teams:
+            return True
+        return False
     
     def __str__(self):
         """Return a string representation of the Employee (for use in the admin interface)"""
         return  f"{self.user.first_name} {self.user.last_name} ({self.user.username})"
-    
+
+
+
+
 class Employee_Status(models.Model):
     
     class Meta:
@@ -46,8 +65,8 @@ class Employee_Type(models.Model):
         """Metaclass defines extra model properties"""
         verbose_name = _("Employee Type")
         
-    shortname = models.CharField(max_length=10, verbose_name=_('Abbreviation'))
-    name = models.CharField(max_length=50, verbose_name=_('Name'))
+    shortname = models.CharField(max_length=10, verbose_name=_('Abbreviation'), unique=True)
+    name = models.CharField(max_length=50, verbose_name=_('Name'), unique=True)
     
     def __str__(self):
         """Return a string representation of the Status (for use in the admin interface)"""
@@ -60,6 +79,16 @@ class Team(models.Model):
     
     name = models.CharField(max_length=50, verbose_name=_('Team Name'))
     leader = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name=_('Team Leader'))
+    
+    @property
+    def nb_mate(self):
+        mates = TeamMate.objects.filter(team=self.pk)
+        if mates: return mates.count()
+        return 0
+    
+    def __str__(self):
+        """Return a string representation of the Status (for use in the admin interface)"""
+        return f"{self.name}"
 
 class TeamMate(models.Model):
     class Meta:
@@ -68,3 +97,18 @@ class TeamMate(models.Model):
         
     team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_('Team'))
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name=_('Employee'))
+    
+    
+    def __str__(self):
+        """Return a string representation of the Status (for use in the admin interface)"""
+        return f"{self.team} / {self.employee}"
+    
+    def clean(self):
+        team = self.team
+        inuser = TeamMate.objects.filter(Q(employee=self.employee), Q(team=team), ~Q(pk=self.pk))
+        if inuser:
+            raise ValidationError(_('Already in Team'))
+        isLeader = Team.objects.filter(Q(pk=self.team.pk), Q(leader=self.employee))
+        print(isLeader)
+        if isLeader:
+            raise ValidationError(_('Is Team leader'))

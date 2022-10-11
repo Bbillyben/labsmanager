@@ -17,20 +17,21 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path, re_path
-from .views import IndexView
+from .views import IndexView 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^index/', IndexView.as_view(), name='index'),
     path('', IndexView.as_view(), name='index'),
+    path('staff/', include('staff.urls')),                  # For Staff models
+    path('project/', include('project.urls')),              # for project model
 ]
+#  Authentications : 
 urlpatterns += [
-    path('staff/', include('staff.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
-urlpatterns += [
-    path('project/', include('project.urls')),
-]
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+#  urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:
     # Static file access
