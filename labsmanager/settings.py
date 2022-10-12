@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'crispy_forms',                         # Improved form rendering
     'django.contrib.sites',
     "view_breadcrumbs",
+    'django_tables2',
 ]
 
 MIDDLEWARE = [

@@ -41,92 +41,72 @@
             <table 
                 class='table table-striped table-condensed' 
                 id="employee_main_table"
-                data-pagination="true"
-                data-toggle="table"
                 data-search="true"
+                
                 data-advanced-search="true"
                 data-id-table="advancedTable"
+                data-show-export="true"
+                data-show-refresh="true"
+                data-show-columns="true"
+                data-pagination="true"
+                data-show-pagination-switch="true"
+                data-page-list="[10, 25, 50, 100, all]"
+                data-url="{% url request.resolver_match.view_name %}?json"
                 >
                 <thead class="">
                     <tr>
-                        <th data-field="first_name">
+                        <th data-sortable="true" class="th-inner sortable both" data-field="user" data-formatter="userFormatter">
                             {% trans 'User Id' %}
                         </th>
-                        <th data-field="entry_date">
+                        <th data-sortable="true" class="th-inner sortable both" data-field="entry_date">
                             {% trans 'Entry Date' %}
-                            
                         </th>
-                        <th data-field="exit_date">
+                        <th data-sortable="true" class="th-inner sortable both" data-field="exit_date">
                             {% trans 'Exit Date' %}
-                            
                         </th>
-                        <th data-field="team_leader" class="text-center">
-                            {% trans 'Team Status' %}
-                            
+                        <th data-sortable="true" class="th-inner sortable both" data-field="team_leader" class="text-center" data-formatter="simpleFormatter" data-cell-style="simpleStyle">
+                            {% trans 'Team Leader' %}                            
                         </th>
-                        
-                        {% if perms.auth.can_change_user %}
-                        <th data-field="toggle_active">
-                            {% trans 'Toggle active' %}
+                        <th data-sortable="true" class="th-inner sortable both" data-field="team_participant" class="text-center" data-formatter="simpleFormatter" data-cell-style="simpleStyle">
+                            {% trans 'Team Participant' %}
                         </th>
-                        {% else %}
-                        <th data-field="is_active">
+                        <th class="th-inner sortable both" 
+                        data-field="active"
+                        data-cell-style="simpleStyle"
+                        data-formatter="simpleFormatter"
+                        data-sortable="true"
+                        >
                             {% trans 'is Active' %}
-                            
                         </th>
-                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
-                {% for emp in employees %}
-                    <tr class="treegrid-2" data-index="0" data-uniqueid="{{ emp.pk }}">
-                        <td><a href="{% url 'employee' emp.pk %}" title="/employee/{{ emp.pk }}/"> {{ emp.user.first_name }} {{ emp.user.last_name }}</a></td>
-                        
-                        <td><div title="{{ emp.entry_date }}">{{ emp.entry_date }}</div></td>
-                        
-
-                        <td> {% if emp.exit_date %}<div title="{{ emp.exit_date }}">{{ emp.exit_date }}</div>{% endif %}</td>
-                        <td> <div class="text-center" title=""> 
-                                            {% if emp.is_team_leader %} 
-                                            <i class="fas fa-crown" style="color: coral" title="{% trans "is team leader" %}"></i>
-                                            {% endif %}
-                                            {% if emp.is_team_mate %} 
-                                            <i class="fas fa-user-friends" style="color: cadetblue" title="{% trans "is team mate" %}"></i>
-                                            {% endif %}
-                            </div>
-                        </td>
-                        {% if perms.auth.can_change_user %}
-                        <td>
-                            {% if emp.user.is_active %}
-                                <i class="fa fa-toggle-off" aria-hidden="true" style="color:green"></i>
-                            {% else %}
-                                <i class="fa fa-toggle-on" aria-hidden="true" style="color:red"></i>
-                            {% endif %}
-                        </td>
-                        {% else %}
-                        <td>
-                            {% if emp.user.is_active %}
-                                <img src="/static/admin/img/icon-yes.svg" alt="True">
-                            {% else %}
-                                <img src="/static/admin/img/icon-no.svg" alt="False">
-                            {% endif %}
-                        </td>  
-                        {% endif %}          
-                    </tr>
-                {% endfor %}
+               
                 </tbody>
             </table>
         </div>
         {% endblock %}
+        
+
     </div>
 
 
-{% block js_load %}
+{% block js_load %} 
+<script type="text/javascript" src="{% static 'bootstrap-table/extensions/export/bootstrap-table-export.js' %}"></script>
+<script type="text/javascript" src="{% static 'bootstrap-table/extensions/export/bootstrap-table-export.min.js' %}"></script>
 <script>
 $(document).ready(function () {
-    $('#employee_main_table').bootstrapTable();
-  });
+    
+    $('#employee_main_table').bootstrapTable();  
+    
+ });
 </script>
+{% endblock %}
+
+
+{% block js %}
+<script type="text/javascript" src="{% static 'tableExport/tableExport.js' %} "></script>
+<script type="text/javascript" src="{% static 'tableExport/jquery.base64.js' %} "></script>
 {% endblock %}
 
 <!--  #####  https://mattsch.com/2021/05/28/django-django_tables2-and-bootstrap-table/ -->

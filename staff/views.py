@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.views.generic.base import TemplateView
+from django.http import JsonResponse
+# from django.views.generic import ListView
 from .models import Employee, Team, TeamMate
 from .filters import EmployeeFilter
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -7,15 +9,55 @@ from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 from django.utils.functional import cached_property
 from view_breadcrumbs import BaseBreadcrumbMixin 
-
+from labsmanager.mixin import TableViewMixin
 # Create your views here.
 
 
-class EmployeeIndexView(LoginRequiredMixin,BaseBreadcrumbMixin , TemplateView):
+# class EmployeeIndexView(LoginRequiredMixin,BaseBreadcrumbMixin , TemplateView):
+#     template_name = 'employee/employee_base.html'
+#     home_label = '<i class="fas fa-bars"></i>'
+#     model = Employee
+#     crumbs = [("Employee","employee")]
+    
+#     def get_context_data(self, **kwargs):
+#         """Returns custom context data for the Employee view:
+#             - employees : list of employee
+#         """
+#         context = super().get_context_data(**kwargs).copy()
+
+#         # View top-level categories
+#         employees = Employee.objects.all()
+                 
+#         context['employees'] = employees
+
+#         return context
+
+class EmployeeIndexView(LoginRequiredMixin, BaseBreadcrumbMixin,TemplateView):
     template_name = 'employee/employee_base.html'
     home_label = '<i class="fas fa-bars"></i>'
     model = Employee
     crumbs = [("Employee","employee")]
+    
+    def get(self, request, *args, **kwargs):
+        response = super().get(self, request, *args, **kwargs)
+        
+        if 'json' in request.GET:
+            data=[]
+            emp=Employee.objects.all();
+            for e in emp:
+                tmp={
+                    "id":e.pk,
+                    "user":e.user.first_name+" "+e.user.last_name,
+                    "entry_date":e.entry_date,
+                    "exit_date":e.exit_date,
+                    "team_leader":e.is_team_leader,
+                    "team_participant":e.is_team_mate,
+                    "active": e.user.is_active,
+                }
+                data.append(tmp)
+            return JsonResponse(data, safe=False)
+        
+        return response
     
     def get_context_data(self, **kwargs):
         """Returns custom context data for the Employee view:
@@ -29,7 +71,7 @@ class EmployeeIndexView(LoginRequiredMixin,BaseBreadcrumbMixin , TemplateView):
         context['employees'] = employees
 
         return context
-
+    
 
 class EmployeeView(LoginRequiredMixin, BaseBreadcrumbMixin ,  TemplateView):
     template_name = 'employee/employee_single.html'

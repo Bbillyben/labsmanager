@@ -20,6 +20,7 @@ class Employee(models.Model):
     entry_date = models.DateField(null=True, blank=True, verbose_name=_('Entry Date'))
     exit_date = models.DateField(null=True, blank=True, verbose_name=_('Exit Date'))
     
+    
     @property
     def is_team_leader(self):
         teams=Team.objects.filter(leader=self.pk)
