@@ -10,27 +10,13 @@ from django.urls import reverse
 from django.utils.functional import cached_property
 from view_breadcrumbs import BaseBreadcrumbMixin 
 from labsmanager.mixin import TableViewMixin
+
+from django.urls import reverse_lazy
+from .forms import EmployeeModelForm
+from bootstrap_modal_forms.generic import BSModalCreateView, BSModalUpdateView
+
 # Create your views here.
 
-
-# class EmployeeIndexView(LoginRequiredMixin,BaseBreadcrumbMixin , TemplateView):
-#     template_name = 'employee/employee_base.html'
-#     home_label = '<i class="fas fa-bars"></i>'
-#     model = Employee
-#     crumbs = [("Employee","employee")]
-    
-#     def get_context_data(self, **kwargs):
-#         """Returns custom context data for the Employee view:
-#             - employees : list of employee
-#         """
-#         context = super().get_context_data(**kwargs).copy()
-
-#         # View top-level categories
-#         employees = Employee.objects.all()
-                 
-#         context['employees'] = employees
-
-#         return context
 
 class EmployeeIndexView(LoginRequiredMixin, BaseBreadcrumbMixin,TemplateView):
     template_name = 'employee/employee_base.html'
@@ -38,39 +24,6 @@ class EmployeeIndexView(LoginRequiredMixin, BaseBreadcrumbMixin,TemplateView):
     model = Employee
     crumbs = [("Employee","employee")]
     
-    def get(self, request, *args, **kwargs):
-        response = super().get(self, request, *args, **kwargs)
-        
-        if 'json' in request.GET:
-            data=[]
-            emp=Employee.objects.all();
-            for e in emp:
-                tmp={
-                    "id":e.pk,
-                    "user":e.user.first_name+" "+e.user.last_name,
-                    "entry_date":e.entry_date,
-                    "exit_date":e.exit_date,
-                    "team_leader":e.is_team_leader,
-                    "team_participant":e.is_team_mate,
-                    "active": e.user.is_active,
-                }
-                data.append(tmp)
-            return JsonResponse(data, safe=False)
-        
-        return response
-    
-    def get_context_data(self, **kwargs):
-        """Returns custom context data for the Employee view:
-            - employees : list of employee
-        """
-        context = super().get_context_data(**kwargs).copy()
-
-        # View top-level categories
-        employees = Employee.objects.all()
-                 
-        context['employees'] = employees
-
-        return context
     
 
 class EmployeeView(LoginRequiredMixin, BaseBreadcrumbMixin ,  TemplateView):
@@ -114,5 +67,24 @@ class EmployeeView(LoginRequiredMixin, BaseBreadcrumbMixin ,  TemplateView):
             
         # View top-level categories
         return context
+    
+    
+    
+    
+###    FOR MODAL Modification
+    
+class EmployeeCreateView(BSModalCreateView):
+    template_name = 'form_base.html'
+    form_class = EmployeeModelForm
+    success_message = 'Success: Employee was created.'
+    success_url = reverse_lazy('index')
+
+# Update
+class EmployeeUpdateView(BSModalUpdateView):
+    model = Employee
+    template_name = 'form_base.html'
+    form_class = EmployeeModelForm
+    success_message = 'Success: Employee was updated.'
+    success_url = reverse_lazy('index')    
     
     

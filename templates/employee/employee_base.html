@@ -14,8 +14,10 @@
 
 {% endblock %}
 
-{% block content %}
 
+
+{% block content %}
+{% include 'modals.html' with modal_id='create-modal' modal_title='Employee' %}
 
 <div id='detail-panels'>
     <div class="panel panel-hidden panel-visible" id="panel-stock" style="display: block;">
@@ -24,7 +26,7 @@
                 <h4>{% trans 'Employee View' %}</h4>
                 <span class="flex" style="flex-grow: 1;"></span>
                 <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-success" id="item-create" title="Create New Employee">
+                    <button type="button" class="btn btn-success" id="employee_create" title="Create New Employee">
                         <span class='fa fa-user-plus'></span>
                         {% trans 'Add Employee' %}
                     </button>
@@ -43,7 +45,6 @@
                 id="employee_main_table"
                 data-search="true"
                 
-                data-advanced-search="true"
                 data-id-table="advancedTable"
                 data-show-export="true"
                 data-show-refresh="true"
@@ -51,11 +52,12 @@
                 data-pagination="true"
                 data-show-pagination-switch="true"
                 data-page-list="[10, 25, 50, 100, all]"
-                data-url="{% url request.resolver_match.view_name %}?json"
+                data-advanced-search="true"
+                data-url="/api/employee/"
                 >
                 <thead class="">
                     <tr>
-                        <th data-sortable="true" class="th-inner sortable both" data-field="user" data-formatter="userFormatter">
+                        <th data-sortable="true" class="th-inner sortable both" data-field="user" data-formatter="userFormatter" data-allow="{{ perms.staff.can_change }}">
                             {% trans 'User Id' %}
                         </th>
                         <th data-sortable="true" class="th-inner sortable both" data-field="entry_date">
@@ -64,20 +66,23 @@
                         <th data-sortable="true" class="th-inner sortable both" data-field="exit_date">
                             {% trans 'Exit Date' %}
                         </th>
-                        <th data-sortable="true" class="th-inner sortable both" data-field="team_leader" class="text-center" data-formatter="simpleFormatter" data-cell-style="simpleStyle">
-                            {% trans 'Team Leader' %}                            
-                        </th>
-                        <th data-sortable="true" class="th-inner sortable both" data-field="team_participant" class="text-center" data-formatter="simpleFormatter" data-cell-style="simpleStyle">
-                            {% trans 'Team Participant' %}
+                        <th data-sortable="true" class="th-inner sortable both" data-field="status" data-formatter="statusFormatter">
+                            {% trans 'Status' %}
                         </th>
                         <th class="th-inner sortable both" 
-                        data-field="active"
+                        data-field="is_active"
                         data-cell-style="simpleStyle"
                         data-formatter="simpleFormatter"
                         data-sortable="true"
+                        data-allow="{{ perms.staff.can_change }}"
                         >
                             {% trans 'is Active' %}
                         </th>
+                        {% if perms.staff.can_change %}
+                        <th data-sortable="false" class="th-inner" data-field="admin_action" data-formatter="adminActionFormatter" >
+                            {% trans 'Action' %}
+                        </th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -85,21 +90,113 @@
                 </tbody>
             </table>
         </div>
+    </div>
+</div>
+
+        {{ request.user.id|json_script:"user_id" }}
         {% endblock %}
         
 
-    </div>
+    
 
 
 {% block js_load %} 
-<script type="text/javascript" src="{% static 'bootstrap-table/extensions/export/bootstrap-table-export.js' %}"></script>
-<script type="text/javascript" src="{% static 'bootstrap-table/extensions/export/bootstrap-table-export.min.js' %}"></script>
+
 <script>
+ // ajax call
+ 
+function SetCliCListenerStaff(){
+    $('.user_action').click(function(){
+        
+        data_action = $(this).attr('action-type');
+        item_pk= $(this).attr('pk');
+        user_id = JSON.parse(document.getElementById('user_id').textContent);
+        if (user_id == item_pk){
+            return;
+        }   
+        $.ajax({
+            type:"POST",
+            url: "{% url 'ajax_staff' %}",
+            data:{
+                    action_type: data_action,
+                    pk:item_pk,
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            success: function( data ) 
+            {
+                $('#employee_main_table').bootstrapTable('refresh');
+            },
+            error:function( err ) 
+            {
+                alert('User mod Error :'+err);
+            }
+        })
+    });
+    
+    $(".edit_employee").each(function () {
+        $(this).modalForm({
+            modalID: "#create-modal",
+            modalContent: ".modal-content",
+            modalForm: ".modal-content form",
+            formURL: $(this).data("form-url"),
+            isDeleteForm: false,
+            errorClass: ".form-validation-warning",
+            asyncUpdate: true,
+            asyncSettings: {
+                directUpdate: true,
+                closeOnSubmit: true,
+                successMessage: "Employee Updated",
+                dataUrl: '/api/employee/',
+                dataElementId: '#employee_main_table',
+                dataKey: 'table',
+                addModalFormFunction: update_windows_function,
+            }
+        });
+    });
+
+}
+
+
+
+function update_windows_function(){
+    $('#employee_main_table').bootstrapTable('refresh');
+    
+    // initialise Modal Form Employee add
+    $("#employee_create").modalForm({
+        modalID: "#create-modal",
+        modalContent: ".modal-content",
+        modalForm: ".modal-content form",
+        formURL: "{% url 'create_employee' %}",
+        isDeleteForm: false,
+        errorClass: ".form-validation-warning",
+        asyncUpdate: true,
+        asyncSettings: {
+            directUpdate: true,
+            closeOnSubmit: true,
+            successMessage: "Employee Created",
+            dataUrl: '/api/employee/',
+            dataElementId: '#employee_main_table',
+            dataKey: 'table',
+            addModalFormFunction: update_windows_function,
+        }
+    });
+    
+
+}
+
+
 $(document).ready(function () {
-    
-    $('#employee_main_table').bootstrapTable();  
-    
- });
+    $('#employee_main_table').bootstrapTable({
+        onLoadSuccess: function(){ SetCliCListenerStaff();},
+        onSearch: function(){ SetCliCListenerStaff();}
+    });
+    $.extend($.fn.bootstrapTable.defaults.icons, {
+        advancedSearch: 'fa-chevron-down'
+    });
+    update_windows_function();
+ })
+
+
 </script>
 {% endblock %}
 
@@ -107,6 +204,8 @@ $(document).ready(function () {
 {% block js %}
 <script type="text/javascript" src="{% static 'tableExport/tableExport.js' %} "></script>
 <script type="text/javascript" src="{% static 'tableExport/jquery.base64.js' %} "></script>
-{% endblock %}
+<script>
+   
+</script>
+{% endblock %} 
 
-<!--  #####  https://mattsch.com/2021/05/28/django-django_tables2-and-bootstrap-table/ -->

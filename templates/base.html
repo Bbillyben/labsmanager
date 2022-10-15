@@ -27,7 +27,7 @@
 <link rel="stylesheet" href="{% static 'css/labsmanager.css' %}">
 <link rel="stylesheet" href="{% static 'css/bootstrap-treeview.css' %}">
 
-<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.css' %}">
 <link rel="stylesheet" href="{% static 'bootstrap-table/bootstrap-table.min.css' %}">
 <link rel="stylesheet" href="{% static 'bootstrap-table/bootstrap-table.css' %}">
 <link rel="stylesheet" href="{% static 'bootstrap-table/extensions/group-by-v2/bootstrap-table-group-by.min.css' %}">
@@ -40,6 +40,8 @@
 <link rel="stylesheet" href="{% static 'script/jquery-ui/jquery-ui.min.css' %}">
 <link rel="stylesheet" href="{% static 'css/color-themes/default.css' %}">
 
+{% block link %}
+{% endblock %}
     <style>
         {% block css %}
         {% endblock %}
@@ -111,7 +113,9 @@
 
 <!-- Scripts -->
 <!-- base jquery -->
-<script type="text/javascript" src="{% static 'script/jquery_3.3.1_jquery.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'script/jquery-3.6.1.min.js' %}"></script>
+
+<!-- <script type="text/javascript" src="{% static 'script/jquery_3.3.1_jquery.min.js' %}"></script> -->
 <script type='text/javascript' src="{% static 'script/jquery.form.min.js' %}"></script>
 <script type='text/javascript' src="{% static 'script/jquery-ui/jquery-ui.min.js' %}"></script>
 
@@ -121,12 +125,23 @@
 <script type='text/javascript' src="{% static 'bootstrap-table/bootstrap-table.min.js' %}"></script>
 <script type='text/javascript' src="{% static 'bootstrap-table/bootstrap-table-toolbar.min.js' %}"></script>
 
+<script type="text/javascript" src="{% static 'bootstrap-table/extensions/export/bootstrap-table-export.js' %}"></script>
+<script type="text/javascript" src="{% static 'bootstrap-table/extensions/export/bootstrap-table-export.min.js' %}"></script>
+
+<script type='text/javascript' src="{% static 'js/jquery.bootstrap.modal.forms.js' %}"></script>
+
 
 <script type='text/javascript' src="{% static 'fontawesome/js/solid.min.js' %}"></script>
 <script type='text/javascript' src="{% static 'fontawesome/js/regular.min.js' %}"></script>
 <script type='text/javascript' src="{% static 'fontawesome/js/brands.min.js' %}"></script>
 <script type='text/javascript' src="{% static 'fontawesome/js/fontawesome.min.js' %}"></script>
+
+
+
 <script type='text/javascript' src="{% static 'js/bootstrap_utils.js' %}"></script>
+
+
+
 
 {% block js_load %}
 {% endblock %}  

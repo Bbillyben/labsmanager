@@ -575,6 +575,10 @@ main {
     color: var(--bs-body-color);
     background-color: var(--secondary-color);
     border-bottom: 1px solid var(--border-color);
+    width: 100%;
+}
+.modal-header > button {
+    float:right;
 }
 
 .modal-footer {
@@ -1037,4 +1041,12 @@ a {
 .treeview .node-icon {
     margin-left: 0.25rem;
     margin-right: 0.25rem;
+}
+
+.icon-spaced{
+    margin-left: 0.25rem;
+}
+.icon-left-cell{
+    float:right;
+    margin-right: 0.25rem;;
 }

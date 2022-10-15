@@ -34,6 +34,9 @@ class Employee(models.Model):
         if teams:
             return True
         return False
+    @property
+    def status(self):
+        return Employee_Status.objects.filter(employee=self)
     
     def __str__(self):
         """Return a string representation of the Employee (for use in the admin interface)"""

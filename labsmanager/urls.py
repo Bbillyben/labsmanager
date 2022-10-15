@@ -18,6 +18,8 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path, re_path
 from .views import IndexView 
+from rest_framework import routers
+from .apiviews import UserViewSet, GroupViewSet, EmployeeViewSet
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,7 +33,17 @@ urlpatterns += [
     path('accounts/', include('django.contrib.auth.urls')),
 ]
 
-#  urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+#  Django Rest Framework
+
+router = routers.DefaultRouter()
+router.register(r'users', UserViewSet)
+router.register(r'groups', GroupViewSet)
+router.register(r'employee', EmployeeViewSet)
+
+urlpatterns += [
+    path('api/', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+]
 
 if settings.DEBUG:
     # Static file access

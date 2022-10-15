@@ -34,20 +34,28 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    # Django Base
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+
+    # Installed Package
+    'crispy_forms',
+    'view_breadcrumbs',
+    'django_tables2',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'bootstrap_modal_forms',
+    
+    # App
     'staff.apps.StaffConfig',
     'project.apps.ProjectConfig',
     'fund.apps.FundConfig',
     'expense.apps.ExpenseConfig',
-    'crispy_forms',                         # Improved form rendering
-    'django.contrib.sites',
-    "view_breadcrumbs",
-    'django_tables2',
 ]
 
 MIDDLEWARE = [
@@ -73,7 +81,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                 'django.template.context_processors.request',
+                'django.template.context_processors.request',
             ],
         },
     },
@@ -153,3 +161,19 @@ SITE_ID=1
 
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/" 
+
+# rest framework
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+       'rest_framework.authentication.TokenAuthentication',
+   ),
+}
+
+APPEND_SLASH = False  # prevent error for post request by ajax
