@@ -40,6 +40,8 @@ router.register(r'users', UserViewSet)
 router.register(r'groups', GroupViewSet)
 router.register(r'employee', EmployeeViewSet)
 
+
+
 urlpatterns += [
     path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))

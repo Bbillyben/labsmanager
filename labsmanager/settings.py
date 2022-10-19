@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'bootstrap_modal_forms',
+    'mptt',                         # https://django-mptt.readthedocs.io/en/latest/tutorial.html
     
     # App
     'staff.apps.StaffConfig',

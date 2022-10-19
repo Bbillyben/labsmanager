@@ -4,8 +4,9 @@ function simpleFormatter(value, row, index, field){
     switch(field) {
         case 'is_active':
           if(this.allow == 'True'){
-            response=(row.user.is_active ? '<i class="fa fa-toggle-off" aria-hidden="true" style="color:green">' : '<i class="fa fa-toggle-on" aria-hidden="true" style="color:red"></i>');
-            response = '<span type="button" class="user_action" action-type="activate_user_'+(!row.user.is_active)+'" pk="'+row.user.pk+'">'+response+'</span>'
+            response=(value ? '<i class="fa fa-toggle-off" aria-hidden="true" style="color:green"></i>' : '<i class="fa fa-toggle-on" aria-hidden="true" style="color:red"></i>');
+            response = '<span type="button" class="user_action" data-action-type="activate_user_'+(!value)+'" data-pk="'+row.user.pk+'">'+response+'</span>';
+            response += '<span style="display:none">'+ value+"</span>";
           }else{
             response=(row.user.is_active ? '<img src="/static/admin/img/icon-yes.svg" alt="True">' : '<img src="/static/admin/img/icon-no.svg" alt="False">');
           }
@@ -64,7 +65,33 @@ function statusFormatter(value, row, index, field){
 }
 
 function adminActionFormatter(value, row, index, field){
-  action = "<span class='icon-left-cell edit_employee' data-form-url='/staff/employee/udpate/"+row.pk+"' ><i type = 'button' class='fas fa-edit'></i></span>";
-
+  action = "<span class='icon-left-cell btn-group'>";
+  action += "<button class='icon edit_employee btn btn-success' data-form-url='/staff/employee/"+row.pk+"/udpate' ><i type = 'button' class='fas fa-edit'></i></button>";
+  action += "<button class='icon delete_employee btn btn-danger ' data-form-url='/staff/employee/"+row.pk+"/delete' ><i type = 'button' class='fas fa-trash'></i></button>";
+  action += "</span>"
   return action;
+}
+
+function contractsFormatter(value, row, index, field){
+  //console.log('contractsFormatter : '+JSON.stringify(value)+" - row : "+JSON.stringify(row) + "  - index :"+index+ " - fiels :"+field+"  # allow :"+this.allow);
+  response = '<ul>';
+  for (const item of value) {
+    if (item.end_date == null){
+      response+= '<li>'+item.fund.institution.short_name+ " / "+item.fund.project.name+" - "+item.fund.funder.short_name+" ("+parseFloat(item.quotity*100).toFixed(0)+"%"+" - "+item.start_date+")"+"</li>";
+    }
+  }
+  response += '</ul>';
+
+  return  response;
+}
+
+
+
+function nameSorter(fieldA, fieldB){
+  //console.log('[activeSorter] '+JSON.stringify(fieldA)+" / "+JSON.stringify(fieldB)+" / "+JSON.stringify(q));
+  A =  fieldA.first_name+" "+fieldA.last_name;
+  B = fieldB.first_name+" "+fieldB.last_name;
+  if (A <B) return -1;
+    if (A > B) return 1;
+    return 0;
 }

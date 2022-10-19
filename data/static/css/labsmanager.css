@@ -1050,3 +1050,12 @@ a {
     float:right;
     margin-right: 0.25rem;;
 }
+.icon-left-cell .icon{
+    margin-left: 1rem;;
+}
+.container .row-header{
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    border-top: thin solid;
+    border-top-color: currentcolor;
+}

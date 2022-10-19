@@ -56,3 +56,4 @@ admin.site.register(Employee, EmployeeAdmin)
 admin.site.register(Employee_Type, EmployeeTypeAdmin)
 
 admin.site.register(Team, TeamAdmin)
+admin.site.register(Employee_Status)

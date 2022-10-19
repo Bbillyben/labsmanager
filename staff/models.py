@@ -20,6 +20,9 @@ class Employee(models.Model):
     entry_date = models.DateField(null=True, blank=True, verbose_name=_('Entry Date'))
     exit_date = models.DateField(null=True, blank=True, verbose_name=_('Exit Date'))
     
+    @property
+    def user_name(self):
+        return self.user.first_name+" "+self.user.last_name
     
     @property
     def is_team_leader(self):
@@ -34,9 +37,19 @@ class Employee(models.Model):
         if teams:
             return True
         return False
+    
     @property
-    def status(self):
-        return Employee_Status.objects.filter(employee=self)
+    def is_active(self):
+        return self.user.is_active
+    
+    @property
+    def get_status(self):
+        return Employee_Status.objects.filter(employee=self.pk)
+    
+    @property
+    def contracts(self):
+        from expense.models import Contract
+        return Contract.objects.filter(employee=self.pk)
     
     def __str__(self):
         """Return a string representation of the Employee (for use in the admin interface)"""
@@ -90,6 +103,11 @@ class Team(models.Model):
         if mates: return mates.count()
         return 0
     
+    @property
+    def team_mate(self):
+        return TeamMate.objects.filter(team=self.pk)
+        
+    
     def __str__(self):
         """Return a string representation of the Status (for use in the admin interface)"""
         return f"{self.name}"
@@ -116,3 +134,4 @@ class TeamMate(models.Model):
         print(isLeader)
         if isLeader:
             raise ValidationError(_('Is Team leader'))
+        
