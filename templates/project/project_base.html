@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load customs_tags %}
+
+{% block page_title %}
+{% trans "LabManager Employee" %}
+{% endblock %}
+
+{% block breadcrumb_list %}
+{% endblock %}
+
+{% block sidebar %}
+
+{% endblock %}
+
+
+
+{% block content %}
+{% include 'modals.html' with modal_id='create-modal' modal_title='Employee' %}
+
+<div id='detail-panels'>
+    <div class="panel panel-hidden panel-visible" id="panel-stock" style="display: block;">
+        <div class="panel-heading">
+            <div class="d-flex flex-wrap">
+                <h4>{% trans 'Project List' %}</h4>
+                <span class="flex" style="flex-grow: 1;"></span>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-success" id="project_create" title="Create New Project">
+                        <span class='fa fa-briefcase-medical'></span>
+                        {% trans 'Add Project' %}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-content">
+            <!-- <div class="fixed-table-toolbar">
+                <div class="float-right search btn-group">
+                    <input class="form-control search-input" type="search" placeholder="Search" autocomplete="off">
+                  </div>
+            </div> -->
+            <table
+                class='table table-striped table-condensed'
+                id="project_main_table"
+                data-search="true"
+                data-id-table="projectTable"
+                data-show-export="true"
+                data-show-refresh="true"
+                data-show-columns="true"
+                data-pagination="true"
+                data-show-pagination-switch="true"
+                data-page-list="[10, 25, 50, 100, all]"
+                data-advanced-search="true"
+                data-url="/api/project/"
+                >
+                <thead class="">
+                    <tr>
+                        <th data-sortable="true" class="th-inner sortable both" data-field="name" data-sorter="nameSorter" data-formatter="ProjectFormatter">
+                            {% trans 'User Id' %}
+                        </th>
+                        <th data-sortable="true" class="th-inner sortable both" data-field="start_date">
+                            {% trans 'Start Date' %}
+                        </th>
+                        <th data-sortable="true" class="th-inner sortable both" data-field="end_date">
+                            {% trans 'End Date' %}
+                        </th>
+                        <th data-sortable="true" class="th-inner sortable both" data-field="participant" data-formatter="ParticipantFormatter">
+                            {% trans 'Participant' %}
+                        </th>
+                        <th data-sortable="true" class="th-inner sortable both" data-field="fund" data-formatter="FundFormatter">
+                            {% trans 'Fund' %}
+                        </th>
+                        <th data-sortable="true" class="th-inner sortable both" data-field="get_funds_amount" data-formatter="moneyFormatter">
+                            {% trans 'Total Fund' %}
+                        </th>
+                        <th data-sortable="true" class="th-inner sortable both" data-field="status" data-formatter="basicBoolean" data-cell-style="styleAlignMiddle" >
+                            {% trans 'Status' %}
+                        </th>
+                        {% if perms.staff.can_change %}
+                        <th data-sortable="false" class="th-inner" data-field="admin_action" data-formatter="adminActionFormatter">
+                            {% trans 'Action' %}
+                        </th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+{{ request.user.id|json_script:"user_id" }}
+{{ project.pk|json_script:"project_id" }}
+{% endblock %}
+
+
+{% block js_load %}
+<script type='text/javascript' src="{% static 'js/project_base.js' %}"></script>
+<script>
+$(document).ready(function () {
+    user_id = JSON.parse(document.getElementById('user_id').textContent);
+    project_id = JSON.parse(document.getElementById('project_id').textContent);
+    initProjectBaseView(user_id, project_id);
+})
+</script>
+
+{% endblock %}

@@ -77,7 +77,20 @@ function contractsFormatter(value, row, index, field){
   response = '<ul>';
   for (const item of value) {
     if (item.end_date == null){
-      response+= '<li>'+item.fund.institution.short_name+ " / "+item.fund.project.name+" - "+item.fund.funder.short_name+" ("+parseFloat(item.quotity*100).toFixed(0)+"%"+" - "+item.start_date+")"+"</li>";
+      response+= '<li>'+item.fund.institution.short_name+ " / "+item.fund.project.name+" - "+item.fund.funder.short_name+" ("+quotityDisplay(item.quotity)+" - "+item.start_date+")"+"</li>";
+    }
+  }
+  response += '</ul>';
+
+  return  response;
+}
+
+function projectsFormatter(value, row, index, field){
+  //console.log('contractsFormatter : '+JSON.stringify(value)+" - row : "+JSON.stringify(row) + "  - index :"+index+ " - fiels :"+field+"  # allow :"+this.allow);
+  response = '<ul>';
+  for (const item of value) {
+    if (item.project_status == true){
+      response+= '<li>'+item.project_name+ " / "+item.status+" ("+quotityDisplay(item.quotity)+")"+"</li>";
     }
   }
   response += '</ul>';
@@ -87,11 +100,3 @@ function contractsFormatter(value, row, index, field){
 
 
 
-function nameSorter(fieldA, fieldB){
-  //console.log('[activeSorter] '+JSON.stringify(fieldA)+" / "+JSON.stringify(fieldB)+" / "+JSON.stringify(q));
-  A =  fieldA.first_name+" "+fieldA.last_name;
-  B = fieldB.first_name+" "+fieldB.last_name;
-  if (A <B) return -1;
-    if (A > B) return 1;
-    return 0;
-}

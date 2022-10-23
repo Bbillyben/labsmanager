@@ -19,7 +19,7 @@ from django.contrib import admin
 from django.urls import include, path, re_path
 from .views import IndexView 
 from rest_framework import routers
-from .apiviews import UserViewSet, GroupViewSet, EmployeeViewSet
+from . import apiviews #UserViewSet, GroupViewSet, EmployeeViewSet, ProjectViewSet, FundViewSet
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,6 +27,8 @@ urlpatterns = [
     path('', IndexView.as_view(), name='index'),
     path('staff/', include('staff.urls')),                  # For Staff models
     path('project/', include('project.urls')),              # for project model
+    path('fund/', include('fund.urls')),              # for project model
+    path('expense/', include('expense.urls')),              # for project model
 ]
 #  Authentications : 
 urlpatterns += [
@@ -36,10 +38,12 @@ urlpatterns += [
 #  Django Rest Framework
 
 router = routers.DefaultRouter()
-router.register(r'users', UserViewSet)
-router.register(r'groups', GroupViewSet)
-router.register(r'employee', EmployeeViewSet)
-
+router.register(r'users', apiviews.UserViewSet)
+router.register(r'groups', apiviews.GroupViewSet)
+router.register(r'employee', apiviews.EmployeeViewSet)
+router.register(r'project', apiviews.ProjectViewSet)
+router.register(r'fund', apiviews.FundViewSet)
+router.register(r'contract', apiviews.ContractViewSet)
 
 
 urlpatterns += [

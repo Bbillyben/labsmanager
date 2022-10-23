@@ -4,9 +4,10 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from fund.models import Fund, Cost_Type
 from staff.models import Employee
-from django.core.validators import MinValueValidator, MaxValueValidator
-        
-PERCENTAGE_VALIDATOR = [MinValueValidator(0), MaxValueValidator(1)]
+
+
+from labsmanager.models_utils import PERCENTAGE_VALIDATOR    
+
 
 # Create your models here.
 class Expense(models.Model):
@@ -16,7 +17,7 @@ class Expense(models.Model):
         
     date = models.DateField(null=False, blank=False, verbose_name=_('Expense Date'))
     type = models.ForeignKey(Cost_Type, on_delete=models.CASCADE, verbose_name=_('Type'))
-    amout=models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Amount'))
+    amount=models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Amount'))
     status_mod=(("e",_("Engaged")), 
                 ("r", _("Realised")),
                 ("p", _("Projected")),
@@ -30,7 +31,7 @@ class Expense(models.Model):
     fund_item = models.ForeignKey(Fund, on_delete=models.CASCADE, verbose_name=_('Related Fund'))
     
     def __str__(self):
-        return f'{self.fund_item.__str__()}/{self.type}: {self.amout} ({self.status})'
+        return f'{self.fund_item.__str__()}/{self.type}: {self.amount} ({self.status})'
 
 
 class Contract_expense(Expense):
@@ -38,7 +39,7 @@ class Contract_expense(Expense):
         """Metaclass defines extra model properties"""
         verbose_name = _("Contract Expense")
     contract= models.ForeignKey('Contract', on_delete=models.CASCADE, verbose_name=_('Related Contract'))
-    
+   
 class Contract(models.Model):
     class Meta:
         """Metaclass defines extra model properties"""
@@ -51,4 +52,4 @@ class Contract(models.Model):
     fund=models.ForeignKey(Fund, on_delete=models.CASCADE, verbose_name=_('Related Fund'))
     
     def __str__(self):
-        return f'{self.employee.__str__()}'
+        return f'{self.employee.__str__()} - {self.fund.__str__()}'

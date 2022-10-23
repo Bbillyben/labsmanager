@@ -1,0 +1,97 @@
+
+user_id = 0;
+project_id = 0;
+
+function initProjectBaseView(user_idA, project_idA){
+        
+    user_id = user_idA;
+    project_id = project_idA;
+    $('#project_main_table').bootstrapTable({
+        onLoadSuccess: function(){ updateAdminBtnHandler();},
+        onSearch: function(){ updateAdminBtnHandler();},
+        onSort: function(){ updateAdminBtnHandler();},
+        onToggle: function(){ updateAdminBtnHandler();},
+        onPageChange: function(){ updateAdminBtnHandler();},
+        }
+    );
+
+    $("#project_create").modalForm({
+        modalID: "#create-modal",
+        modalContent: ".modal-content",
+        modalForm: ".modal-content form",
+        formURL: "/project/ajax/add/",
+        isDeleteForm: false,
+        errorClass: ".form-validation-warning",
+        asyncUpdate: true,
+        asyncSettings: {
+            directUpdate: true,
+            closeOnSubmit: true,
+            successMessage: "Employee Created",
+            dataUrl: '/api/employee/',
+            dataElementId: '#employee_main_table',
+            dataKey: 'table',
+            addModalFormFunction: updateProjectTable,
+        }
+    });
+}
+
+
+function updateProjectTable(){
+    $('#project_main_table').bootstrapTable('refresh');
+}
+function updateAdminBtnHandler(){
+    $(".edit_project").each(function () {
+        console.log("updateProjectTable :"+this);
+        $(this).modalForm({
+            modalID: "#create-modal",
+            modalContent: ".modal-content",
+            modalForm: ".modal-content form",
+            formURL: $(this).data("form-url"),
+            isDeleteForm: false,
+            errorClass: ".form-validation-warning",
+            asyncUpdate: true,
+            asyncSettings: {
+                directUpdate: true,
+                closeOnSubmit: true,
+                successMessage: "Employee Updated",
+                dataUrl: '/api/employee/',
+                dataElementId: '#employee_main_table',
+                dataKey: 'table',
+                addModalFormFunction: updateProjectTable,
+            }
+        });
+    });
+    $(".delete_project").each(function () {
+        $(this).modalForm({
+            modalID: "#create-modal",
+            modalContent: ".modal-content",
+            modalForm: ".modal-content form",
+            formURL: $(this).data("form-url"),
+            isDeleteForm: true,
+            errorClass: ".form-validation-warning",
+            asyncUpdate: true,
+            asyncSettings: {
+                directUpdate: true,
+                closeOnSubmit: true,
+                successMessage: "Employee deleted",
+                dataUrl: '/api/employee/',
+                dataElementId: '#employee_main_table',
+                dataKey: 'table',
+                addModalFormFunction: updateProjectTable,
+            }
+        });
+    });
+}
+
+function adminActionFormatter(value, row, index, field){
+    action = "<span class='icon-left-cell btn-group'>";
+    action += "<button class='icon edit_project btn btn-success' data-form-url='/project/ajax/"+row.pk+"/udpate' ><i type = 'button' class='fas fa-edit'></i></button>";
+    action += "<button class='icon delete_project btn btn-danger ' data-form-url='/project/ajax/"+row.pk+"/delete' ><i type = 'button' class='fas fa-trash'></i></button>";
+    action += "</span>"
+    return action;
+  }
+
+function ProjectFormatter(value, row, index, field){
+    response =  '<span class="icon-right-cell"><a href="'+row.pk+'" title="/'+row.ipkd+'/"> '+value+'</a>';
+    return response;
+}

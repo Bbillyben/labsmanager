@@ -1,5 +1,5 @@
 from django.urls import include, path, re_path
-from .views import EmployeeIndexView, EmployeeUpdateView, EmployeeView, EmployeeCreateView, EmployeeRemoveView, EmployeeStatusCreateView, StatusUpdateView, StatusDeleteView
+from .views import EmployeeIndexView, EmployeeUpdateView, EmployeeView, EmployeeCreateView, EmployeeRemoveView, EmployeeStatusCreateView, StatusUpdateView, StatusDeleteView, get_employee_valid
 from .ajax import ajax_staff
 
 urlpatterns = [
@@ -22,4 +22,7 @@ urlpatterns += [
     path('employee/<employee>/status/add/', EmployeeStatusCreateView.as_view(), name='create_status_employee'),  
     path('status/<pk>/update/', StatusUpdateView.as_view(), name='update_status_employee'),  # specific for status view
     path('status/<pk>/delete/', StatusDeleteView.as_view(), name='delete_status_employee'),  # specific for status view
+    
+    # for sub template 
+    path('ajax/<pk>/activ', get_employee_valid, name='user_valid_temp'),  # template for user valid check box
 ]

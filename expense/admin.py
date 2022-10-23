@@ -2,10 +2,13 @@ from django.contrib import admin
 from expense.models import Expense, Contract_expense, Contract
 from django.utils.translation import gettext_lazy as _
 
-
+class Contract_expenseInline(admin.TabularInline):
+    model=Contract_expense
+    extra=0
+    
 class ContractAdmin(admin.ModelAdmin):
     list_display = ('__str__','get_proj_name','get_fund_name', 'start_date', 'end_date', 'quotity')
-    
+    inlines = [Contract_expenseInline,]
     
     def get_proj_name(self, obj):
         return obj.fund.project.__str__()

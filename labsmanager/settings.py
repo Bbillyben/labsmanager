@@ -44,13 +44,14 @@ INSTALLED_APPS = [
     'django.contrib.sites',
 
     # Installed Package
-    'crispy_forms',
-    'view_breadcrumbs',
-    'django_tables2',
-    'rest_framework',
+    'crispy_forms',                 # https://django-crispy-forms.readthedocs.io/en/latest/install.html
+    'view_breadcrumbs',             # https://pypi.org/project/django-view-breadcrumbs/#add-view_breadcrumbs-to-your-installed_apps
+    'django_tables2',               # https://django-tables2.readthedocs.io/en/latest/
+    'rest_framework',               # https://www.django-rest-framework.org/
     'rest_framework.authtoken',
-    'bootstrap_modal_forms',
+'bootstrap_modal_forms',            # https://pypi.org/project/django-bootstrap-modal-forms/
     'mptt',                         # https://django-mptt.readthedocs.io/en/latest/tutorial.html
+    'django_pivot',                 # https://github.com/martsberger/django-pivot
     
     # App
     'staff.apps.StaffConfig',
@@ -84,6 +85,10 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.request',
             ],
+            'libraries':{
+                'customs_tags': 'labsmanager.templatetags.customs_tags',
+            
+            }
         },
     },
 ]

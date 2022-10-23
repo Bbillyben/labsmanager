@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load customs_tags %}
+
+{% block page_title %}
+{% trans "LabManager Employee" %}
+{% endblock %}
+
+{% block breadcrumb_list %}
+{% endblock %}
+
+{% block sidebar %}
+
+{% endblock %}
+
+{% block content %}
+{% include 'modals.html' with modal_id='create-modal' modal_title='Project' %}
+
+
+<div id='detail-panels'>
+    <div class="panel panel-hidden panel-visible" id="panel-stock" style="display: block;">
+
+        <div class="panel-heading">
+            <div class="d-flex flex-wrap">
+                <h4>{% trans 'Project' %} : {{ project }}</h4>
+                <span class="flex" style="flex-grow: 1;"></span>
+                {% if perms.staff.can_change %}
+                <div class="btn-group" role="group">
+                    <button id="employee-options" class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" title="Employee Actions" aria-expanded="false">
+                        <i class="fas fa-flask"></i>
+                    </button>
+                    <ul class="dropdown-menu" style="">
+                        <li><a class="dropdown-item" href="#" id="edit-project" title="Edit Project">
+                            <i class='fa fa-edit'></i> {% trans 'Edit Project' %}
+                        </a></li>
+                        <li><a class="dropdown-item" href="#" id="add_participant" title="Add Participant">
+                            <i class='fa fa-user-plus'></i> {% trans 'Add Participant' %}
+                        </a></li>
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="panel-content">
+            <div class="container" style="max-width: 100%; padding: 5px;">
+                <div class="row">
+                    <div class="col" id="detail-panel-left">
+                    <div class="card">
+                        <div class="row">
+                            <div class="col" id="project_desc_table">
+                                <!-- project description table inserted here -->
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col" id="detail-panel-right">
+                    <div class="card">
+                        <div class="row">
+                            <div class="col">
+                                <table
+                                    class='table table-striped table-condensed'
+                                    id="project_participant_table"
+                                    data-id-table="statusTable"
+                                    data-url="/api/project/{{ project.pk }}/participant/"
+                                    >
+                                    <thead class="">
+                                        <tr>
+                                            <th data-sortable="true" class="th-inner sortable both" data-field="employee"  data-formatter="teamMateFormatter">
+                                                {% trans 'Employee' %}
+                                            </th>
+                                            <th data-sortable="true" class="th-inner sortable both" data-field="status">
+                                                {% trans 'Status' %}
+                                            </th>
+                                            <th data-sortable="true" class="th-inner sortable both" data-field="quotity" data-formatter="quotityFormatter">
+                                                {% trans 'Quotity' %}
+                                            </th>
+                                            <th data-sortable="true" class="th-inner sortable both" data-field="start_date">
+                                                {% trans 'Start Date' %}
+                                            </th>
+                                            <th data-sortable="true" class="th-inner sortable both" data-field="end_date">
+                                                {% trans 'End Date' %}
+                                            </th>
+                                            <th data-sortable="true" class="th-inner sortable both" data-field="employee.is_active" data-formatter="basicBoolean" data-cell-style="styleAlignMiddle" >
+                                                {% trans 'Employee Active' %}
+                                            </th>
+                                            {% if perms.praticipant.can_change %}
+                                            <th data-sortable="false" class="th-inner" data-field="admin_action" data-user="{{ request.user.id }}"  data-formatter="adminActionParticipant">
+                                                {% trans 'Action' %}
+                                            </th>
+                                            {% endif %}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                
+                
+            </div> <!-- container # 1-->
+            <div class="row" style=" padding-top: 5px;">
+                <div class="col">
+                    <div class="card">
+                        <div class="row-header">
+                            <div class="d-flex flex-wrap subheading">
+                                <h4><i class="fas fa-briefcase"></i>  {% trans 'Fund' %} : <i class="super-small">{{ project }}</i></h4> 
+                                <span class="flex" style="flex-grow: 1;"></span>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-secondary" id="add_fund_temp" title="Add Item" data-projectpk="{{ project.pk }}" >
+                                        <span class='fas fa-money-check'></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <table
+                                    class='table table-striped table-condensed'
+                                    id="project_fund_table"
+                                    data-id-table="fundTable"
+                                    data-url="/api/project/{{ project.pk }}/funds/"
+                                    >
+                                    <thead class="">
+                                        <tr>
+                                            <th data-sortable="true" class="th-inner sortable both" data-field="funder.short_name" >
+                                                {% trans 'Funder' %}
+                                            </th>
+                                            <th data-sortable="true" class="th-inner sortable both" data-field="institution.short_name">
+                                                {% trans 'Institution' %}
+                                            </th>
+
+                                            <th data-sortable="true" class="th-inner sortable both" data-field="start_date">
+                                                {% trans 'Start Date' %}
+                                            </th>
+                                            <th data-sortable="true" class="th-inner sortable both" data-field="end_date">
+                                                {% trans 'End Date' %}
+                                            </th>
+                                            <th data-sortable="true" class="th-inner sortable both" data-field="ref">
+                                                {% trans 'Reference' %}
+                                            </th>
+                                            <th data-sortable="true" class="th-inner sortable both" data-field="amount" data-formatter="moneyFormatter">
+                                                {% trans 'Total Amount' %}
+                                            </th>
+                                            {% if perms.fund.can_change %}
+                                            <th data-sortable="false" class="th-inner" data-field="admin_action" data-user="{{ request.user.id }}"  data-formatter="adminActionFund">
+                                                {% trans 'Action' %}
+                                            </th>
+                                            {% endif %}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+
+                        </div>
+                    </div>
+                </div>
+                
+
+           <!--  </div>
+            <div class="container" style="max-width: 100%; padding: 5px;"> 
+                -->
+                <div class="col">
+                    <div class="card" id="fund_item_detail">
+                        <!-- fund item details wil lbe loaded here -->
+                    </div>
+                </div>
+
+            </div>
+            <div class="container" style="max-width: 100%; padding: 5px;">
+                <div class="row">
+                    <div class="row-header">
+                        <h4><i class="fas fa-users"></i>  {% trans 'Teams' %}</h4>
+                    </div>
+                </div>
+                <div class="row">
+                   
+
+                </div>
+                
+
+            </div>
+            
+        </div>
+
+    </div>
+</div>
+
+{{ request.user.id|json_script:"user_id" }}
+{{ project.pk|json_script:"project_id" }}
+{% endblock %}
+
+
+
+{% block js_load %}
+<script type='text/javascript' src="{% static 'js/project_single.js' %}"></script>
+<script>
+$(document).ready(function () {
+    user_id = JSON.parse(document.getElementById('user_id').textContent);
+    project_id = JSON.parse(document.getElementById('project_id').textContent);
+    initProjectSingleView(user_id, project_id);
+})
+</script>
+
+{% endblock %}
+
+{% block js %}
+{% endblock %}

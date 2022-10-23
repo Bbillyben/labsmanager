@@ -22,8 +22,13 @@ https://github.com/trco/django-bootstrap-modal-forms
                 event.preventDefault();
                 isFormValid(settings, submitForm);
                 return false;
+            }else if(settings.isDeleteForm === true && settings.asyncSettings.directUpdate == true ){
+                event.preventDefault();
+                submitForm(settings);
+                return false;
             }
         });
+        
         // Modal close handler
         $(settings.modalID).on("hidden.bs.modal", function (event) {
             $(settings.modalForm).remove();
@@ -59,8 +64,10 @@ https://github.com/trco/django-bootstrap-modal-forms
     // Submit form callback function
     var submitForm = function (settings) {        
         if (!settings.asyncUpdate) {
+            console.log("direct");
             $(settings.modalForm).submit();
-        } else {          
+        } else {        
+            console.log("INdirect");  
             var asyncSettingsValid = validateAsyncSettings(settings.asyncSettings);
             
             if (asyncSettingsValid) {                
@@ -81,7 +88,7 @@ https://github.com/trco/django-bootstrap-modal-forms
                         if (body.length === 0) {
                             console.error("django-bootstrap-modal-forms: <body> element missing in your html.");
                         }
-                        body.prepend(asyncSettings.successMessage);
+                        //body.prepend(asyncSettings.successMessage);
                         if(asyncSettings.directUpdate){
                             if (asyncSettings.addModalFormFunction) {
                                 asyncSettings.addModalFormFunction();

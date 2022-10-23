@@ -22,7 +22,7 @@
 
           <!-- For Project-->
           <li class='nav-item'>
-            <a class='nav-link' href="">
+            <a class='nav-link' href="{% url 'project_index' %}">
               <span class='fas fa-flask icon-header'></span>{% trans "Projects" %}
             </a>
           </li>
@@ -51,7 +51,7 @@
             <li><a class='dropdown-item' href="{% url 'login' %}"><span class="fas fa-sign-in-alt"></span> {% trans "Login" %}</a></li>
             {% endif %}
             <hr>
-            <li id='launch-stats'>
+            {% comment %} <li id='launch-stats'>
               <a class='dropdown-item' href='#'>
                 {% if system_healthy or not user.is_staff %}
                 <span class='fas fa-server'></span>
@@ -60,7 +60,7 @@
                 {% endif %}
                 {% trans "System Information" %}
               </a>
-            </li>
+            </li> {% endcomment %}
           </ul>
         </li>
       </ul>

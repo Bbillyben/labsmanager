@@ -1,4 +1,6 @@
 from http.client import HTTPResponse
+from django.http import HttpResponse
+from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.views.generic.base import TemplateView
 from django.http import JsonResponse
@@ -16,8 +18,6 @@ from labsmanager.mixin import TableViewMixin
 from django.urls import reverse_lazy
 from .forms import EmployeeModelForm, EmployeeStatusForm
 from bootstrap_modal_forms.generic import BSModalCreateView, BSModalUpdateView, BSModalDeleteView
-
-
 # Create your views here.
 
 
@@ -143,3 +143,15 @@ class StatusDeleteView(LoginRequiredMixin, BSModalDeleteView):
     def get_success_url(self):
         previous = self.request.META.get('HTTP_REFERER')
         return previous
+        
+    def post(self, *args, **kwargs):
+        
+        self.object = self.get_object()
+        self.object.delete()
+        return HttpResponse("okok", status=200)
+
+
+## Get the template for activation/ deactivation user
+def get_employee_valid(request, pk):
+    emp = Employee.objects.filter(pk=pk).first()
+    return render(request, 'staff/employee_desc_table.html', {'employee': emp})

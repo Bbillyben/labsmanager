@@ -802,6 +802,10 @@ input[type="submit"] {
     color: #55E;
 }
 
+.subheading .btn{
+    scale:0.8;
+}
+
 .button-toolbar {
     padding-left: 0px;
 }
@@ -1054,8 +1058,26 @@ a {
     margin-left: 1rem;;
 }
 .container .row-header{
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    border-top: thin solid;
-    border-top-color: currentcolor;
+    margin: 1rem 1rem 1rem 1rem;
+    border-bottom: thin solid;
+    border-bottom-color: currentcolor;
+}
+
+
+.warning-quotity{
+    background-color: #ec7f7f;
+    width:100%;
+}
+
+
+.table-desc{
+
+}
+.table-desc .desc_title{
+    font-size: small;
+    font-style: italic;
+}
+
+.super-small{
+    font-size:0.6em;
 }

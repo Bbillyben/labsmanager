@@ -1,7 +1,29 @@
 // ----------------------  Common  ------------------- //
-function initEmployeeSingleView(user_id, employee_id){
+employee_id= 0;
+user_id= 0;
+
+function initEmployeeSingleView(user_idA, employee_idA){
+    employee_id=employee_idA;
+    user_id = user_idA;
+    
+
     $('#employee_team_table').bootstrapTable();
-    $('#employee_contract_table').bootstrapTable();
+    $('#employee_contract_table').bootstrapTable({
+        onLoadSuccess: function(){ updateContractBtnHandler();},
+        onSearch: function(){ updateContractBtnHandler();},
+        onSort: function(){  updateContractBtnHandler();},
+        onToggle: function(){ updateContractBtnHandler();},
+        onPageChange: function(){ updateContractBtnHandler();},
+    });
+
+    $('#employee_project_table').bootstrapTable({
+        onLoadSuccess: function(){ updateParticipantBtnHandler();},
+        onSearch: function(){ updateParticipantBtnHandler();},
+        onSort: function(){  updateParticipantBtnHandler();},
+        onToggle: function(){ updateParticipantBtnHandler();},
+        onPageChange: function(){ updateParticipantBtnHandler();},
+    });
+    
     $('#employee_status_table').bootstrapTable({
         onLoadSuccess: function(){ update_status_btn();},
         onSearch: function(){ update_status_btn();},
@@ -22,9 +44,9 @@ function initEmployeeSingleView(user_id, employee_id){
             directUpdate: true,
             closeOnSubmit: true,
             successMessage: "Employee Updated",
-            dataUrl: '/api/employee/'+employee_id,
+            dataUrl: "/staff/ajax/"+employee_id+"/activ",
             dataElementId: '#employee_single_table',
-            dataKey: 'table',
+            dataKey: '0',
             addModalFormFunction: update_employee,
         }
     });
@@ -42,31 +64,83 @@ function initEmployeeSingleView(user_id, employee_id){
             closeOnSubmit: true,
             successMessage: "Employee Updated",
             dataUrl: '/api/employee/'+employee_id,
-            dataElementId: '#employee_single_table',
+            dataElementId: '#employee_dec_table',
             dataKey: 'table',
             addModalFormFunction: update_status,
         }
     })
-    update_activ_btn();
+
+    $('#add_project').modalForm({
+        modalID: "#create-modal",
+        modalContent: ".modal-content",
+        modalForm: ".modal-content form",
+        formURL: '/project/ajax/participant/add/'+employee_id,
+        isDeleteForm: false,
+        errorClass: ".form-validation-warning",
+        asyncUpdate: true,
+        asyncSettings: {
+            directUpdate: true,
+            closeOnSubmit: true,
+            successMessage: "Employee Updated",
+            dataUrl: '/api/employee/',
+            dataElementId: '#employee_dec_table',
+            dataKey: 'table',
+            addModalFormFunction: updateParticipant,
+        }
+    })
+
+    $('#add_contract').modalForm({
+        modalID: "#create-modal",
+        modalContent: ".modal-content",
+        modalForm: ".modal-content form",
+        formURL: '/expense/ajax/contract/add/employee/'+employee_id,
+        isDeleteForm: false,
+        errorClass: ".form-validation-warning",
+        asyncUpdate: true,
+        asyncSettings: {
+            directUpdate: true,
+            closeOnSubmit: true,
+            successMessage: "Employee Updated",
+            dataUrl: '/api/employee/',
+            dataElementId: '#employee_dec_table',
+            dataKey: 'table',
+            addModalFormFunction: updateContract,
+        }
+    })
+
+    update_employee();
 }
 
 // ----------------------  Employee  ------------------- //
 function update_employee(){
-    window.location.reload();
-    update_activ_btn();
-    
+    //window.location.reload();
+    csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type:"POST",
+        url: "/staff/ajax/"+employee_id+"/activ",
+        data:{
+                pk:employee_id,
+                csrfmiddlewaretoken: csrftoken,
+        },
+        success: function( data )
+        {
+            $('#employee_dec_table').html(data);
+            update_activ_btn();
+        },
+        error:function( err )
+        {
+             $("body").html(err.responseText)
+            //console.log(JSON.stringify(err));
+        }
+    })    
 }
 function update_activ_btn(){
     $('.user_action').click(function(){
-        console.log('user_action clicl');
 
         data_action = $(this).data('action-type');
         item_pk= $(this).data('pk');
         user_id = JSON.parse(document.getElementById('user_id').textContent);
         urlAjax= $(this).data('url');
-        console.log('data_action :'+data_action);
-        console.log('item_pk :'+item_pk);
-        console.log('user_id :'+user_id);
         csrftoken = getCookie('csrftoken');
 
         if (user_id == item_pk){
@@ -155,41 +229,236 @@ function empStatusFormatter(value, row, index, field){
     return action;
 }
 
+
+// ----------------------  table Project  ------------------- //
+function updateParticipant(){
+    $('#employee_project_table').bootstrapTable('refresh');
+    update_employee();
+}
+function adminActionParticipant(value, row, index, field){
+    //console.log(JSON.stringify(row));
+    action = "<span class='icon-left-cell btn-group'>";
+    action += "<button class='icon edit_participant btn btn-success' data-form-url='/project/ajax/participant/"+row.pk+"/udpate' ><i type = 'button' class='fas fa-edit'></i></button>";
+    action += "<button class='icon delete_participant btn btn-danger ' data-form-url='/project/ajax/participant/"+row.pk+"/delete' ><i type = 'button' class='fas fa-trash'></i></button>";
+    action += "</span>"
+    return action;
+}
+function updateParticipantBtnHandler(){
+    $(".edit_participant").each(function () {
+        //console.log("updateProjectTable :"+this);
+        $(this).modalForm({
+            modalID: "#create-modal",
+            modalContent: ".modal-content",
+            modalForm: ".modal-content form",
+            formURL: $(this).data("form-url"),
+            isDeleteForm: false,
+            errorClass: ".form-validation-warning",
+            asyncUpdate: true,
+            asyncSettings: {
+                directUpdate: true,
+                closeOnSubmit: true,
+                successMessage: "Employee Updated",
+                dataUrl: '/api/employee/',
+                dataElementId: '#employee_main_table',
+                dataKey: 'table',
+                addModalFormFunction: updateParticipant,
+            }
+        });
+    });
+    $(".delete_participant").each(function () {
+        $(this).modalForm({
+            modalID: "#create-modal",
+            modalContent: ".modal-content",
+            modalForm: ".modal-content form",
+            formURL: $(this).data("form-url"),
+            isDeleteForm: true,
+            errorClass: ".form-validation-warning",
+            asyncUpdate: true,
+            asyncSettings: {
+                directUpdate: true,
+                closeOnSubmit: true,
+                successMessage: "Employee Updated",
+                dataUrl: '/api/employee/',
+                dataElementId: '#employee_main_table',
+                dataKey: 'table',
+                addModalFormFunction: updateParticipant,
+            }
+        });
+    });
+}
 // ----------------------  table Contract  ------------------- //
 
-function quotityFormatter(value, row, index, field){
-        return parseFloat(value*100).toFixed(0)+" %"
+function adminActionContract(value, row, index, field){
+    action = "<span class='icon-left-cell btn-group'>";
+    action += "<button class='icon edit_contract btn btn-success' data-form-url='/expense/ajax/contract/"+row.pk+"/update' ><i type = 'button' class='fas fa-edit'></i></button>";
+    action += "<button class='icon show_contract btn btn-secondary' data-contract='"+row.pk+"' ><i type = 'button' class='fas fa-toolbox'></i></button>";
+    action += "<button class='icon delete_contract btn btn-danger ' data-form-url='/expense/ajax/contract/"+row.pk+"/delete' ><i type = 'button' class='fas fa-trash'></i></button>";
+    action += "</span>"
+    return action;
 }
 
-
-// ----------------------  table Team  ------------------- //
-function teamMateFormatter(value, row, index, field){
-    response = "";
-    for (const item of value) {
-        if (item.end_date == null){
-          response+= (response.length > 1 ? ', ' : '') + item.employee.user_name
-        }
-      }
-      return response;
+function updateContract(){
+    $('#employee_contract_table').bootstrapTable('refresh');
+    update_employee();
 }
+function updateContractExpense(){
+    $("#project_contract_item_table").bootstrapTable('refresh');
+}
+function updateContractBtnHandler(){
+    $(".show_contract").each(function () {
 
+        $(this).click(function(e){
+            e.preventDefault();
+            contract=$(this).data("contract");
+            csrftoken = getCookie('csrftoken');
+            $.ajax({
+                type:"POST",
+                url: "/expense/ajax/"+contract+"/contract_expense/", 
+                data:{
+                        pk:contract,
+                        csrfmiddlewaretoken: csrftoken,
+                },
+                success: function( data )
+                {
+                    $('#contract_expense_detail').html(data);
+                    updateContractItem();                    
+                },
+                error:function( err )
+                {
+                     $("body").html(err.responseText)
+                    //console.log(JSON.stringify(err));
+                }
+            }) 
 
+        })
+    });
 
-
-
-
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
+    $(".edit_contract").each(function () {
+        $(this).modalForm({
+            modalID: "#create-modal",
+            modalContent: ".modal-content",
+            modalForm: ".modal-content form",
+            formURL: $(this).data("form-url"),
+            isDeleteForm: false,
+            errorClass: ".form-validation-warning",
+            asyncUpdate: true,
+            asyncSettings: {
+                directUpdate: true,
+                closeOnSubmit: true,
+                successMessage: "Employee Updated",
+                dataUrl: '/api/employee/',
+                dataElementId: '#employee_main_table',
+                dataKey: 'table',
+                addModalFormFunction: updateContract,
             }
-        }
-    }
-    return cookieValue;
+        });
+    });
+
+    $(".delete_contract").each(function () {
+        $(this).modalForm({
+            modalID: "#create-modal",
+            modalContent: ".modal-content",
+            modalForm: ".modal-content form",
+            formURL: $(this).data("form-url"),
+            isDeleteForm: true,
+            errorClass: ".form-validation-warning",
+            asyncUpdate: true,
+            asyncSettings: {
+                directUpdate: true,
+                closeOnSubmit: true,
+                successMessage: "Employee Updated",
+                dataUrl: '/api/employee/',
+                dataElementId: '#employee_main_table',
+                dataKey: 'table',
+                addModalFormFunction: updateContract,
+            }
+        });
+    });
+
+
+    $(".show_contract").eq(0).trigger("click");
 }
+function updateContractItem(){
+    $('#project_contract_item_table').bootstrapTable({
+        onLoadSuccess: function(){ updateContractExpenseBtnHandler();},
+        onSearch: function(){ updateContractExpenseBtnHandler();},
+        onSort: function(){  updateContractExpenseBtnHandler();},
+        onToggle: function(){ updateContractExpenseBtnHandler();},
+        onPageChange: function(){ updateContractExpenseBtnHandler();},
+    });
+    $('#add_contract_expense').unbind();
+    $('#add_contract_expense').modalForm({
+        modalID: "#create-modal",
+        modalContent: ".modal-content",
+        modalForm: ".modal-content form",
+        formURL: '/expense/ajax/contract_expense/add/'+$('#add_contract_expense').attr('data-contractPk'),
+        isDeleteForm: false,
+        errorClass: ".form-validation-warning",
+        asyncUpdate: true,
+        asyncSettings: {
+            directUpdate: true,
+            closeOnSubmit: true,
+            successMessage: "Employee Updated",
+            dataUrl: '/api/employee/',
+            dataElementId: '#employee_dec_table',
+            dataKey: 'table',
+            addModalFormFunction: updateContract,
+        }
+    })
+
+
+}
+function updateContractExpenseBtnHandler(){
+    $("#project_contract_item_table .edit_item").each(function () {
+        $(this).modalForm({
+            modalID: "#create-modal",
+            modalContent: ".modal-content",
+            modalForm: ".modal-content form",
+            formURL: $(this).data("form-url"),
+            isDeleteForm: false,
+            errorClass: ".form-validation-warning",
+            asyncUpdate: true,
+            asyncSettings: {
+                directUpdate: true,
+                closeOnSubmit: true,
+                successMessage: "Employee Updated",
+                dataUrl: '/api/employee/',
+                dataElementId: '#employee_main_table',
+                dataKey: 'table',
+                addModalFormFunction: updateContractExpense,
+            }
+        });
+    });
+
+    $("#project_contract_item_table .delete_item").each(function () {
+        $(this).modalForm({
+            modalID: "#create-modal",
+            modalContent: ".modal-content",
+            modalForm: ".modal-content form",
+            formURL: $(this).data("form-url"),
+            isDeleteForm: true,
+            errorClass: ".form-validation-warning",
+            asyncUpdate: true,
+            asyncSettings: {
+                directUpdate: true,
+                closeOnSubmit: true,
+                successMessage: "Employee Updated",
+                dataUrl: '/api/employee/',
+                dataElementId: '#employee_main_table',
+                dataKey: 'table',
+                addModalFormFunction: updateContractExpense,
+            }
+        });
+    });
+}
+
+function adminContractExpenseFormatter(value, row, index, field){
+    action = "<span class='icon-left-cell btn-group'>";
+    action += "<button class='icon edit_item btn btn-success' data-form-url='/expense/ajax/contractitem/"+row.pk+"/update' ><i type = 'button' class='fas fa-edit'></i></button>";
+    action += "<button class='icon delete_item btn btn-danger ' data-form-url='/expense/ajax/contractitem/"+row.pk+"/delete' ><i type = 'button' class='fas fa-trash'></i></button>";
+    action += "</span>";
+    return action;
+}
+// ----------------------  table Team  ------------------- //
+
+

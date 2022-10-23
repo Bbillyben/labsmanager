@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.db.models import Q
+from django.db.models import Sum
 
 
 ### Models 
@@ -50,6 +51,22 @@ class Employee(models.Model):
     def contracts(self):
         from expense.models import Contract
         return Contract.objects.filter(employee=self.pk)
+    
+    #ItemPrice.objects.aggregate(Sum('price'))
+    @property
+    def contracts_quotity(self):
+        from expense.models import Contract
+        return Contract.objects.filter(employee=self.pk, end_date=None).aggregate(Sum('quotity'))["quotity__sum"]
+
+    @property
+    def projects(self):
+        from project.models import Participant
+        return Participant.objects.filter(employee=self.pk)
+    
+    @property
+    def projects_quotity(self):
+        from project.models import Participant
+        return Participant.objects.filter(employee=self.pk).aggregate(Sum('quotity'))["quotity__sum"]
     
     def __str__(self):
         """Return a string representation of the Employee (for use in the admin interface)"""
