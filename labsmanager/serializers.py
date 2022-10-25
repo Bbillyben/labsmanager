@@ -2,7 +2,7 @@ from multiprocessing import context
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 from staff.models import Employee, Employee_Status, Employee_Type, Team, TeamMate
-from expense.models import Contract, Contract_expense
+from expense.models import Contract, Contract_expense, Contract_type
 from fund.models import Fund, Cost_Type, Fund_Item, Fund_Institution
 from project.models import Project, Institution, Participant
 from django.db.models import Sum
@@ -14,7 +14,7 @@ from django.db.models import Sum
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['pk', 'url', 'username', 'first_name','last_name', 'email', 'groups', 'is_active',]
+        fields = ['pk','username', 'first_name','last_name', 'email', 'groups', 'is_active',]
 
 
 class GroupSerializer(serializers.ModelSerializer):
@@ -68,6 +68,14 @@ class EmployeeSerialize_Min(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = ['pk', 'user_name', 'is_active']    
+        
+
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>    APP Expense
+
+class ContractTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contract_type
+        fields = ['pk', 'name',]  
 
 
 # --------------------------------------------------------------------------------------- #
@@ -153,13 +161,21 @@ class FundProjectSerialize(serializers.ModelSerializer):
 # ---------------------------------------------------------------------------------------- #
 # ---------------------------    APP Expense / SERIALISZER    --------------------------- #
 # ---------------------------------------------------------------------------------------- #
-
-class ContractEmployeeSerializer(serializers.ModelSerializer):
+ 
+class ContractSerializer(serializers.ModelSerializer):
     fund = FundSerialize(many=False, read_only=True)
+    contract_type = serializers.SerializerMethodField()
+    employee=EmployeeSerialize_Min(many = False, read_only = True)
     class Meta:
         model = Contract
-        fields = ['pk','start_date', 'end_date', 'fund', 'quotity']
-        
+        fields = ['pk', 'employee', 'start_date', 'end_date', 'fund', 'contract_type','total_amount', 'quotity']
+    
+    def get_contract_type(self,obj):
+        if obj.contract_type:
+            return obj.contract_type.name
+        return None 
+    
+          
 class ContractExpenseSerializer_min(serializers.ModelSerializer):
     fund = FundSerialize(many=False, read_only=True)
     status = serializers.SerializerMethodField()
@@ -178,6 +194,7 @@ class ContractSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contract
         fields = ['pk', 'employee', 'start_date', 'end_date', 'quotity',  'fund',
+                  'total_amount',
                   'expenses', ]
     
 # ---------------------------------------------------------------------------------------- #
@@ -188,14 +205,18 @@ class ContractSerializer(serializers.ModelSerializer):
         
 class EmployeeStatusSerialize(serializers.ModelSerializer):
     type = EmployeeTypeSerialize(many=False, read_only=True)
+    is_contractual=serializers.SerializerMethodField()
     class Meta:
         model = Employee_Status
-        fields = ['pk', 'type', 'start_date', 'end_date',]
+        fields = ['pk', 'type', 'start_date', 'end_date', 'is_contractual']
         
+    def get_is_contractual(self,obj):
+        return obj.get_is_contractual_display()
+     
 class EmployeeSerialize(serializers.ModelSerializer):
     user = UserSerializer(many=False, read_only=True)
     get_status =EmployeeStatusSerialize(many=True, read_only=True)
-    contracts=ContractEmployeeSerializer(many=True, read_only=True)
+    contracts=ContractSerializer(many=True, read_only=True)
     projects=ParticipantSerializer(many=True, read_only=True)
     class Meta:
         model = Employee
@@ -266,4 +287,6 @@ class ProjectFullSerializer(serializers.ModelSerializer):
     # def get_total_amount(self,obj):
     #     fund = Fund.objects.filter(project = obj.pk)
     #     return Fund_Item.objects.filter(fund__in=fund).aggregate(Sum('amount'))["amount__sum"]
+    
+    
     

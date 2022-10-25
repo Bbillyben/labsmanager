@@ -21,11 +21,12 @@ from .views import IndexView
 from rest_framework import routers
 from . import apiviews #UserViewSet, GroupViewSet, EmployeeViewSet, ProjectViewSet, FundViewSet
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^index/', IndexView.as_view(), name='index'),
     path('', IndexView.as_view(), name='index'),
-    path('staff/', include('staff.urls')),                  # For Staff models
+    path('staff/', include('staff.urls'), name='staff'),                  # For Staff models
     path('project/', include('project.urls')),              # for project model
     path('fund/', include('fund.urls')),              # for project model
     path('expense/', include('expense.urls')),              # for project model
@@ -38,16 +39,16 @@ urlpatterns += [
 #  Django Rest Framework
 
 router = routers.DefaultRouter()
-router.register(r'users', apiviews.UserViewSet)
-router.register(r'groups', apiviews.GroupViewSet)
-router.register(r'employee', apiviews.EmployeeViewSet)
-router.register(r'project', apiviews.ProjectViewSet)
-router.register(r'fund', apiviews.FundViewSet)
-router.register(r'contract', apiviews.ContractViewSet)
+router.register(r'users', apiviews.UserViewSet, basename='user')
+router.register(r'groups', apiviews.GroupViewSet, basename='groups')
+router.register(r'employee', apiviews.EmployeeViewSet, basename='employee')
+router.register(r'project', apiviews.ProjectViewSet, basename='project')
+router.register(r'fund', apiviews.FundViewSet, basename='fund')
+router.register(r'contract', apiviews.ContractViewSet, basename='contract')
 
 
 urlpatterns += [
-    path('api/', include(router.urls)),
+    path('api/', include((router.urls, 'api_app'), namespace='api')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
 

@@ -44,7 +44,7 @@ class EmployeeModelForm(BSModalModelForm):
 class EmployeeStatusForm(BSModalModelForm):
     class Meta:
         model = Employee_Status
-        fields = ['type', 'start_date', 'end_date', 'employee']
+        fields = ['type', 'start_date', 'end_date', 'is_contractual', 'employee']
     
     def __init__(self, *args, **kwargs): 
         

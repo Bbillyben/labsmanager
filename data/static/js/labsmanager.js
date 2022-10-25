@@ -2,6 +2,11 @@
 
 // --------------------     Basic Function    ------------------- // 
 
+/**
+ * get the cookie information (
+ * @param {*} name : the nema of the value to retrieve
+ * @returns 
+ */
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -16,6 +21,15 @@ function getCookie(name) {
         }
     }
     return cookieValue;
+}
+
+/**
+ *  Test if an html element is empty
+ * @param {*} el : the elemetn to test
+ * @returns true if empty or false if filled
+ */
+function isEmpty( el ){
+    return !$.trim(el.html())
 }
 
 /**
@@ -120,6 +134,21 @@ function ParticipantFormatter(value, row, index, field){
             tm+="</a>";
             response+= (response.length > 1 ? ', ' : '') + tm;
         }
+      }
+      return response;
+}
+
+function ProjectFormatter(value, row, index, field){
+    if(!isIterable(value)){
+        value=[{"project":value}];
+    }
+    response = "";
+    for (const item of value) {
+        //console.log("item :"+JSON.stringify(item));
+
+            tm ="<a href='/project/"+item.project.pk+"'>"+item.project.name;
+            tm+="</a>";
+            response+= (response.length > 1 ? ', ' : '') + tm;
       }
       return response;
 }

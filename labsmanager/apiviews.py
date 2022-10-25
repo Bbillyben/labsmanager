@@ -46,7 +46,7 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     def contracts(self,request, pk=None):
         emp = self.get_object()
         contract=Contract.objects.filter(employee=emp.pk).order_by('end_date')
-        return JsonResponse(serializers.ContractEmployeeSerializer(contract, many=True).data, safe=False)
+        return JsonResponse(serializers.ContractSerializer(contract, many=True).data, safe=False)
     
     
     @action(methods=['get'], detail=True, url_path='teams', url_name='teams')
@@ -82,6 +82,12 @@ class ProjectViewSet(viewsets.ModelViewSet):
         proj = self.get_object()
         t1=Fund.objects.filter(project=proj.pk)
         return JsonResponse(serializers.FundProjectSerialize(t1, many=True).data, safe=False)   
+    
+    @action(methods=['get'], detail=True,url_path='contracts', url_name='contracts')
+    def contracts(self,request, pk=None):
+        fund=Fund.objects.filter(project=pk).values('pk')        
+        contract=Contract.objects.filter(fund__in=fund).order_by('end_date')
+        return JsonResponse(serializers.ContractSerializer(contract, many=True).data, safe=False)
 
 class FundViewSet(viewsets.ModelViewSet):
     queryset = Fund.objects.all()
@@ -104,3 +110,4 @@ class ContractViewSet(viewsets.ModelViewSet):
         cont = self.get_object()
         t1=Contract_expense.objects.filter(contract=cont.pk)
         return JsonResponse(serializers.ContractExpenseSerializer_min(t1, many=True).data, safe=False) 
+

@@ -85,6 +85,35 @@ function initProjectSingleView(user_idA, project_idA){
         }
     });
 
+
+    $('#project_contract_table').bootstrapTable({
+        onLoadSuccess: function(){ updateContractBtnHandler();},
+        onSearch: function(){ updateContractBtnHandler();},
+        onSort: function(){  updateContractBtnHandler();},
+        onToggle: function(){ updateFundBtupdateContractBtnHandlernHandler();},
+        onPageChange: function(){ updateContractBtnHandler();},
+    });
+
+    $('#add_contract').modalForm({
+        modalID: "#create-modal",
+        modalContent: ".modal-content",
+        modalForm: ".modal-content form",
+        formURL: '/expense/ajax/contract/add/project/'+project_id,
+        isDeleteForm: false,
+        errorClass: ".form-validation-warning",
+        asyncUpdate: true,
+        asyncSettings: {
+            directUpdate: true,
+            closeOnSubmit: true,
+            successMessage: "Employee Updated",
+            dataUrl: '/api/employee/',
+            dataElementId: '#employee_dec_table',
+            dataKey: 'table',
+            addModalFormFunction: updateContract,
+        }
+    })
+
+
     update_project();
     
 
@@ -375,3 +404,6 @@ function adminActionFundItem(value, row, index, field){
     action += "</span>"
     return action;
 }
+
+
+// --------------------- Contract Table

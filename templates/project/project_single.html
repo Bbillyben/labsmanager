@@ -113,7 +113,7 @@
                                 <span class="flex" style="flex-grow: 1;"></span>
                                 <div class="btn-group" role="group">
                                     <button type="button" class="btn btn-secondary" id="add_fund_temp" title="Add Item" data-projectpk="{{ project.pk }}" >
-                                        <span class='fas fa-money-check'></span>
+                                        <span class='fas fa-plus'></span>
                                     </button>
                                 </div>
                             </div>
@@ -173,17 +173,39 @@
                 </div>
 
             </div>
-            <div class="container" style="max-width: 100%; padding: 5px;">
-                <div class="row">
-                    <div class="row-header">
-                        <h4><i class="fas fa-users"></i>  {% trans 'Teams' %}</h4>
+            <div class="row" style=" padding-top: 5px;">
+                <div class="col">
+                    <div class="card">
+                        <div class="row-header">
+                            <div class="d-flex flex-wrap subheading">
+                                <h4><i class="fas fa-file-signature"></i>  {% trans 'Contract' %}</h4> 
+                                <span class="flex" style="flex-grow: 1;"></span>
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-secondary" id="add_contract" title="Add Item" data-employee="{{ employee.pk }}" >
+                                        <span class='fas fa-plus'></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                        
+                        {% url 'api:project-contracts' pk=project.pk as ContractDataURL %}
+                        {% include 'expense/contract_table.html' with datatype="project" dataURL=ContractDataURL %}
+                        
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                   
-
-                </div>
                 
+
+           <!--  </div>
+            <div class="container" style="max-width: 100%; padding: 5px;"> 
+                -->
+                <div class="col">
+                    <div class="card" id="contract_expense_detail">
+                        
+                        
+                    </div>
+                </div>
 
             </div>
             
@@ -200,11 +222,13 @@
 
 {% block js_load %}
 <script type='text/javascript' src="{% static 'js/project_single.js' %}"></script>
+<script type='text/javascript' src="{% static 'js/tables/contract_tables.js' %}"></script>
 <script>
 $(document).ready(function () {
     user_id = JSON.parse(document.getElementById('user_id').textContent);
     project_id = JSON.parse(document.getElementById('project_id').textContent);
     initProjectSingleView(user_id, project_id);
+    initializeContractsTable();
 })
 </script>
 

@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.db.models import Sum
-
+from django.utils import timezone
 
 ### Models 
 class Employee(models.Model):
@@ -56,7 +56,7 @@ class Employee(models.Model):
     @property
     def contracts_quotity(self):
         from expense.models import Contract
-        return Contract.objects.filter(employee=self.pk, end_date=None).aggregate(Sum('quotity'))["quotity__sum"]
+        return Contract.objects.filter(Q(employee=self.pk) & ( Q(end_date__gte=timezone.now()) | Q(end_date=None))).aggregate(Sum('quotity'))["quotity__sum"]
 
     @property
     def projects(self):
@@ -87,6 +87,15 @@ class Employee_Status(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name=_('Employee'))
     start_date=models.DateField(null=True, blank=True, verbose_name=_('Start Date'))
     end_date=models.DateField(null=True, blank=True, verbose_name=_('End Date'))
+    contract_status=(("c",_("Contractual")), 
+                ("s", _("Statutory")),
+                )
+    is_contractual= models.CharField(
+        max_length=1,
+        choices=contract_status,
+        blank=False,
+        default='c', verbose_name=_('Is Contractual'),
+    )
     
     def __str__(self):
         """Return a string representation of the Status (for use in the admin interface)"""

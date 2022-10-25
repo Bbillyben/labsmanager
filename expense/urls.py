@@ -13,7 +13,8 @@ urlpatterns = [
 # for modal
 
 urlpatterns += [
-    path('ajax/contract/add/employee/<employee>', views_modal.ContractCreateView.as_view(), name='add_contract_open'),  
+    path('ajax/contract/add/employee/<employee>', views_modal.ContractCreateView.as_view(), name='add_contract_open'), 
+    path('ajax/contract/add/project/<project>', views_modal.ContractCreateView.as_view(), name='add_contract_open'),   
     path('ajax/contract/<pk>/update', views_modal.ContractUpdateView.as_view(), name='update_contract_open'),  
     path('ajax/contract/<pk>/delete', views_modal.ContractDeleteView.as_view(), name='add_contract_open'),
     

@@ -22,6 +22,8 @@ class ContractCreateView(LoginRequiredMixin, BSModalCreateView):
             form = self.form_class(initial={'contract': kwargs['pk']})
         elif 'employee' in kwargs:
             form = self.form_class(initial={'employee': kwargs['employee']})
+        elif 'project' in kwargs:
+            form = self.form_class(initial={'project': kwargs['project']})
         else:
             form = self.form_class()        
         

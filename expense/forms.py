@@ -1,6 +1,8 @@
 from bootstrap_modal_forms.forms import BSModalModelForm
 from bootstrap_modal_forms.utils import is_ajax
 from django.core.exceptions import ValidationError
+
+from project.models import Project
 from . import models
 from staff.models import Employee
 from django.utils.translation import gettext_lazy as _
@@ -10,7 +12,7 @@ from fund.models import Cost_Type, Fund
 class ContractModelForm(BSModalModelForm):
     class Meta:
         model = models.Contract
-        fields = ['employee', 'fund','start_date','end_date', 'quotity',]
+        fields = ['employee', 'fund','start_date','end_date', 'contract_type', 'quotity',]
 
     def __init__(self, *args, **kwargs):
         if ('initial' in kwargs and 'employee' in kwargs['initial']):
@@ -21,6 +23,22 @@ class ContractModelForm(BSModalModelForm):
         else:
             self.base_fields['employee'] = forms.ModelChoiceField(
                 queryset=Employee.objects.all(),
+            )
+        if ('initial' in kwargs and 'project' in kwargs['initial']):
+            # self.base_fields['project'] = forms.ModelChoiceField(
+            #     queryset=Project.objects.all(),
+            #     widget=forms.HiddenInput
+            # )
+            self.base_fields['fund'] = forms.ModelChoiceField(
+                queryset=Fund.objects.filter(project__in=kwargs['initial']['project']),
+            )
+
+        else:
+            # self.base_fields['project'] = forms.ModelChoiceField(
+            #     queryset=Project.objects.all(),
+            # )
+            self.base_fields['fund'] = forms.ModelChoiceField(
+                queryset=Fund.objects.all(),
             )
         
         super().__init__(*args, **kwargs)
