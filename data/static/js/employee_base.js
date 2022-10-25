@@ -89,8 +89,8 @@ function projectsFormatter(value, row, index, field){
   //console.log('contractsFormatter : '+JSON.stringify(value)+" - row : "+JSON.stringify(row) + "  - index :"+index+ " - fiels :"+field+"  # allow :"+this.allow);
   response = '<ul>';
   for (const item of value) {
-    if (item.project_status == true){
-      response+= '<li>'+item.project_name+ " / "+item.status+" ("+quotityDisplay(item.quotity)+")"+"</li>";
+    if (item.project.status == true){
+      response+= '<li>'+item.project.name+ " / "+item.status+" ("+quotityDisplay(item.quotity)+")"+"</li>";
     }
   }
   response += '</ul>';
