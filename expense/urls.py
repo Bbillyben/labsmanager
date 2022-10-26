@@ -2,7 +2,7 @@ from django.urls import include, path, re_path
 from . import views, views_modal
 
 urlpatterns = [
-    # path('', views.ProjectIndexView.as_view(), name='project_index'),
+    path('', views.ContractIndexView.as_view(), name='contract_index'),
     # path('<pk>', views.ProjectView.as_view(), name='project_single'),
     
     
@@ -13,6 +13,7 @@ urlpatterns = [
 # for modal
 
 urlpatterns += [
+    path('ajax/contract/add/', views_modal.ContractCreateView.as_view(), name='add_contract'), 
     path('ajax/contract/add/employee/<employee>', views_modal.ContractCreateView.as_view(), name='add_contract_open'), 
     path('ajax/contract/add/project/<project>', views_modal.ContractCreateView.as_view(), name='add_contract_open'),   
     path('ajax/contract/<pk>/update', views_modal.ContractUpdateView.as_view(), name='update_contract_open'),  

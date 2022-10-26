@@ -8,6 +8,8 @@ from django.db.models import Q, Sum
 
 from labsmanager.models_utils import PERCENTAGE_VALIDATOR    
 
+from auditlog.models import AuditlogHistoryField
+from auditlog.registry import auditlog
 
 # Create your models here.
 class Expense(models.Model):
@@ -29,9 +31,10 @@ class Expense(models.Model):
         default='e', verbose_name=_('Status'),
     )
     fund_item = models.ForeignKey(Fund, on_delete=models.CASCADE, verbose_name=_('Related Fund'))
+    history = AuditlogHistoryField()
     
     def __str__(self):
-        return f'{self.fund_item.__str__()}/{self.type}: {self.amount} ({self.status})'
+        return f'{self.fund_item.__str__()}/{self.type}'
 
 
 class Contract_expense(Expense):
@@ -39,7 +42,7 @@ class Contract_expense(Expense):
         """Metaclass defines extra model properties"""
         verbose_name = _("Contract Expense")
     contract= models.ForeignKey('Contract', on_delete=models.CASCADE, verbose_name=_('Related Contract'))
-
+    
 
 class Contract_type(models.Model):
     class Meta:
@@ -60,6 +63,8 @@ class Contract(models.Model):
     quotity = models.DecimalField(max_digits=4, decimal_places=3, default=0, validators=PERCENTAGE_VALIDATOR, verbose_name=_('Time qutotity'))
     fund=models.ForeignKey(Fund, on_delete=models.CASCADE, verbose_name=_('Related Fund'))
     contract_type=models.ForeignKey(Contract_type,null=True, on_delete=models.SET_NULL, verbose_name=_('Contract Type'))
+    is_active=models.BooleanField(default=True, verbose_name=_('Contract is active'))
+    history = AuditlogHistoryField()
     
     def __str__(self):
         return f'{self.employee.__str__()} - {self.fund.__str__()}'
@@ -70,3 +75,9 @@ class Contract(models.Model):
         if exp:
             return exp.aggregate(Sum('amount'))["amount__sum"]
         return 0
+    
+    
+    
+auditlog.register(Expense)
+auditlog.register(Contract_expense)
+auditlog.register(Contract)

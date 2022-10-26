@@ -7,6 +7,9 @@ from django.db.models import Q
 from django.db.models import Sum
 from django.utils import timezone
 
+from auditlog.models import AuditlogHistoryField
+from auditlog.registry import auditlog
+
 ### Models 
 class Employee(models.Model):
     
@@ -20,6 +23,7 @@ class Employee(models.Model):
     birth_date = models.DateField(null=True, blank=True, verbose_name=_('Birth Date'))
     entry_date = models.DateField(null=True, blank=True, verbose_name=_('Entry Date'))
     exit_date = models.DateField(null=True, blank=True, verbose_name=_('Exit Date'))
+    history = AuditlogHistoryField()
     
     @property
     def user_name(self):
@@ -96,6 +100,7 @@ class Employee_Status(models.Model):
         blank=False,
         default='c', verbose_name=_('Is Contractual'),
     )
+    history = AuditlogHistoryField()
     
     def __str__(self):
         """Return a string representation of the Status (for use in the admin interface)"""
@@ -122,6 +127,7 @@ class Team(models.Model):
     
     name = models.CharField(max_length=50, verbose_name=_('Team Name'))
     leader = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name=_('Team Leader'))
+    history = AuditlogHistoryField()
     
     @property
     def nb_mate(self):
@@ -145,7 +151,7 @@ class TeamMate(models.Model):
         
     team = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name=_('Team'))
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name=_('Employee'))
-    
+    history = AuditlogHistoryField()
     
     def __str__(self):
         """Return a string representation of the Status (for use in the admin interface)"""
@@ -161,3 +167,8 @@ class TeamMate(models.Model):
         if isLeader:
             raise ValidationError(_('Is Team leader'))
         
+        
+auditlog.register(Employee)
+auditlog.register(Employee_Status)
+auditlog.register(Team)
+auditlog.register(TeamMate)

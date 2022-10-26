@@ -33,3 +33,13 @@ def moneyFormat(context, dynvarname):
     else:
          val="-" 
     return mark_safe(val)
+
+
+@register.simple_tag(takes_context=True)
+def etpFormat(context, dynvarname):
+    """ Returns the value of dynvarname into the context """
+    if dynvarname != None:
+        val =  "{:.1f}".format(dynvarname)
+    else:
+         val="-" 
+    return mark_safe(val)

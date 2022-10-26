@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load customs_tags %}
+
+{% block page_title %}
+{% trans "LabManager Employee" %}
+{% endblock %}
+
+{% block breadcrumb_list %}
+{% endblock %}
+
+{% block sidebar %}
+
+{% endblock %}
+
+{% block content %}
+{% include 'modals.html' with modal_id='create-modal' modal_title='Employee' %}
+
+
+<div id='detail-panels'>
+    <div class="panel panel-hidden panel-visible" id="panel-stock" style="display: block;">
+        <div class="panel-heading">
+            <div class="d-flex flex-wrap">
+                <h4>{% trans 'Contract List' %} </h4> 
+                <span class="flex" style="flex-grow: 1;"></span>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-success" id="contract_create" title="Create New Project">
+                        <span class='fa fa-briefcase-medical'></span>
+                        {% trans 'Add Contract' %}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-content">
+            <!-- Table should be loaded here -->
+            {% include 'expense/contract_table.html' with datatype="all" dataURL='/api/contract/' %}
+        </div>
+    </div>
+</div>
+<div class="card" id="contract_expense_detail">
+                        
+                        
+</div>
+
+
+{{ request.user.id|json_script:"user_id" }}
+{% endblock %}
+
+
+{% block js_load %}
+<script type='text/javascript' src="{% static 'js/contract_base.js' %}"></script>
+<script type='text/javascript' src="{% static 'js/tables/contract_tables.js' %}"></script>
+<script>
+$(document).ready(function () {
+    user_id = JSON.parse(document.getElementById('user_id').textContent);
+    initContractBaseView(user_id);
+    initializeContractsTable();
+})
+</script>
+
+{% endblock %}

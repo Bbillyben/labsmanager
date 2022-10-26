@@ -49,9 +49,11 @@ INSTALLED_APPS = [
     'django_tables2',               # https://django-tables2.readthedocs.io/en/latest/
     'rest_framework',               # https://www.django-rest-framework.org/
     'rest_framework.authtoken',
-'bootstrap_modal_forms',            # https://pypi.org/project/django-bootstrap-modal-forms/
+    'bootstrap_modal_forms',        # https://pypi.org/project/django-bootstrap-modal-forms/
     'mptt',                         # https://django-mptt.readthedocs.io/en/latest/tutorial.html
     'django_pivot',                 # https://github.com/martsberger/django-pivot
+    'auditlog',                     # https://django-auditlog.readthedocs.io/en/latest/installation.html
+    #                                 # https://django-easy-pdf.readthedocs.io/en/v0.2.0-dev1/installation.html
     
     # App
     'staff.apps.StaffConfig',
@@ -68,6 +70,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'auditlog.middleware.AuditlogMiddleware',
 ]
 
 ROOT_URLCONF = 'labsmanager.urls'

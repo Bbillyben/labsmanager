@@ -5,6 +5,9 @@ from django.utils.translation import gettext_lazy as _
 from project.models import Project, Institution
 from mptt.models import MPTTModel, TreeForeignKey
 
+from auditlog.models import AuditlogHistoryField
+from auditlog.registry import auditlog
+
 class Cost_Type(MPTTModel):
     class Meta:
         """Metaclass defines extra model properties"""
@@ -40,6 +43,7 @@ class Fund_Item(models.Model):
     type=models.ForeignKey(Cost_Type, on_delete=models.CASCADE, verbose_name=_('Type'))
     amount=models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Amount'))
     fund=models.ForeignKey('Fund', on_delete=models.CASCADE, verbose_name=_('Related Fund'))
+    history = AuditlogHistoryField()
 
 class Fund(models.Model):
     class Meta:
@@ -51,6 +55,7 @@ class Fund(models.Model):
     start_date=models.DateField(null=False, blank=False, verbose_name=_('Start Date'))
     end_date=models.DateField(null=True, blank=True, verbose_name=_('End Date'))
     ref= models.CharField(max_length=30, blank=True, verbose_name=_('Reference'))
+    history = AuditlogHistoryField()
     
     def clean_end_date(self):
         ## print("EXIT DATE CLEAN Fund Model :"+str(self.cleaned_data))
@@ -60,3 +65,6 @@ class Fund(models.Model):
     
     def __str__(self):
         return f'{self.project.name} | {self.funder.short_name} -> {self.institution.short_name}'
+    
+auditlog.register(Fund_Item)
+auditlog.register(Fund)

@@ -12,7 +12,7 @@ from fund.models import Cost_Type, Fund
 class ContractModelForm(BSModalModelForm):
     class Meta:
         model = models.Contract
-        fields = ['employee', 'fund','start_date','end_date', 'contract_type', 'quotity',]
+        fields = ['employee', 'fund','start_date','end_date', 'contract_type', 'quotity','is_active',]
 
     def __init__(self, *args, **kwargs):
         if ('initial' in kwargs and 'employee' in kwargs['initial']):

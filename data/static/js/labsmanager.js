@@ -1,5 +1,6 @@
 
 
+
 // --------------------     Basic Function    ------------------- // 
 
 /**
@@ -43,13 +44,14 @@ function quotityDisplay(value){
 }
 
 function moneyDisplay(value){
-    formatter = new Intl.NumberFormat('fr-FR', {
-        style: 'currency',
-        currency: 'EUR',
+    formatter = new Intl.NumberFormat('en-US', {
+        // style: 'currency',
+        // currency: 'EUR',
         minimumFractionDigits: 0,
         maximumFractionDigits: 2,
       });
-    return formatter.format(value);
+    return formatter.format(value).replaceAll(',', ' ')+" EUR";
+
 }
 
 /**

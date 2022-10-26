@@ -5,6 +5,8 @@ from django.db.models import Q, Sum
 from staff.models import Employee
 from labsmanager.models_utils import PERCENTAGE_VALIDATOR 
 
+from auditlog.models import AuditlogHistoryField
+from auditlog.registry import auditlog
 
 class Institution(models.Model):
     class Meta:
@@ -29,6 +31,7 @@ class Project(models.Model):
     start_date=models.DateField(null=False, blank=False, verbose_name=_('Start Date'))
     end_date=models.DateField(null=True, blank=True, verbose_name=_('End Date'))
     status=models.BooleanField(default=True, verbose_name=_('Project Status'))
+    history = AuditlogHistoryField()
     
     def get_status(self):
         return self.status
@@ -39,6 +42,19 @@ class Project(models.Model):
         from fund.models import Fund, Fund_Item
         fundP=Fund.objects.filter(project=self.pk).only('pk').all()
         return Fund_Item.objects.filter(fund__in = fundP).aggregate(Sum('amount'))["amount__sum"]
+    
+    @property
+    def get_total_participant_quotity(self):
+        parti=Participant.objects.filter(project=self.pk)
+        return parti.aggregate(Sum('quotity'))["quotity__sum"]
+    
+    @property
+    def get_total_contract_quotity(self):
+        from expense.models import Contract
+        from fund.models import Fund, Fund_Item
+        fundP=Fund.objects.filter(project=self.pk).only('pk').all()
+        cont=Contract.objects.filter(fund__in = fundP)
+        return cont.aggregate(Sum('quotity'))["quotity__sum"]   
     
     def __str__(self):
         """Return a string representation of the Status (for use in the admin interface)"""
@@ -60,6 +76,7 @@ class Institution_Participant(models.Model):
         default='p', 
         verbose_name=_('Status'),        
     )
+    history = AuditlogHistoryField()
 
 class Participant(models.Model):
 
@@ -76,6 +93,7 @@ class Participant(models.Model):
         verbose_name=_('Status'),        
     )
     quotity = models.DecimalField(max_digits=4, decimal_places=3, default=0, validators=PERCENTAGE_VALIDATOR, verbose_name=_('Time qutotity'))
+    history = AuditlogHistoryField()
     
     class Meta:
         verbose_name = _("Participant")
@@ -99,3 +117,7 @@ class Participant(models.Model):
 
     # def get_absolute_url(self):
     #     return reverse("_detail", kwargs={"pk": self.pk})
+    
+auditlog.register(Project)
+auditlog.register(Institution_Participant)
+auditlog.register(Participant)

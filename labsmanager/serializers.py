@@ -168,7 +168,7 @@ class ContractSerializer(serializers.ModelSerializer):
     employee=EmployeeSerialize_Min(many = False, read_only = True)
     class Meta:
         model = Contract
-        fields = ['pk', 'employee', 'start_date', 'end_date', 'fund', 'contract_type','total_amount', 'quotity']
+        fields = ['pk', 'employee', 'start_date', 'end_date', 'fund', 'contract_type','total_amount', 'quotity', 'is_active',]
     
     def get_contract_type(self,obj):
         if obj.contract_type:
@@ -187,15 +187,15 @@ class ContractExpenseSerializer_min(serializers.ModelSerializer):
     def get_status(self,obj):
         return obj.get_status_display()
     
-class ContractSerializer(serializers.ModelSerializer):
-    expenses = ContractExpenseSerializer_min(many=True, read_only=True)
-    employee=EmployeeSerialize_Min(many=False, read_only=True)
-    fund=FundSerialize(many=False, read_only=True)
-    class Meta:
-        model = Contract
-        fields = ['pk', 'employee', 'start_date', 'end_date', 'quotity',  'fund',
-                  'total_amount',
-                  'expenses', ]
+# class ContractSerializer(serializers.ModelSerializer):
+#     expenses = ContractExpenseSerializer_min(many=True, read_only=True)
+#     employee=EmployeeSerialize_Min(many=False, read_only=True)
+#     fund=FundSerialize(many=False, read_only=True)
+#     class Meta:
+#         model = Contract
+#         fields = ['pk', 'employee', 'start_date', 'end_date', 'quotity',  'fund',
+#                   'total_amount',
+#                   'expenses', ]
     
 # ---------------------------------------------------------------------------------------- #
 # ---------------------------    APP EMPLOYEE / SERIALISZER    --------------------------- #

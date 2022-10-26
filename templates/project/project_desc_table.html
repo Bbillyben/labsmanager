@@ -22,12 +22,22 @@
             <td>{% firstof project.end_date "-"  %}</td>
         </tr>
         <tr>
-            <td><i class="fas fa-calendar-minus"></i></td>
+            <td><i class="fa-solid fa-money-bills"></i></td>
             <td  class="desc_title">{% trans 'Fund Amout Total' %}</td>
             <td>{% moneyFormat project.get_funds_amount %}</td>
         </tr>
         <tr>
-            <td><i class="fas fa-user"></i></td>
+            <td><i class="fas fa-users"></i></td>
+            <td  class="desc_title">{% trans 'Total Participant Quotity' %}</td>
+            <td>{% etpFormat project.get_total_participant_quotity %}</td>
+        </tr>
+        <tr>
+            <td><i class="fa-solid fa-person-digging"></i></td>
+            <td  class="desc_title">{% trans 'Total Contract Quotity' %}</td>
+            <td>{% etpFormat project.get_total_contract_quotity %}</td>
+        </tr>
+        <tr>
+            <td><i class="fa-solid fa-key"></i></td>
             <td  class="desc_title">{% trans 'Active' %}</td>
             <td id="project_activ_th">
                {% include 'project/active.html' %}

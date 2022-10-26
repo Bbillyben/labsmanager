@@ -7,6 +7,14 @@ from django.urls import reverse
 from view_breadcrumbs import BaseBreadcrumbMixin
 from .models import Contract, Contract_expense
 
+
+class ContractIndexView(LoginRequiredMixin, BaseBreadcrumbMixin, TemplateView):
+    template_name = 'expense/contract_base.html'
+    home_label = '<i class="fas fa-bars"></i>'
+    model = Contract
+    crumbs = [("Contracts","contracts")]
+    
+    
 # Create your views here.
 
 def get_contractExpense_table(request, pk):
