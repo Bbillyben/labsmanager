@@ -9,33 +9,33 @@ class EmployeeStatusInline(admin.TabularInline):
     
     
 class EmployeeAdmin(admin.ModelAdmin):
-    list_display = ('get_first_name', 'get_last_name',  'entry_date' , 'exit_date', 'get_is_valid')
+    list_display = ('first_name', 'last_name',  'entry_date' , 'exit_date', 'is_active', 'get_user')
     fieldsets = (
-        (None, {
-            'fields': ('user', 'birth_date')
+        ('Employee', {
+            'fields': ('first_name', 'last_name', 'birth_date')
         }),
         ('Lab Status', {
-            'fields': ('entry_date', 'exit_date')
+            'fields': ('entry_date', 'exit_date', 'is_active')
+        }),
+        ('LabsManager User', {
+            'fields': ('user',)
         }),
     )
     inlines = [EmployeeStatusInline]
     list_filter=('entry_date' , 'exit_date')
      
-    def get_last_name(self, obj):
-        return obj.user.last_name
-    get_last_name.short_description = _('Last Name')
-    get_last_name.admin_order_field = 'user__last_name'
+    def get_user(self, obj):
+        if obj.user:
+            return obj.user.username
+        return None
+    get_user.short_description = _('User Attached')
+    get_user.admin_order_field = 'user_attached'
     
     def get_first_name(self, obj):
         return obj.user.first_name
     get_first_name.short_description = _('First Name')
     get_first_name.admin_order_field = 'user__first_name'
     
-    def get_is_valid(self, obj):
-        return obj.user.is_active
-    get_is_valid.short_description = 'Is Active'
-    get_is_valid.admin_order_field = 'user__is_a&ctive'
-    get_is_valid.boolean = True
     
 class EmployeeTypeAdmin(admin.ModelAdmin):
     list_display = ('name', 'shortname' )

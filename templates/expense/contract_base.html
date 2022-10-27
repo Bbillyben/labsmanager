@@ -25,10 +25,12 @@
                 <h4>{% trans 'Contract List' %} </h4> 
                 <span class="flex" style="flex-grow: 1;"></span>
                 <div class="btn-group" role="group">
+                    {% if perms.expense.add_contract %}
                     <button type="button" class="btn btn-success" id="contract_create" title="Create New Project">
                         <span class='fa fa-briefcase-medical'></span>
                         {% trans 'Add Contract' %}
                     </button>
+                    {% endif %}
                 </div>
             </div>
         </div>

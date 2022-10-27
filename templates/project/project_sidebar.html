@@ -1,0 +1,10 @@
+{% load i18n %}
+{% load static %}
+
+{% trans "Funds" as text %}
+{% include "sidebar_item.html" with label="project-fund" text=text icon="fa-money-bills" %}
+
+{% trans "Contracts" as text %}
+{% include "sidebar_item.html" with label="project-contract" text=text icon="fa-file-signature" %}
+
+{% include "sidebar_toggle.html" with text="" target='sidebar' %}

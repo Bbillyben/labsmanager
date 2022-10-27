@@ -34,8 +34,11 @@
                 <th data-sortable="true" class="th-inner sortable both" data-field="amount" data-formatter="moneyFormatter">
                     {% trans 'Amount' %}
                 </th>
-                {% if perms.contract.can_change %}
-                <th data-sortable="false" class="th-inner" data-field="admin_action" data-user="{{ request.user.id }}"  data-formatter="adminContractExpenseFormatter">
+                {% if perms.expense.change_contract_expense or perms.expense.delete_contract_expense %}
+                <th data-sortable="false" class="th-inner" data-field="admin_action" data-user="{{ request.user.id }}"  data-formatter="adminContractExpenseFormatter"
+                data-can-change="{{ perms.expense.change_contract_expense }}"
+                data-can-delete="{{ perms.expense.delete_contract_expense }}"
+                >
                     {% trans 'Action' %}
                 </th>
                 {% endif %}

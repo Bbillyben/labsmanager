@@ -2,7 +2,7 @@ from multiprocessing import context
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 from staff.models import Employee, Employee_Status, Employee_Type, Team, TeamMate
-from expense.models import Contract, Contract_expense, Contract_type
+from expense.models import Expense_point, Contract, Contract_expense, Contract_type
 from fund.models import Fund, Cost_Type, Fund_Item, Fund_Institution
 from project.models import Project, Institution, Participant
 from django.db.models import Sum
@@ -157,7 +157,12 @@ class FundProjectSerialize(serializers.ModelSerializer):
     def get_amount(self,obj):
         return Fund_Item.objects.filter(fund=obj.pk).aggregate(Sum('amount'))["amount__sum"]
 
-    
+class ExpensePOintSerializer(serializers.ModelSerializer):
+    fund=FundSerialize(many=False, read_only=True)
+    type=CostTypeSerialize(many=False, read_only=True)
+    class Meta:
+        model = Expense_point
+        fields = ['pk', 'entry_date', 'value_date', 'fund', 'type', 'amount']       
 # ---------------------------------------------------------------------------------------- #
 # ---------------------------    APP Expense / SERIALISZER    --------------------------- #
 # ---------------------------------------------------------------------------------------- #
@@ -220,7 +225,7 @@ class EmployeeSerialize(serializers.ModelSerializer):
     projects=ParticipantSerializer(many=True, read_only=True)
     class Meta:
         model = Employee
-        fields = ['pk', 'user', 'birth_date', 'entry_date', 'exit_date','is_team_leader','is_team_mate','get_status','is_active',
+        fields = ['pk','first_name', 'last_name', 'user', 'birth_date', 'entry_date', 'exit_date','is_team_leader','is_team_mate','get_status','is_active',
                   'contracts', 'contracts_quotity',
                   'projects','projects_quotity',
                   ]

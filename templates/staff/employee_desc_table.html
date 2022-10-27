@@ -9,7 +9,7 @@
         <tr>
             <td><i class="fas fa-id-card"></i></td>
             <td  class="desc_title">{% trans 'Employee Id' %}</td>
-            <td>{{employee.user.first_name }} {{employee.user.last_name }}</td>
+            <td>{{employee.first_name }} {{employee.last_name }}</td>
         </tr>
         <tr>
             <td><i class="fas fa-birthday-cake"></i></td>
@@ -40,7 +40,7 @@
             <td><i class="fas fa-user"></i></td>
             <td  class="desc_title">{% trans 'Active' %}</td>
             <td id="employee_valid_th">
-               {% include 'staff/active.html' with user=employee.user %}
+               {% include 'staff/active.html' with user=employee %}
             </td>
         </tr>
     </tbody>

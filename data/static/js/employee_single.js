@@ -142,11 +142,7 @@ function update_activ_btn(){
         user_id = JSON.parse(document.getElementById('user_id').textContent);
         urlAjax= $(this).data('url');
         csrftoken = getCookie('csrftoken');
-
-        if (user_id == item_pk){
-            return;
-        }
-        
+       
 
         $.ajax({
             type:"POST",
@@ -223,8 +219,8 @@ function update_status_btn(){
 function empStatusFormatter(value, row, index, field){
     //console.log('statusFormatter : '+JSON.stringify(value)+" - row : "+JSON.stringify(row) + "  - index :"+index+ " - fiels :"+field+"  # allow :"+this.allow);
     action = "<span class='icon-left-cell btn-group'>";
-    action += "<button class='icon edit_status_emp btn btn-success' data-form-url='/staff/status/"+row.pk+"/update/' ><i type = 'button' class='fas fa-edit'></i></button>";
-    action += "<button class='icon delete_status_emp btn btn-danger ' data-form-url='/staff/status/"+row.pk+"/delete/' ><i type = 'button' class='fas fa-trash'></i></button>";
+    if(this.canChange=='True')action += "<button class='icon edit_status_emp btn btn-success' data-form-url='/staff/status/"+row.pk+"/update/' ><i type = 'button' class='fas fa-edit'></i></button>";
+    if(this.canDelete=='True')action += "<button class='icon delete_status_emp btn btn-danger ' data-form-url='/staff/status/"+row.pk+"/delete/' ><i type = 'button' class='fas fa-trash'></i></button>";
     action += "</span>"
     return action;
 }
@@ -238,8 +234,8 @@ function updateParticipant(){
 function adminActionParticipant(value, row, index, field){
     //console.log(JSON.stringify(row));
     action = "<span class='icon-left-cell btn-group'>";
-    action += "<button class='icon edit_participant btn btn-success' data-form-url='/project/ajax/participant/"+row.pk+"/udpate' ><i type = 'button' class='fas fa-edit'></i></button>";
-    action += "<button class='icon delete_participant btn btn-danger ' data-form-url='/project/ajax/participant/"+row.pk+"/delete' ><i type = 'button' class='fas fa-trash'></i></button>";
+    if(this.canChange=="True")action += "<button class='icon edit_participant btn btn-success' data-form-url='/project/ajax/participant/"+row.pk+"/udpate' ><i type = 'button' class='fas fa-edit'></i></button>";
+    if(this.canDelete=="True")action += "<button class='icon delete_participant btn btn-danger ' data-form-url='/project/ajax/participant/"+row.pk+"/delete' ><i type = 'button' class='fas fa-trash'></i></button>";
     action += "</span>"
     return action;
 }

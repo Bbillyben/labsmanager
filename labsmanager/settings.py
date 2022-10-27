@@ -23,12 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure,klsdh0989è_çà$*ùùjkoijç_015.BHh_dq'
+SECRET_KEY = 'django-insecure,klsdh0989è_çà$*ùùjkoijç_015.BHh_dq' # os.environ.get("SECRET_KEY") # 'django-insecure,klsdh0989è_çà$*ùùjkoijç_015.BHh_dq'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True # int(os.environ.get("DEBUG", default=0))
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS =  ['*'] # os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
 
 # Application definition
@@ -54,6 +54,8 @@ INSTALLED_APPS = [
     'django_pivot',                 # https://github.com/martsberger/django-pivot
     'auditlog',                     # https://django-auditlog.readthedocs.io/en/latest/installation.html
     #                                 # https://django-easy-pdf.readthedocs.io/en/v0.2.0-dev1/installation.html
+    'dbbackup',                     # https://django-dbbackup.readthedocs.io/en/master/installation.html
+    'tabular_permissions',          # https://pypi.org/project/django-tabular-permissions/
     
     # App
     'staff.apps.StaffConfig',
@@ -103,9 +105,17 @@ WSGI_APPLICATION = 'labsmanager.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'data' / 'dbs' / 'db.sqlite3',
+    # },
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'data' / 'dbs' / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'labsmanager',
+        'USER': 'labsmanager',
+        'PASSWORD': 'labsManagerPass',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
@@ -146,6 +156,7 @@ USE_TZ = True
 
 # The filesystem location for served static files
 
+STATIC_ROOT = '/home/labsmanager/data/static/'
 
 STATIC_URL = 'static/'
 

@@ -20,18 +20,20 @@ function initializeContractsTable(callback_contract=undefined, callback_contract
 /// contract Table
 
 function adminActionContract(value, row, index, field){
+    //console.log("adminActionContract   ------------------------------------------------------------------------------------------------- ")
+
     action = "<span class='icon-left-cell btn-group'>";
-    action += "<button class='icon edit_contract btn btn-success' data-form-url='/expense/ajax/contract/"+row.pk+"/update' ><i type = 'button' class='fas fa-edit'></i></button>";
+    if(this.canChange=='True')action += "<button class='icon edit_contract btn btn-success' data-form-url='/expense/ajax/contract/"+row.pk+"/update' ><i type = 'button' class='fas fa-edit'></i></button>";
     action += "<button class='icon show_contract btn btn-secondary' data-contract='"+row.pk+"' ><i type = 'button' class='fas fa-toolbox'></i></button>";
-    action += "<button class='icon delete_contract btn btn-danger ' data-form-url='/expense/ajax/contract/"+row.pk+"/delete' ><i type = 'button' class='fas fa-trash'></i></button>";
+    if(this.canDelete=='True')action += "<button class='icon delete_contract btn btn-danger ' data-form-url='/expense/ajax/contract/"+row.pk+"/delete' ><i type = 'button' class='fas fa-trash'></i></button>";
     action += "</span>"
     return action;
 }
 /// contract Expense Table
 function adminContractExpenseFormatter(value, row, index, field){
     action = "<span class='icon-left-cell btn-group'>";
-    action += "<button class='icon edit_item btn btn-success' data-form-url='/expense/ajax/contractitem/"+row.pk+"/update' ><i type = 'button' class='fas fa-edit'></i></button>";
-    action += "<button class='icon delete_item btn btn-danger ' data-form-url='/expense/ajax/contractitem/"+row.pk+"/delete' ><i type = 'button' class='fas fa-trash'></i></button>";
+    if(this.canChange=='True')action += "<button class='icon edit_item btn btn-success' data-form-url='/expense/ajax/contractitem/"+row.pk+"/update' ><i type = 'button' class='fas fa-edit'></i></button>";
+    if(this.canDelete=='True')action += "<button class='icon delete_item btn btn-danger ' data-form-url='/expense/ajax/contractitem/"+row.pk+"/delete' ><i type = 'button' class='fas fa-trash'></i></button>";
     action += "</span>";
     return action;
 }
@@ -79,6 +81,11 @@ function updateContractBtnHandler(){
                     //console.log(JSON.stringify(err));
                 }
             }) 
+            // set the barck grod color
+            rows=$(this).closest('tbody');
+            rows.find('tr').each(function(){$(this).removeClass('select-row')});
+            row=$(this).closest('tr');
+            row.addClass('select-row');
 
         })
     });

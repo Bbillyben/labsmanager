@@ -1081,3 +1081,7 @@ a {
 .super-small{
     font-size:0.6em;
 }
+
+.select-row{
+    background-color: #0d4b4b;
+}
