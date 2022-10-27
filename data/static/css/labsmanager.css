@@ -1070,9 +1070,7 @@ a {
 }
 
 
-.table-desc{
 
-}
 .table-desc .desc_title{
     font-size: small;
     font-style: italic;
@@ -1082,6 +1080,26 @@ a {
     font-size:0.6em;
 }
 
+
+/* ################  for table customisation */
 .select-row{
-    background-color: #0d4b4b;
+    background-color: #7ed4d4;
+}
+.table-desc{
+
+}
+/* table simple */
+tr.row-Sum{
+    background-color: gray;
+}
+
+tr.row-Sum td:last-child{
+    background-color: rgb(43, 33, 33);
+    color: white !important;
+}
+tr.row-Sum td[data-negative] {
+    color: #8a0f0f !important;
+  }
+col.column-Sum{
+    background-color: gray;
 }

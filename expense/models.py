@@ -68,11 +68,21 @@ class Expense_point(models.Model):
         cts=Cost_Type.objects.all()
         bp = []
         for ct in cts:
-            bpT=Budget_point.objects.filter(type=ct.pk, fund=fundPk).order_by('-value_date').first()
+            bpT=Expense_point.objects.filter(type=ct.pk, fund=fundPk).order_by('-value_date').first()
             if bpT:
                 bp.append(bpT)
         return bp
-        
+    
+    @classmethod
+    def get_lastpoint_by_fund_qs(self, fundPk):
+        # get cost type
+        cts=Cost_Type.objects.all()
+        bp = Expense_point.objects.none()
+        for ct in cts:
+            bpT=Expense_point.objects.filter(type=ct.pk, fund=fundPk).order_by('-value_date').first()
+            if bpT:
+                bp= bp.union(Expense_point.objects.filter(pk=bpT.pk))
+        return bp 
         
         
         

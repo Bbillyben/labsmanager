@@ -4,6 +4,7 @@ from . import views, views_modal
 urlpatterns = [
     # path('', views.ProjectIndexView.as_view(), name='project_index'),
     # path('<pk>', views.ProjectView.as_view(), name='project_single'),
+    path('<pk>/fundoverview/', views.get_fund_global_overview, name='fund_overview_single'),
     
     
     # for sub template 

@@ -5,6 +5,7 @@ from .ajax import ajax_project
 urlpatterns = [
     path('', views.ProjectIndexView.as_view(), name='project_index'),
     path('<pk>', views.ProjectView.as_view(), name='project_single'),
+    path('<pk>/fundoverview/', views.get_project_fund_overview, name='project_fund_overview'),
     
     
     # for sub template 

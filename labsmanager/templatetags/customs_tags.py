@@ -1,7 +1,8 @@
+from decimal import Decimal
 from django import template
 from django.urls import reverse
 from django.utils.safestring import mark_safe
-
+import math
 register = template.Library()
 
 @register.simple_tag(takes_context=True)
@@ -28,7 +29,8 @@ def quotityFormat(context, dynvarname):
 @register.simple_tag(takes_context=True)
 def moneyFormat(context, dynvarname):
     """ Returns the value of dynvarname into the context """
-    if dynvarname != None:
+    print(str(type(dynvarname)))
+    if dynvarname != None and (type(dynvarname) == int or type(dynvarname)==float or type(dynvarname)==Decimal) and math.isnan(dynvarname)==False :
         val =  "{:0,.0f}€".format(dynvarname).replace(',', ' ') 
     else:
          val="-" 

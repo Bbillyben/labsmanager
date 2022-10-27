@@ -114,40 +114,67 @@ function updateFundItemBtnHandler(){
     });
 
 }
-
+// AJAX Function to update related tables
+function updateFundItemTableAjax(fundPk, csrftoken){
+    $.ajax({
+        type:"POST",
+        url: "/fund/ajax/"+fundPk+"/items/", 
+        data:{
+                pk:fundPk,
+                csrfmiddlewaretoken: csrftoken,
+        },
+        success: function( data )
+        {
+            $('#fund_item_detail').html(data);
+            updateFundItem();                    
+        },
+        error:function( err )
+        {
+            $("body").html(err.responseText)
+            //console.log(JSON.stringify(err));
+        }
+    }) 
+}
+function updateFundOverviewTableAjax(fundPk, csrftoken){
+    $.ajax({
+        type:"POST",
+        url: "/fund/"+fundPk+"/fundoverview/", 
+        data:{
+                pk:fundPk,
+                csrfmiddlewaretoken: csrftoken,
+        },
+        success: function( data )
+        {
+            $('#fund_overview').html(data);
+            updateFundItem();                    
+        },
+        error:function( err )
+        {
+            $("body").html(err.responseText)
+            //console.log(JSON.stringify(err));
+        }
+    }) 
+}
 function updateFundBtnHandler(){   
 
     $(".show_fund").each(function () {
+        
+            $(this).click(function(e){
+                e.preventDefault();
+                fundPk=$(this).data("fund");
+                csrftoken = getCookie('csrftoken');
+                // fund overview
+                if($('#fund_overview').exists())updateFundOverviewTableAjax(fundPk, csrftoken);
+                // Fund item
+                if($('#fund_item_detail').exists())updateFundItemTableAjax(fundPk, csrftoken);
+                // set the barck grod color
+                rows=$(this).closest('tbody');
+                rows.find('tr').each(function(){$(this).removeClass('select-row')});
+                row=$(this).closest('tr');
+                row.addClass('select-row');
 
-        $(this).click(function(e){
-            e.preventDefault();
-            fundPk=$(this).data("fund");
-            csrftoken = getCookie('csrftoken');
-            $.ajax({
-                type:"POST",
-                url: "/fund/ajax/"+fundPk+"/items/", 
-                data:{
-                        pk:fundPk,
-                        csrfmiddlewaretoken: csrftoken,
-                },
-                success: function( data )
-                {
-                    $('#fund_item_detail').html(data);
-                    updateFundItem();                    
-                },
-                error:function( err )
-                {
-                     $("body").html(err.responseText)
-                    //console.log(JSON.stringify(err));
-                }
-            }) 
-            // set the barck grod color
-            rows=$(this).closest('tbody');
-            rows.find('tr').each(function(){$(this).removeClass('select-row')});
-            row=$(this).closest('tr');
-            row.addClass('select-row');
-
-        })
+            })
+        
 
     });
 

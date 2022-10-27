@@ -58,6 +58,10 @@ class Fund(models.Model):
     ref= models.CharField(max_length=30, blank=True, verbose_name=_('Reference'))
     history = AuditlogHistoryField()
     
+    @property
+    def getId(self):
+        return f'{self.project.name} | {self.funder.short_name} -> {self.institution.short_name}'
+    
     def clean_end_date(self):
         ## print("EXIT DATE CLEAN Fund Model :"+str(self.cleaned_data))
         if( self.end_date != None and (self.start_date == None or self.start_date > self.end_date)):
