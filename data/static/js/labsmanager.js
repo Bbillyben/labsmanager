@@ -55,6 +55,11 @@ function moneyDisplay(value){
 }
 
 /**
+ * test if a selector exist
+ * @returns 
+ */
+jQuery.fn.exists = function(){ return this.length > 0; }
+/**
  * Determine whether the given `input` is iterable.
  *
  * @returns {Boolean}
@@ -103,13 +108,27 @@ function styleAlignMiddle(value, row, index, field){
       return response;
 }
 
+function employeeFormatter(value, row, index, field){
+    if(!isIterable(value)){
+        value=[{"employee":value}];
+    }
+    response = "";
+    for (const item of value) {
+        console.log("item :"+JSON.stringify(item));
+
+            tm ="<a href='/staff/employee/"+item.employee.pk+"'>"+item.employee.user_name+"</a>";
+            response+= (response.length > 1 ? ', ' : '') + tm;
+      }
+      return response;
+}
+
 function teamMateFormatter(value, row, index, field){
     if(!isIterable(value)){
         value=[{"employee":value}];
     }
     response = "";
     for (const item of value) {
-        //console.log("item :"+JSON.stringify(item));
+        console.log("item :"+JSON.stringify(item));
         if (item.employee.is_active == true){
 
             tm ="<a href='/staff/employee/"+item.employee.pk+"'>"+item.employee.user_name+"</a>";
@@ -119,6 +138,9 @@ function teamMateFormatter(value, row, index, field){
       return response;
 }
 function ParticipantFormatter(value, row, index, field){
+    //console.log('ParticipantFormatter'+JSON.stringify(value))
+    //console.log('ParticipantFormatter'+JSON.stringify(row))
+
     if(!isIterable(value)){
         value=[{"employee":value}];
     }
@@ -176,7 +198,6 @@ function projectFormatter(value, row, index, field){
     response = '<a href="/project/'+value.pk+'" >'+value.name+"</a>";
     return response;
 }
-
 
 
 

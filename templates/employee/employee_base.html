@@ -26,10 +26,12 @@
                 <h4>{% trans 'Employee List' %}</h4>
                 <span class="flex" style="flex-grow: 1;"></span>
                 <div class="btn-group" role="group">
+                    {% if  perms.staff.add_employee %}
                     <button type="button" class="btn btn-success" id="employee_create" title="Create New Employee">
                         <span class='fa fa-user-plus'></span>
                         {% trans 'Add Employee' %}
                     </button>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -56,7 +58,7 @@
                 >
                 <thead class="">
                     <tr>
-                        <th data-sortable="true" class="th-inner sortable both" data-field="user" data-formatter="userFormatter" data-allow="{{ perms.staff.can_change }} " data-sorter="nameSorter" data-search-formatter='false'>
+                        <th data-sortable="true" class="th-inner sortable both" data-field="first_name" data-formatter="userFormatter" data-allow="{{ perms.staff.can_change }} " data-sorter="nameSorter" data-search-formatter='false'>
                             {% trans 'User Id' %}
                         </th>
                         <th data-sortable="true" class="th-inner sortable both" data-field="entry_date">
@@ -91,9 +93,12 @@
                         >
                             {% trans 'is Active' %}
                         </th>
-                        {% if perms.staff.can_change %}
-                        <th data-sortable="false" class="th-inner" data-field="admin_action" data-formatter="adminActionFormatter" data-searchable="false">
-                            {% trans 'Action' %}
+                        {% if  perms.staff.change_employee or perms.staff.delete_employee %}
+                        <th data-sortable="false" class="th-inner" data-field="admin_action" data-formatter="adminActionFormatter" data-searchable="false"
+                        data-can-change="{{ perms.staff.change_employee }}"
+                        data-can-delete="{{ perms.staff.delete_employee }}"
+                        >
+                        {% trans 'Action' %}
                         </th>
                         {% endif %}
                     </tr>
@@ -125,9 +130,6 @@ function SetCliCListenerStaff(){
         data_action = $(this).data('action-type');
         item_pk= $(this).data('pk');
         user_id = JSON.parse(document.getElementById('user_id').textContent);
-        if (user_id == item_pk){
-            return;
-        }
         $.ajax({
             type:"POST",
             url: "{% url 'ajax_staff' %}",

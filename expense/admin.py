@@ -1,5 +1,5 @@
 from django.contrib import admin
-from expense.models import Expense, Contract_expense, Contract, Contract_type
+from expense.models import Expense_point, Expense, Contract_expense, Contract, Contract_type
 from fund.models import Fund
 from django.utils.translation import gettext_lazy as _
 from django.forms.models import BaseInlineFormSet
@@ -58,9 +58,13 @@ class ContractAdmin(admin.ModelAdmin):
     get_fund_name.short_description = _('Funder')
     get_fund_name.admin_order_field = 'funder__short_name'
     
-
+class ExpenseTimePointAdmin(admin.ModelAdmin):
+    list_display = ('fund','type','value_date', 'amount', 'entry_date')
+    list_filter=('fund' ,'value_date', 'type')
+    
 # Register your models here.
 admin.site.register(Expense)
 admin.site.register(Contract_expense)
 admin.site.register(Contract, ContractAdmin)
 admin.site.register(Contract_type)
+admin.site.register(Expense_point,ExpenseTimePointAdmin)

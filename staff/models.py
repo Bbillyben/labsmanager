@@ -19,15 +19,18 @@ class Employee(models.Model):
         verbose_name_plural = _("Employee")
 
     """Model for employee"""
-    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name=_('User'))
+    first_name=models.CharField(max_length=40, blank=False, null=False)
+    last_name=models.CharField(max_length=40, blank=False, null=False)
+    user = models.OneToOneField(User, null=True, blank=True, on_delete=models.CASCADE, verbose_name=_('User'))
     birth_date = models.DateField(null=True, blank=True, verbose_name=_('Birth Date'))
     entry_date = models.DateField(null=True, blank=True, verbose_name=_('Entry Date'))
     exit_date = models.DateField(null=True, blank=True, verbose_name=_('Exit Date'))
+    is_active=models.BooleanField(default=True, null=False)
     history = AuditlogHistoryField()
     
     @property
     def user_name(self):
-        return self.user.first_name+" "+self.user.last_name
+        return self.first_name+" "+self.last_name
     
     @property
     def is_team_leader(self):
@@ -43,9 +46,6 @@ class Employee(models.Model):
             return True
         return False
     
-    @property
-    def is_active(self):
-        return self.user.is_active
     
     @property
     def get_status(self):
@@ -74,7 +74,7 @@ class Employee(models.Model):
     
     def __str__(self):
         """Return a string representation of the Employee (for use in the admin interface)"""
-        return  f"{self.user.first_name} {self.user.last_name} ({self.user.username})"
+        return  f"{self.first_name} {self.last_name}"
 
 
 
@@ -104,7 +104,7 @@ class Employee_Status(models.Model):
     
     def __str__(self):
         """Return a string representation of the Status (for use in the admin interface)"""
-        return f"{self.employee.user.first_name} {self.employee.user.last_name}  : {self.type.name}"
+        return f"{self.employee.first_name} {self.employee.last_name}  : {self.type.name}"
     
 
 class Employee_Type(models.Model):

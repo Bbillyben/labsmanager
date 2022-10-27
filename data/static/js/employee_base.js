@@ -5,10 +5,10 @@ function simpleFormatter(value, row, index, field){
         case 'is_active':
           if(this.allow == 'True'){
             response=(value ? '<i class="fa fa-toggle-off" aria-hidden="true" style="color:green"></i>' : '<i class="fa fa-toggle-on" aria-hidden="true" style="color:red"></i>');
-            response = '<span type="button" class="user_action" data-action-type="activate_user_'+(!value)+'" data-pk="'+row.user.pk+'">'+response+'</span>';
+            response = '<span type="button" class="user_action" data-action-type="activate_user_'+(!value)+'" data-pk="'+row.pk+'">'+response+'</span>';
             response += '<span style="display:none">'+ value+"</span>";
           }else{
-            response=(row.user.is_active ? '<img src="/static/admin/img/icon-yes.svg" alt="True">' : '<img src="/static/admin/img/icon-no.svg" alt="False">');
+            response=(value ? '<img src="/static/admin/img/icon-yes.svg" alt="True">' : '<img src="/static/admin/img/icon-no.svg" alt="False">');
           }
             break;
         default:
@@ -39,7 +39,7 @@ function simpleStyle(value, row, index, field){
 
 function userFormatter(value, row, index, field){
     //console.log('userFormatter : '+JSON.stringify(value)+" - row : "+JSON.stringify(row) + "  - index :"+index+ " - fiels :"+field+"  # allow :"+this.allow);
-    response =  '<span class="icon-right-cell"><a href="/staff/employee/'+row.pk+'" title="/staff/employee/'+row.ipkd+'/"> '+value.first_name+" "+value.last_name+'</a>';
+    response =  '<span class="icon-right-cell"><a href="/staff/employee/'+row.pk+'" title="/staff/employee/'+row.ipkd+'/"> '+row.first_name+" "+row.last_name+'</a>';
     response += '<span class="icon-left-cell">';
   if(row.is_team_leader){
     response+='<i class="fas fa-crown icon-spaced" style="color: coral" title="team leader"></i>'
@@ -66,8 +66,8 @@ function statusFormatter(value, row, index, field){
 
 function adminActionFormatter(value, row, index, field){
   action = "<span class='icon-left-cell btn-group'>";
-  action += "<button class='icon edit_employee btn btn-success' data-form-url='/staff/employee/"+row.pk+"/udpate' ><i type = 'button' class='fas fa-edit'></i></button>";
-  action += "<button class='icon delete_employee btn btn-danger ' data-form-url='/staff/employee/"+row.pk+"/delete' ><i type = 'button' class='fas fa-trash'></i></button>";
+  if(this.canChange=='True')action += "<button class='icon edit_employee btn btn-success' data-form-url='/staff/employee/"+row.pk+"/udpate' ><i type = 'button' class='fas fa-edit'></i></button>";
+  if(this.canDelete=='True') action += "<button class='icon delete_employee btn btn-danger ' data-form-url='/staff/employee/"+row.pk+"/delete' ><i type = 'button' class='fas fa-trash'></i></button>";
   action += "</span>"
   return action;
 }

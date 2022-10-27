@@ -6,7 +6,7 @@ from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
 from . import serializers  # UserSerializer, GroupSerializer, EmployeeSerialize, EmployeeStatusSerialize, ContractEmployeeSerializer, TeamSerializer, ParticipantSerializer, ProjectSerializer
 from staff.models import Employee, Employee_Status, Team, TeamMate
-from expense.models import Contract, Contract_expense
+from expense.models import Expense_point, Contract, Contract_expense
 from fund.models import Fund, Fund_Item
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -98,7 +98,13 @@ class FundViewSet(viewsets.ModelViewSet):
     def items(self, request, pk=None):
         fund = self.get_object()
         t1=Fund_Item.objects.filter(fund=fund.pk)
-        return JsonResponse(serializers.FundItemSerialize(t1, many=True).data, safe=False) 
+        return JsonResponse(serializers.FundItemSerialize(t1, many=True).data, safe=False)
+    
+    
+    @action(methods=['get'], detail=True, url_path='budgetpoint', url_name='budget_fund')
+    def fundBudgetPOint(self, request, pk=None):
+        BP = Expense_point.get_lastpoint_by_fund(pk)
+        return JsonResponse(serializers.ExpensePOintSerializer(BP, many=True).data, safe=False) 
     
 class ContractViewSet(viewsets.ModelViewSet):
     queryset = Contract.objects.all()
@@ -111,3 +117,10 @@ class ContractViewSet(viewsets.ModelViewSet):
         t1=Contract_expense.objects.filter(contract=cont.pk)
         return JsonResponse(serializers.ContractExpenseSerializer_min(t1, many=True).data, safe=False) 
 
+
+
+class BudgetPOintViewSet(viewsets.ModelViewSet):
+    queryset = Expense_point.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = serializers.ExpensePOintSerializer
+    

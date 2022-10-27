@@ -85,8 +85,8 @@ function updateAdminBtnHandler(){
 
 function adminActionFormatter(value, row, index, field){
     action = "<span class='icon-left-cell btn-group'>";
-    action += "<button class='icon edit_project btn btn-success' data-form-url='/project/ajax/"+row.pk+"/udpate' ><i type = 'button' class='fas fa-edit'></i></button>";
-    action += "<button class='icon delete_project btn btn-danger ' data-form-url='/project/ajax/"+row.pk+"/delete' ><i type = 'button' class='fas fa-trash'></i></button>";
+    if(this.canChange=="True")action += "<button class='icon edit_project btn btn-success' data-form-url='/project/ajax/"+row.pk+"/udpate' ><i type = 'button' class='fas fa-edit'></i></button>";
+    if(this.canDelete=="True")action += "<button class='icon delete_project btn btn-danger ' data-form-url='/project/ajax/"+row.pk+"/delete' ><i type = 'button' class='fas fa-trash'></i></button>";
     action += "</span>"
     return action;
   }

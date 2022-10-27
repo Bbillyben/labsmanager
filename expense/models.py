@@ -2,11 +2,11 @@ from pyexpat import model
 from statistics import mode
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from fund.models import Fund, Cost_Type
+from fund.models import Fund, Cost_Type, Fund_Item
 from staff.models import Employee
 from django.db.models import Q, Sum
 
-from labsmanager.models_utils import PERCENTAGE_VALIDATOR    
+from labsmanager.models_utils import PERCENTAGE_VALIDATOR, NEGATIVE_VALIDATOR    
 
 from auditlog.models import AuditlogHistoryField
 from auditlog.registry import auditlog
@@ -44,6 +44,43 @@ class Contract_expense(Expense):
     contract= models.ForeignKey('Contract', on_delete=models.CASCADE, verbose_name=_('Related Contract'))
     
 
+class Expense_point(models.Model):
+    class Meta:
+        verbose_name = _("Total Expense Timepoint")
+        unique_together = ('value_date', 'fund', 'type')
+    
+    entry_date = models.DateField(null=False, blank=False, verbose_name=_('Entry Date'))
+    value_date = models.DateField(null=False, blank=False, verbose_name=_('value Date'))
+    fund=models.ForeignKey(Fund, on_delete=models.CASCADE, verbose_name=_('Related Fund'))
+    type = models.ForeignKey(Cost_Type, on_delete=models.CASCADE, verbose_name=_('Type'))
+    amount=models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Amount'), validators=NEGATIVE_VALIDATOR,)
+    history = AuditlogHistoryField()
+    
+    
+    def clean_amount(self):
+        if self.cleaned_data['amount']>0:
+            self.cleaned_data['amount']=-self.cleaned_data['amount']
+        return self.cleaned_data['amount']
+    
+    @classmethod
+    def get_lastpoint_by_fund(self, fundPk):
+        # get cost type
+        cts=Cost_Type.objects.all()
+        bp = []
+        for ct in cts:
+            bpT=Budget_point.objects.filter(type=ct.pk, fund=fundPk).order_by('-value_date').first()
+            if bpT:
+                bp.append(bpT)
+        return bp
+        
+        
+        
+        
+    
+    def __str__(self):
+        return f'{self.fund.__str__()}/{self.type} - {self.value_date}'
+    
+    
 class Contract_type(models.Model):
     class Meta:
         verbose_name = _("Contract Type")
@@ -81,3 +118,4 @@ class Contract(models.Model):
 auditlog.register(Expense)
 auditlog.register(Contract_expense)
 auditlog.register(Contract)
+auditlog.register(Expense_point)

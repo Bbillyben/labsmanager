@@ -45,6 +45,7 @@ router.register(r'employee', apiviews.EmployeeViewSet, basename='employee')
 router.register(r'project', apiviews.ProjectViewSet, basename='project')
 router.register(r'fund', apiviews.FundViewSet, basename='fund')
 router.register(r'contract', apiviews.ContractViewSet, basename='contract')
+router.register(r'budget', apiviews.BudgetPOintViewSet, basename='budget')
 
 
 urlpatterns += [

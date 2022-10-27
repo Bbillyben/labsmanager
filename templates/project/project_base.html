@@ -26,10 +26,12 @@
                 <h4>{% trans 'Project List' %}</h4>
                 <span class="flex" style="flex-grow: 1;"></span>
                 <div class="btn-group" role="group">
+                    {% if perms.project.add_project %}
                     <button type="button" class="btn btn-success" id="project_create" title="Create New Project">
                         <span class='fa fa-briefcase-medical'></span>
                         {% trans 'Add Project' %}
                     </button>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -77,8 +79,13 @@
                         <th data-sortable="true" class="th-inner sortable both" data-field="status" data-formatter="basicBoolean" data-cell-style="styleAlignMiddle" >
                             {% trans 'Status' %}
                         </th>
-                        {% if perms.staff.can_change %}
-                        <th data-sortable="false" class="th-inner" data-field="admin_action" data-formatter="adminActionFormatter">
+                        
+                        {% if perms.project.change_project or perms.project.delete_participant %}
+                        <th data-sortable="false" class="th-inner" data-field="admin_action" data-formatter="adminActionFormatter"
+                        data-can-change="{{ perms.project.change_project }}"
+                        data-can-delete="{{ perms.project.delete_participant }}"
+                        
+                        >
                             {% trans 'Action' %}
                         </th>
                         {% endif %}

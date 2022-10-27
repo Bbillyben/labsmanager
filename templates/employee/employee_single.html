@@ -48,7 +48,7 @@
                     <div class="card">
                         <div class="row">
                             <div class="col" id="employee_dec_table">
-                                
+                                <!-- here is loaded the table description of the user-->
 
                             </div>
                         </div>
@@ -81,8 +81,12 @@
                                             <th data-sortable="true" class="th-inner sortable both" data-field="is_contractual">
                                                 {% trans 'Job type' %}
                                             </th>
-                                            {% if perms.staff.can_change %}
-                                            <th data-sortable="false" class="th-inner" data-field="admin_action" data-user="{{ request.user.id }}"  data-formatter="empStatusFormatter">
+                                            {% if perms.staff.change_employee_status or perms.staff.delete_employee_status %}
+                                            <th data-sortable="false" class="th-inner" data-field="admin_action" 
+                                            data-can-change="{{ perms.staff.change_employee_status }}"
+                                            data-can-delete="{{ perms.staff.delete_employee_status }}"
+                                            data-formatter="empStatusFormatter"
+                                            >
                                                 {% trans 'Action' %}
                                             </th>
                                             {% endif %}
@@ -180,8 +184,11 @@
                                         <th data-sortable="true" class="th-inner sortable both" data-field="quotity" data-formatter="quotityFormatter">
                                             {% trans 'Quotity' %}
                                         </th>
-                                        {% if perms.staff.can_change %}
-                                        <th data-sortable="false" class="th-inner" data-field="admin_action" data-formatter="adminActionParticipant" >
+                                        {% if perms.project.change_participant or project.delete_participant %}
+                                        <th data-sortable="false" class="th-inner" data-field="admin_action" data-formatter="adminActionParticipant" 
+                                        data-can-change="{{ perms.project.change_participant }}"
+                                        data-can-delete="{{ perms.project.delete_participant }}"
+                                        >
                                             {% trans 'Action' %}
                                         </th>
                                         {% endif %}

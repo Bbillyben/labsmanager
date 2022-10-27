@@ -27,13 +27,14 @@ class TeamMateForm(forms.ModelForm):
 class EmployeeModelForm(BSModalModelForm):
     class Meta:
         model = Employee
-        fields = ['user', 'birth_date', 'entry_date', 'exit_date']
+        fields = ['first_name', 'last_name', 'birth_date', 'entry_date', 'exit_date', ]
         
     def __init__(self, *args, **kwargs):
         super(EmployeeModelForm, self).__init__(*args, **kwargs)
         instance = getattr(self, 'instance', None)
         if instance and instance.pk:
-            self.fields['user'].disabled = True
+            self.fields['first_name'].disabled = True
+            self.fields['last_name'].disabled = True
             
     def clean_exit_date(self):
         # print("EXIT DATE CLEAN"+str(self.cleaned_data))

@@ -9,6 +9,8 @@ from django.utils.translation import gettext_lazy as _
 from django import forms
 from fund.models import Cost_Type, Fund
 
+from datetime import date
+
 class ContractModelForm(BSModalModelForm):
     class Meta:
         model = models.Contract
@@ -52,6 +54,11 @@ class ContractModelForm(BSModalModelForm):
         if( self.cleaned_data['end_date'] != None and (self.cleaned_data['start_date'] == None or self.cleaned_data['start_date'] > self.cleaned_data['end_date'])):
             raise ValidationError(_('Exit Date (%s) should be later than entry date (%s) ') % (self.cleaned_data['end_date'], self.cleaned_data['start_date']))
         return self.cleaned_data['end_date']
+    
+    def clean_is_active(self):
+        if self.cleaned_data['is_active']==False and (self.cleaned_data['end_date']==None):
+             raise ValidationError(_('If A Contract is turn inactive, it should have a end Dat '))
+        return self.cleaned_data['is_active']
     
 class ContractExpenseModelForm(BSModalModelForm):
     class Meta:
