@@ -136,7 +136,7 @@ function updateMainButton(){
             error:function( err )
             {
                  $("body").html(err.responseText)
-                console.log(JSON.stringify(err));
+                //console.log(JSON.stringify(err));
             }
         })
     });
@@ -167,6 +167,7 @@ function update_project(){
             //console.log(JSON.stringify(err));
         }
     })    
+    updateGeneralFundOverview();
 }
 
 
@@ -177,7 +178,7 @@ function updateParticipant(){
 }
 function updateParticipantBtnHandler(){
     $(".edit_participant").each(function () {
-        console.log("updateProjectTable :"+this);
+        //console.log("updateProjectTable :"+this);
         $(this).modalForm({
             modalID: "#create-modal",
             modalContent: ".modal-content",
@@ -229,7 +230,29 @@ function adminActionParticipant(value, row, index, field){
 
 // ----------------------  Fund & Fund Item  ------------------- //
 
-
+// fund general overview
+function updateGeneralFundOverview(){
+    csrftoken = getCookie('csrftoken');
+    $.ajax({
+        type:"POST",
+        url: project_id+"/fundoverview/",
+        data:{
+                pk:project_id,
+                csrfmiddlewaretoken: csrftoken,
+        },
+        success: function( data )
+        {
+            $('#fund_project_overview_detail').html(data);
+            updateMainButton();
+            
+        },
+        error:function( err )
+        {
+             $("body").html(err.responseText)
+            //console.log(JSON.stringify(err));
+        }
+    })    
+}
 
 
 

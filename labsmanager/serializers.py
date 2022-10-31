@@ -136,7 +136,7 @@ class FundSerialize(serializers.ModelSerializer):
     project=ProjectSerializer(many=False, read_only=True)
     class Meta:
         model = Fund
-        fields = ['pk', 'project', 'funder', 'institution', 'ref'] 
+        fields = ['pk', 'project', 'funder', 'institution', 'ref', 'is_active',] 
           
 class FundItemSerialize(serializers.ModelSerializer):
     fund=FundSerialize(many=False, read_only=True)
@@ -152,7 +152,7 @@ class FundProjectSerialize(serializers.ModelSerializer):
     
     class Meta:
         model = Fund
-        fields = ['pk', 'funder', 'institution', 'start_date', 'end_date', 'ref', 'amount'] 
+        fields = ['pk', 'funder', 'institution', 'start_date', 'end_date', 'ref', 'amount', 'is_active',] 
         
     def get_amount(self,obj):
         return Fund_Item.objects.filter(fund=obj.pk).aggregate(Sum('amount'))["amount__sum"]

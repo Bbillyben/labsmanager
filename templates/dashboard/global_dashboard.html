@@ -1,0 +1,32 @@
+
+{% load i18n %}
+{% load static %}
+
+<div id='detail-panels'>
+    <div class="panel" id="panel-project" style="display: block;">
+        <div class="panel-heading">
+            <div class="d-flex flex-wrap">
+                <h4>{% trans 'Dashboard' %}</h4>
+                
+            </div>
+        </div>
+
+    </div>
+    <!-- COnteneur -->
+    <div class="panel-content">
+        <div class="container" style="max-width: 100%; padding: 5px;">
+            <div class="row">
+                <div class="col" id="detail-panel-left">
+                    
+                </div><!-- end card panel left -->
+                <div class="col" id="detail-panel-right">
+                </div><!-- end card panel left -->
+            </div>
+        </div><!-- end container-->
+    </div> <!-- end panel content -->
+</div>
+
+
+{% block js_load %} 
+
+{% endblock %}

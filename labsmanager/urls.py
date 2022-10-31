@@ -30,6 +30,7 @@ urlpatterns = [
     path('project/', include('project.urls')),              # for project model
     path('fund/', include('fund.urls')),              # for project model
     path('expense/', include('expense.urls')),              # for project model
+    path('dashboard/', include('dashboard.urls'))
 ]
 #  Authentications : 
 urlpatterns += [

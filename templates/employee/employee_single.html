@@ -11,14 +11,14 @@
 {% endblock %}
 
 {% block sidebar %}
-
+    {% include 'employee/employee_sidebar.html' %}
 {% endblock %}
 
 {% block content %}
 {% include 'modals.html' with modal_id='create-modal' modal_title='Employee' %}
 
 <div id='detail-panels'>
-    <div class="panel panel-hidden panel-visible" id="panel-stock" style="display: block;">
+    <div class="panel " id="panel-employee" style="display: block;">
 
         <div class="panel-heading">
             <div class="d-flex flex-wrap">
@@ -104,151 +104,159 @@
                 
                 
             </div> <!-- container # 1-->
-            <div class="row" style=" padding-top: 5px;">
-                <div class="col">
-                    <div class="card">
-                        <div class="row-header">
-                            <div class="d-flex flex-wrap subheading">
-                                <h4><i class="fas fa-file-signature"></i>  {% trans 'Contract' %}</h4> 
-                                <span class="flex" style="flex-grow: 1;"></span>
-                                <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-secondary" id="add_contract" title="Add Item" data-employee="{{ employee.pk }}" >
-                                        <span class='fas fa-plus'></span>
-                                    </button>
+        </div>
+    </div>
+</div>
+    <!-- ######################################    CONTRACT PANEL ############################################### -->
+<div id='detail-panels'>
+    <div class="panel panel-hidden panel-visible" id="panel-employee-contract" style="display: block;">
+        <div class="panel-heading">
+            <div class="d-flex flex-wrap">
+                <h4>{% trans 'Contracts' %}</h4>
+                <span class="flex" style="flex-grow: 1;"></span>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-secondary" id="add_contract" title="Add Item" data-employee="{{ employee.pk }}" >
+                        <span class='fas fa-plus'></span>
+                    </button>
+                </div>             
+            </div>
+        </div>
+        <div class="panel-content"></div>
+            <div class="container" style="max-width: 100%; padding: 5px;">
+                <div class="row" style=" padding-top: 5px;">
+                    <div class="col">
+                        <div class="card">
+                            <div class="row">
+                            {% url 'api:employee-contracts' pk=employee.pk as ContractDataURL %}
+                            {% include 'expense/contract_table.html' with datatype="employee" dataURL=ContractDataURL %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col">
+                        <div class="card" id="contract_expense_detail">
+                            
+                            
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <!-- ######################################    PROJECT PANEL ############################################### -->
+    <div id='detail-panels'>
+        <div class="panel panel-hidden panel-visible" id="panel-employee-project" style="display: block;">
+            <div class="panel-heading">
+                <div class="d-flex flex-wrap">
+                    <h4>{% trans 'Projects Participation' %}</h4>
+                    <span class="flex" style="flex-grow: 1;"></span>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-secondary" id="add_project" title="Create New Project">
+                            <span class='fa fa-plus'></span>
+                        </button>
+                    </div>             
+                </div>
+            </div>
+            <div class="panel-content">
+                <div class="container" style="max-width: 100%; padding: 5px;"></div>
+                    <div class="row" style=" padding-top: 5px;">
+                        <div class="col">
+                            <div class="card">
+                                <div class="row">
+                                    <table
+                                    class='table table-striped table-condensed'
+                                    id="employee_project_table"
+                                    data-id-table="projectTable"
+                                    data-url="/api/employee/{{ employee.pk }}/projects/"
+                                    >
+                                        <thead class="">
+                                            <tr>
+                                                <th data-sortable="true" class="th-inner sortable both" data-field="project" data-formatter="projectFormatter">
+                                                    {% trans 'Project' %}
+                                                </th>
+                                                <th data-sortable="true" class="th-inner sortable both" data-field="project.start_date">
+                                                    {% trans 'Project Start Date' %}
+                                                </th>
+                                                <th data-sortable="true" class="th-inner sortable both" data-field="project.end_date">
+                                                    {% trans 'Project End Date' %}
+                                                </th>
+                                                <th data-sortable="true" class="th-inner sortable both" data-field="project.status" data-cell-style="styleAlignMiddle" data-formatter="basicBoolean">
+                                                    {% trans 'Project Status' %}
+                                                </th>
+                                                <th data-sortable="true" class="th-inner sortable both" data-field="status">
+                                                    {% trans 'Participant Status' %}
+                                                </th>
+                                                <th data-sortable="true" class="th-inner sortable both" data-field="start_date">
+                                                    {% trans 'Start Date' %}
+                                                </th>
+                                                <th data-sortable="true" class="th-inner sortable both" data-field="end_date">
+                                                    {% trans 'End Date' %}
+                                                </th>
+                                                <th data-sortable="true" class="th-inner sortable both" data-field="quotity" data-formatter="quotityFormatter">
+                                                    {% trans 'Quotity' %}
+                                                </th>
+                                                {% if perms.project.change_participant or project.delete_participant %}
+                                                <th data-sortable="false" class="th-inner" data-field="admin_action" data-formatter="adminActionParticipant" 
+                                                data-can-change="{{ perms.project.change_participant }}"
+                                                data-can-delete="{{ perms.project.delete_participant }}"
+                                                >
+                                                    {% trans 'Action' %}
+                                                </th>
+                                                {% endif %}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        </tbody>
+                                    </table>
+
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                        {% url 'api:employee-contracts' pk=employee.pk as ContractDataURL %}
-                        {% include 'expense/contract_table.html' with datatype="employee" dataURL=ContractDataURL %}
-                        </div>
-                    </div>
-                </div>
+                        <div class="col">
+                            <div class="card">
+                                <div class="row-header">
+                                    <div class="d-flex flex-wrap subheading">
+                                        <h4><i class="fas fa-users"></i>  {% trans 'Teams' %}</h4>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <table
+                                    class='table table-striped table-condensed'
+                                    id="employee_team_table"
+                                    data-id-table="teamTable"
+                                    data-url="/api/employee/{{ employee.pk }}/teams/"
+                                    >
+                                        <thead class="">
+                                            <tr>
+                                                <th data-sortable="true" class="th-inner sortable both" data-field="name" >
+                                                    {% trans 'Team Name' %}
+                                                </th>
+                                                <th data-sortable="true" class="th-inner sortable both" data-field="leader" data-formatter="teamMateFormatter">
+                                                    {% trans 'Leader' %}
+                                                </th>
+                                                <th data-sortable="true" class="th-inner sortable both" data-field="team_mate" data-formatter="teamMateFormatter">
+                                                    {% trans 'Team Mate' %}
+                                                </th>
+                                                {% if perms.staff.can_change %}
+                                                <th data-sortable="false" class="th-inner" data-field="admin_action" >
+                                                    {% trans 'Action' %}
+                                                </th>
+                                                {% endif %}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
                 
-
-           <!--  </div>
-            <div class="container" style="max-width: 100%; padding: 5px;"> 
-                -->
-                <div class="col">
-                    <div class="card" id="contract_expense_detail">
-                        
-                        
-                    </div>
-                </div>
-
-            </div>
-            <div class="row" style=" padding-top: 5px;">
-                <div class="col">
-                    <div class="card">
-                        <div class="row-header">
-                            <div class="d-flex flex-wrap subheading">
-                                <h4><i class="fas fa-briefcase"></i>  {% trans 'Projects Participation' %}</h4>
-                                <span class="flex" style="flex-grow: 1;"></span>
-                                <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-secondary" id="add_project" title="Create New Project">
-                                        <span class='fa fa-briefcase-medical'></span>
-                                    </button>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <table
-                            class='table table-striped table-condensed'
-                            id="employee_project_table"
-                            data-id-table="projectTable"
-                            data-url="/api/employee/{{ employee.pk }}/projects/"
-                            >
-                                <thead class="">
-                                    <tr>
-                                        <th data-sortable="true" class="th-inner sortable both" data-field="project" data-formatter="projectFormatter">
-                                            {% trans 'Project' %}
-                                        </th>
-                                        <th data-sortable="true" class="th-inner sortable both" data-field="project.start_date">
-                                            {% trans 'Project Start Date' %}
-                                        </th>
-                                        <th data-sortable="true" class="th-inner sortable both" data-field="project.end_date">
-                                            {% trans 'Project End Date' %}
-                                        </th>
-                                        <th data-sortable="true" class="th-inner sortable both" data-field="project.status" data-cell-style="styleAlignMiddle" data-formatter="basicBoolean">
-                                            {% trans 'Project Status' %}
-                                        </th>
-                                        <th data-sortable="true" class="th-inner sortable both" data-field="status">
-                                            {% trans 'Participant Status' %}
-                                        </th>
-                                        <th data-sortable="true" class="th-inner sortable both" data-field="start_date">
-                                            {% trans 'Start Date' %}
-                                        </th>
-                                        <th data-sortable="true" class="th-inner sortable both" data-field="end_date">
-                                            {% trans 'End Date' %}
-                                        </th>
-                                        <th data-sortable="true" class="th-inner sortable both" data-field="quotity" data-formatter="quotityFormatter">
-                                            {% trans 'Quotity' %}
-                                        </th>
-                                        {% if perms.project.change_participant or project.delete_participant %}
-                                        <th data-sortable="false" class="th-inner" data-field="admin_action" data-formatter="adminActionParticipant" 
-                                        data-can-change="{{ perms.project.change_participant }}"
-                                        data-can-delete="{{ perms.project.delete_participant }}"
-                                        >
-                                            {% trans 'Action' %}
-                                        </th>
-                                        {% endif %}
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                </tbody>
-                            </table>
-
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card">
-                        <div class="row-header">
-                            <div class="d-flex flex-wrap subheading">
-                                <h4><i class="fas fa-users"></i>  {% trans 'Teams' %}</h4>
-                                <!-- <span class="flex" style="flex-grow: 1;"></span>
-                                <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-secondary" id="add_team_participant" title="Create New Participant">
-                                        <span class='fa fa-briefcase-medical'></span>
-                                    </button>
-                                </div> -->
-                            </div>
-                        </div>
-                        <div class="row">
-                            <table
-                            class='table table-striped table-condensed'
-                            id="employee_team_table"
-                            data-id-table="teamTable"
-                            data-url="/api/employee/{{ employee.pk }}/teams/"
-                            >
-                                <thead class="">
-                                    <tr>
-                                        <th data-sortable="true" class="th-inner sortable both" data-field="name" >
-                                            {% trans 'Team Name' %}
-                                        </th>
-                                        <th data-sortable="true" class="th-inner sortable both" data-field="leader" data-formatter="teamMateFormatter">
-                                            {% trans 'Leader' %}
-                                        </th>
-                                        <th data-sortable="true" class="th-inner sortable both" data-field="team_mate" data-formatter="teamMateFormatter">
-                                            {% trans 'Team Mate' %}
-                                        </th>
-                                        {% if perms.staff.can_change %}
-                                        <th data-sortable="false" class="th-inner" data-field="admin_action" >
-                                            {% trans 'Action' %}
-                                        </th>
-                                        {% endif %}
-                                    </tr>
-                                </thead>
-                                <tbody>
-        
-                                </tbody>
-                            </table>
-                        </div>
                     </div>
                 </div>
             </div>
-            
         </div>
 
     </div>
@@ -263,12 +271,14 @@
 {% block js_load %}
 <script type='text/javascript' src="{% static 'js/employee_single.js' %}"></script>
 <script type='text/javascript' src="{% static 'js/tables/contract_tables.js' %}"></script>
+<script type='text/javascript' src="{% static 'js/nav.js' %}"></script>
 <script>
 $(document).ready(function () {
     user_id = JSON.parse(document.getElementById('user_id').textContent);
     employee_id = JSON.parse(document.getElementById('employee_id').textContent);
     initEmployeeSingleView(user_id, employee_id);
     initializeContractsTable(update_employee)
+    enableSidebar('employee')
 })
 </script>
 

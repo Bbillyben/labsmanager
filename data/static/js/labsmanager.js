@@ -114,7 +114,7 @@ function employeeFormatter(value, row, index, field){
     }
     response = "";
     for (const item of value) {
-        console.log("item :"+JSON.stringify(item));
+        //console.log("item :"+JSON.stringify(item));
 
             tm ="<a href='/staff/employee/"+item.employee.pk+"'>"+item.employee.user_name+"</a>";
             response+= (response.length > 1 ? ', ' : '') + tm;
@@ -128,7 +128,7 @@ function teamMateFormatter(value, row, index, field){
     }
     response = "";
     for (const item of value) {
-        console.log("item :"+JSON.stringify(item));
+        //console.log("item :"+JSON.stringify(item));
         if (item.employee.is_active == true){
 
             tm ="<a href='/staff/employee/"+item.employee.pk+"'>"+item.employee.user_name+"</a>";

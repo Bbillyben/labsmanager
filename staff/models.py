@@ -70,7 +70,7 @@ class Employee(models.Model):
     @property
     def projects_quotity(self):
         from project.models import Participant
-        return Participant.objects.filter(employee=self.pk).aggregate(Sum('quotity'))["quotity__sum"]
+        return Participant.objects.filter(Q(employee=self.pk)  & ( Q(end_date__gte=timezone.now()) | Q(end_date=None)) ).aggregate(Sum('quotity'))["quotity__sum"]
     
     def __str__(self):
         """Return a string representation of the Employee (for use in the admin interface)"""

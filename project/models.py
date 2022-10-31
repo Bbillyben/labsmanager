@@ -4,7 +4,7 @@ from django.core.exceptions import ValidationError
 from django.db.models import Q, Sum
 from staff.models import Employee
 from labsmanager.models_utils import PERCENTAGE_VALIDATOR 
-
+from datetime import date
 from auditlog.models import AuditlogHistoryField
 from auditlog.registry import auditlog
 
@@ -45,7 +45,7 @@ class Project(models.Model):
     
     @property
     def get_total_participant_quotity(self):
-        parti=Participant.objects.filter(project=self.pk)
+        parti=Participant.objects.filter(Q(project=self.pk) & (Q(end_date=None) | Q(end_date__gte=date.today())))
         return parti.aggregate(Sum('quotity'))["quotity__sum"]
     
     @property
@@ -53,7 +53,7 @@ class Project(models.Model):
         from expense.models import Contract
         from fund.models import Fund, Fund_Item
         fundP=Fund.objects.filter(project=self.pk).only('pk').all()
-        cont=Contract.objects.filter(fund__in = fundP)
+        cont=Contract.objects.filter(Q(fund__in = fundP) & (Q(end_date=None) | Q(end_date__gte=date.today())))
         return cont.aggregate(Sum('quotity'))["quotity__sum"]   
     
     def __str__(self):
@@ -107,9 +107,22 @@ class Participant(models.Model):
     
     def clean(self):
         project = self.project
-        inuser = Participant.objects.filter(Q(employee=self.employee), Q(project=project), ~Q(pk=self.pk))
+        ## user already in team withou end date
+        inuser = Participant.objects.filter(Q(employee=self.employee), Q(project=project), ~Q(pk=self.pk), Q(end_date=None))
         if inuser:
             raise ValidationError(_('Already in Team'))
+        # user already in but has finished but date between
+        q = (Q(start_date__lte=self.start_date) & Q(end_date__gte=self.start_date))
+        if self.end_date:
+            q= q | (Q(start_date__lte=self.end_date) & Q(end_date__gte=self.end_date))
+        
+        inuser = Participant.objects.filter(Q(employee=self.employee), Q(project=project), ~Q(pk=self.pk),
+                                            
+                                           q
+                                            
+                                            )
+        if inuser:
+            raise ValidationError(_('Already in Team At That Date'))
 
 
     def __str__(self):

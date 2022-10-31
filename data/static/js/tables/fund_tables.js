@@ -1,6 +1,9 @@
 var callbackFund;
 var callbackFundItem;
 
+var fundPk=0;
+var csrftoken=0;
+
 function initializeFundTable(callback_fund=null, callback_funditem=null){
     callbackFund=callback_fund;
     callbackFundItem=callback_funditem;
@@ -21,6 +24,8 @@ function updateFund(){
 function updateFullFund(){
     $('#project_fund_table').bootstrapTable('refresh');
     $('#project_fund_item_table').bootstrapTable('refresh');
+    $('#project_expense_timepoint_table').bootstrapTable('refresh');
+    updateFundOverviewTableAjax(fundPk, csrftoken);
     if(callbackFundItem!=null)callbackFundItem();
 }
 
@@ -37,6 +42,13 @@ function adminActionFundItem(value, row, index, field){
     action = "<span class='icon-left-cell btn-group'>";
     if(this.canChange=='True')action += "<button class='icon edit_fundItem btn btn-success' data-form-url='/fund/ajax/funditem/"+row.pk+"/update' ><i type = 'button' class='fas fa-edit'></i></button>";
     if(this.canDelete=='True')action += "<button class='icon delete_fundItem btn btn-danger ' data-form-url='/fund/ajax/funditem/"+row.pk+"/delete' ><i type = 'button' class='fas fa-trash'></i></button>";
+    action += "</span>"
+    return action;
+}
+function adminActionExpensePointdItem(value, row, index, field){
+    action = "<span class='icon-left-cell btn-group'>";
+    if(this.canChange=='True')action += "<button class='icon edit_ExpTpitem btn btn-success' data-form-url='/fund/ajax/expense_timepoint/"+row.pk+"/update' ><i type = 'button' class='fas fa-edit'></i></button>";
+    if(this.canDelete=='True')action += "<button class='icon delete_ExpTpitem btn btn-danger ' data-form-url='/fund/ajax/expense_timepoint/"+row.pk+"/delete' ><i type = 'button' class='fas fa-trash'></i></button>";
     action += "</span>"
     return action;
 }
@@ -68,6 +80,76 @@ function updateFundItem(){
             dataKey: 'table',
             addModalFormFunction: updateFullFund,
         }
+    });
+}
+
+function updateExpenseTimepoint(){
+    $('#project_expense_timepoint_table').bootstrapTable({
+        onLoadSuccess: function(){ updateExpenseTimepointBtnHandler();},
+        onSearch: function(){ updateExpenseTimepointBtnHandler();},
+        onSort: function(){  updateExpenseTimepointBtnHandler();},
+        onToggle: function(){ updateExpenseTimepointBtnHandler();},
+        onPageChange: function(){ updateExpenseTimepointBtnHandler();},
+    });
+    $('#add_expense_timepoint').modalForm({
+        modalID: "#create-modal",
+        modalContent: ".modal-content",
+        modalForm: ".modal-content form",
+        formURL: '/fund/ajax/expense_timepoint/add/' + $("#add_expense_timepoint").attr("data-fundPk"),
+        isDeleteForm: false,
+        errorClass: ".form-validation-warning",
+        asyncUpdate: true,
+        asyncSettings: {
+            directUpdate: true,
+            closeOnSubmit: true,
+            successMessage: "Employee Updated",
+            dataUrl: '/api/employee/',
+            dataElementId: '#employee_main_table',
+            dataKey: 'table',
+            addModalFormFunction: updateFullFund,
+        }
+    });
+}
+function updateExpenseTimepointBtnHandler(){
+    $(".edit_ExpTpitem").each(function () {
+        $(this).modalForm({
+            modalID: "#create-modal",
+            modalContent: ".modal-content",
+            modalForm: ".modal-content form",
+            formURL: $(this).data("form-url"),
+            isDeleteForm: false,
+            errorClass: ".form-validation-warning",
+            asyncUpdate: true,
+            asyncSettings: {
+                directUpdate: true,
+                closeOnSubmit: true,
+                successMessage: "Employee Updated",
+                dataUrl: '/api/employee/',
+                dataElementId: '#employee_main_table',
+                dataKey: 'table',
+                addModalFormFunction: updateFullFund,
+            }
+        });
+    });
+    $(".delete_ExpTpitem").each(function () {
+        $(this).modalForm({
+            modalID: "#create-modal",
+            modalContent: ".modal-content",
+            modalForm: ".modal-content form",
+            formURL: $(this).data("form-url"),
+            isDeleteForm: true,
+            errorClass: ".form-validation-warning",
+            asyncUpdate: true,
+            asyncSettings: {
+                directUpdate: true,
+                closeOnSubmit: true,
+                successMessage: "Employee Updated",
+                dataUrl: '/api/employee/',
+                dataElementId: '#employee_main_table',
+                dataKey: 'table',
+                addModalFormFunction: updateFullFund,
+            }
+        });
     });
 }
 
@@ -155,6 +237,26 @@ function updateFundOverviewTableAjax(fundPk, csrftoken){
         }
     }) 
 }
+function updateFundExpenseTimepointTableAjax(fundPk, csrftoken){
+    $.ajax({
+        type:"POST",
+        url: "/fund/"+fundPk+"/expense_timepoint/", 
+        data:{
+                pk:fundPk,
+                csrfmiddlewaretoken: csrftoken,
+        },
+        success: function( data )
+        {
+            $('#fund_expense_timepoint_detail').html(data);
+            updateExpenseTimepoint();                    
+        },
+        error:function( err )
+        {
+            $("body").html(err.responseText)
+            //console.log(JSON.stringify(err));
+        }
+    }) 
+}
 function updateFundBtnHandler(){   
 
     $(".show_fund").each(function () {
@@ -167,6 +269,7 @@ function updateFundBtnHandler(){
                 if($('#fund_overview').exists())updateFundOverviewTableAjax(fundPk, csrftoken);
                 // Fund item
                 if($('#fund_item_detail').exists())updateFundItemTableAjax(fundPk, csrftoken);
+                if($('#fund_expense_timepoint_detail').exists())updateFundExpenseTimepointTableAjax(fundPk, csrftoken);
                 // set the barck grod color
                 rows=$(this).closest('tbody');
                 rows.find('tr').each(function(){$(this).removeClass('select-row')});
