@@ -3,6 +3,9 @@ from staff.models import Employee, Employee_Status, Employee_Type, Team, TeamMat
 from django.utils.translation import gettext_lazy as _
 from .forms import TeamMateForm
 
+from import_export import resources
+
+
 class EmployeeStatusInline(admin.TabularInline):
     model = Employee_Status
     extra = 0
@@ -49,6 +52,13 @@ class TeamMateInline(admin.TabularInline):
 class TeamAdmin(admin.ModelAdmin):
     list_display = ('name', 'leader' )
     inlines = [TeamMateInline]
+    
+    
+# ressource for import export 
+class EmployeeResource(resources.ModelResource):
+
+    class Meta:
+        model = Employee
      
 # Register your models here.
 admin.site.register(Employee, EmployeeAdmin)

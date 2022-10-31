@@ -93,3 +93,27 @@ class ContractExpenseModelForm(BSModalModelForm):
             instance = super(ContractExpenseModelForm, self).save(commit=False)
         return instance
     
+    
+class ExpenseTimepointModelForm(BSModalModelForm):
+    class Meta:
+        model = models.Expense_point
+        fields = ['fund', 'value_date', 'type','amount','entry_date']
+        
+    def __init__(self, *args, **kwargs):
+        
+        if ('initial' in kwargs and 'fund' in kwargs['initial']):
+            self.base_fields['fund'].widget=forms.HiddenInput()
+        else:
+            self.base_fields['fund'] = forms.ModelChoiceField(
+                queryset=Fund.objects.all(),
+            )
+        # set today as default entrey date
+        self.base_fields['entry_date'].initial = date.today()
+        
+        
+        super().__init__(*args, **kwargs)
+        instance = getattr(self, 'instance', None)
+        if instance and instance.pk:
+            self.fields['fund'].widget = forms.HiddenInput()
+            self.fields['type'].disabled = True
+            self.fields['value_date'].disabled = True

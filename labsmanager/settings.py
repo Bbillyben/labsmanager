@@ -24,9 +24,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure,klsdh0989è_çà$*ùùjkoijç_015.BHh_dq' # os.environ.get("SECRET_KEY") # 'django-insecure,klsdh0989è_çà$*ùùjkoijç_015.BHh_dq'
-
+if os.environ.get("SECRET_KEY"):
+    SECRET_KEY = os.environ.get("SECRET_KEY")
+else:
+    SECRET_KEY = 'django-insecure,klsdh0989è_çà$*ùùjkoijç_015.BHh_dq' # os.environ.get("SECRET_KEY") # 'django-insecure,klsdh0989è_çà$*ùùjkoijç_015.BHh_dq'
+    
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True # int(os.environ.get("DEBUG", default=0))
+if os.environ.get("DEBUG"):
+     DEBUG = os.environ.get("DEBUG", default=False)=='True'
+else:
+    DEBUG = True # int(os.environ.get("DEBUG", default=0))
 
 ALLOWED_HOSTS =  ['*'] # os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
@@ -56,6 +63,7 @@ INSTALLED_APPS = [
     #                                 # https://django-easy-pdf.readthedocs.io/en/v0.2.0-dev1/installation.html
     'dbbackup',                     # https://django-dbbackup.readthedocs.io/en/master/installation.html
     'tabular_permissions',          # https://pypi.org/project/django-tabular-permissions/
+    'import_export',                # https://django-import-export.readthedocs.io/en/latest/installation.html
     
     # App
     'staff.apps.StaffConfig',
@@ -104,18 +112,23 @@ WSGI_APPLICATION = 'labsmanager.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# print ("LAB_DB_NAME : "+str(os.environ.get("LAB_DB_NAME", default='labsmanager')))
+# print ("LAB_DB_USER : "+str(os.environ.get("LAB_DB_USER", default='labsmanager')))
+# print ("LAB_DB_PASSWORD : "+str(os.environ.get("LAB_DB_PASSWORD", default='labsManagerPass')))
+
+
 DATABASES = {
     # 'default': {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'data' / 'dbs' / 'db.sqlite3',
     # },
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'labsmanager',
-        'USER': 'labsmanager',
-        'PASSWORD': 'labsManagerPass',
-        'HOST': 'localhost',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get("LAB_DB_NAME", default='labsmanager'),
+        'USER': os.environ.get("LAB_DB_USER", default='labsmanager'),
+        'PASSWORD': os.environ.get("LAB_DB_PASSWORD", default='labsManagerPass'),
+        'HOST': os.environ.get("LAB_DB_HOST", default='localhost'),
+        'PORT': os.environ.get("LAB_DB_PORT", default='5432'),
     }
 }
 

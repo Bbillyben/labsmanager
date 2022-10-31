@@ -2,6 +2,7 @@ from tabnanny import verbose
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
+
 from project.models import Project, Institution
 
 from mptt.models import MPTTModel, TreeForeignKey
@@ -56,6 +57,7 @@ class Fund(models.Model):
     start_date=models.DateField(null=False, blank=False, verbose_name=_('Start Date'))
     end_date=models.DateField(null=True, blank=True, verbose_name=_('End Date'))
     ref= models.CharField(max_length=30, blank=True, verbose_name=_('Reference'))
+    is_active=models.BooleanField(default=True, null=False)
     history = AuditlogHistoryField()
     
     @property
@@ -68,6 +70,18 @@ class Fund(models.Model):
             raise ValidationError(_('Exit Date (%s) should be later than entry date (%s) ') % (self.end_date, self.start_date))
         return self.end_date
     
+    def get_available(self):
+        from expense.models import Expense_point
+        import pandas as pd
+        
+        fi =Fund_Item.objects.filter(fund=self.pk).values_list('type__short_name', 'amount')
+        exp=Expense_point.objects.filter(fund=self.pk)
+        exp=Expense_point.get_lastpoint_by_fund_qs(exp)
+        expI= exp.values_list('type__short_name', 'amount')
+        u = fi.union(expI)
+        cpd=pd.DataFrame.from_records(u, columns=['type','amount',])
+        return cpd        
+        
     def __str__(self):
         return f'{self.project.name} | {self.funder.short_name} -> {self.institution.short_name}'
     

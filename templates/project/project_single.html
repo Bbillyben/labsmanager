@@ -19,7 +19,7 @@
 
 
 <div id='detail-panels'>
-    <div class="panel" id="panel-stock" style="display: block;">
+    <div class="panel" id="panel-project" style="display: block;">
 
         <div class="panel-heading">
             <div class="d-flex flex-wrap">
@@ -118,51 +118,78 @@
 
 
     <!-- ######################################    FUND PANEL ############################################### -->
-<div id='detail-panels'>  
-    <div class="panel panel-hidden panel-visible" id="panel-project-fund" style="display: block;">
+<div class="panel-hidden panel-visible" id="panel-project-fund" style="display: block;">
+    <div id='detail-panels'> 
+        <div class="panel" id="panel-project-fund1" style="display: block;">
 
-        <div class="panel-heading">
-            <div class="d-flex flex-wrap">
-                <h4>{% trans 'Funds' %}</h4>
-                <span class="flex" style="flex-grow: 1;"></span>                
+            <div class="panel-heading">
+                <div class="d-flex flex-wrap">
+                    <h4>{% trans 'project Funds Overview' %}</h4>
+                    <span class="flex" style="flex-grow: 1;"></span>                
+                </div>
+            </div>
+            <div class="panel-content">
+                <div class="row" style=" padding-top: 5px;">
+                    <div class="col">
+                        <div class="card" id="fund_project_overview_detail">
+                            
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="panel-content">
+    </div>
+    <div id='detail-panels'> 
+        <div class="panel" id="panel-project-fund2" style="display: block;">
 
-            <div class="row" style=" padding-top: 5px;">
-                <div class="col">
-                    <div class="card">
-                        <div class="row-header">
-                            <div class="d-flex flex-wrap subheading">
-                                <h4><i class="fas fa-money-bills"></i>  {% trans 'Fund' %} : <i class="super-small">{{ project }}</i></h4> 
-                                <span class="flex" style="flex-grow: 1;"></span>
-                                <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-secondary" id="add_fund_temp" title="Add Item" data-projectpk="{{ project.pk }}" >
-                                        <span class='fas fa-plus'></span>
-                                    </button>
+            <div class="panel-heading">
+                <div class="d-flex flex-wrap">
+                    <h4>{% trans 'Funds' %}</h4>
+                    <span class="flex" style="flex-grow: 1;"></span>                
+                </div>
+            </div>
+            <div class="panel-content">
+                <div class="row" style=" padding-top: 5px;">
+                    <div class="col">
+                        <div class="card">
+                            <div class="row-header">
+                                <div class="d-flex flex-wrap subheading">
+                                    <h4><i class="fas fa-money-bills"></i>  {% trans 'Fund' %} : <i class="super-small">{{ project }}</i></h4> 
+                                    <span class="flex" style="flex-grow: 1;"></span>
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-secondary" id="add_fund_temp" title="Add Item" data-projectpk="{{ project.pk }}" >
+                                            <span class='fas fa-plus'></span>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            {% url 'api:project-funds' pk=project.pk as FundDataURL %}
-                            {% include 'fund/fund_table.html' with datatype="project" dataURL=FundDataURL %}
+                            <div class="row">
+                                {% url 'api:project-funds' pk=project.pk as FundDataURL %}
+                                {% include 'fund/fund_table.html' with datatype="project" dataURL=FundDataURL %}
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col">
-                    <div class="card" id="fund_overview">
+                    <div class="col">
+                        <div class="card" id="fund_overview">
+                        </div>
                     </div>
-                </div>
 
-            </div>
-            <div class="row" style=" padding-top: 5px;">
-                <div class="col">
-                    <div class="card">
-                        <div class="card" id="fund_item_detail">
+                </div>
+                <div class="row" style=" padding-top: 5px;">
+                    <div class="col">
+                        <div class="card">
+                            <div class="card" id="fund_item_detail">
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div> 
+                    <div class="col">
+                        <div class="card">
+                            <div class="card" id="fund_expense_timepoint_detail">
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+            </div>
         </div>
     </div>
 </div>
@@ -229,7 +256,7 @@ $(document).ready(function () {
     user_id = JSON.parse(document.getElementById('user_id').textContent);
     project_id = JSON.parse(document.getElementById('project_id').textContent);
     initProjectSingleView(user_id, project_id);
-    initializeContractsTable();
+    initializeContractsTable(update_project);
     initializeFundTable(null, update_project)
     enableSidebar('project')
 })
