@@ -1,0 +1,33 @@
+{% extends 'dashboard/dashboard_card.html' %}
+{% load i18n %}
+{% load static %}
+{% load customs_tags %}
+
+{% block 'dash-content' %}
+<div class="col chart_card" id="c_chart">
+    <table
+        class='table table-striped table-condensed'
+        id="dashboard_card_{% makeId title %}"
+        data-id-table="stalefundTable"
+        data-url="{{url}}"
+
+    >
+        <thead class="">
+            <tr>
+                {% for c in columns %}
+                <th data-sortable="true" class="th-inner sortable both" data-field="{{c.item}}" data-formatter="{{c.formatter}}">
+                    {{c.name}}
+                </th>
+                {% endfor %}
+            
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+        
+</div>
+<script>
+        $('#dashboard_card_{% makeId title %}').bootstrapTable();
+</script>
+{% endblock %}

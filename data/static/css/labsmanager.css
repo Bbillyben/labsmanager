@@ -12,6 +12,9 @@
     --label-yellow: #fdc82a;
 
     --bs-body-color: #68686a;
+
+    --headings-color: #c9e0cf;
+    --subheading-color: #d1dbd3;
 }
 
 main {
@@ -827,9 +830,10 @@ input[type="submit"] {
     padding-top: 5px;
     padding-left: 15px;
     color: var(--bs-body-color);
-    background-color: var(--secondary-color);
+    background-color: var(--headings-color);
     border-bottom: 1px solid var(--border-color);
     box-shadow: 0px 5px 5px rgb(0 0 0 / 5%);
+    border-radius: 1rem 0.25rem 0 0;
 }
 
 .panel {
@@ -837,6 +841,7 @@ input[type="submit"] {
     margin-bottom: .75rem;
     background-color: #fff;
     border: 1px solid #ccc;
+    border-radius: 1rem 0.25rem 1rem 1rem;
 }
 
 .panel-hidden {
@@ -1102,4 +1107,19 @@ tr.row-Sum td[data-negative] {
   }
 col.column-Sum{
     background-color: gray;
+}
+
+
+
+.subheading{
+    background-color: var(--subheading-color);
+}
+.subheading h4{
+    margin-left: 0.5rem;
+    margin-top: 0.35rem;
+}
+
+/* overrride bootstrap style */
+.list-group-item.active{
+    background-color: #53825f !important;
 }

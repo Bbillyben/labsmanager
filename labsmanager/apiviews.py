@@ -1,6 +1,8 @@
 from http.client import HTTPResponse
 from django.contrib.auth.models import User, Group
 from django.http import JsonResponse
+from django.db.models import Q
+
 from project.models import Participant, Project
 from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
@@ -8,6 +10,9 @@ from . import serializers  # UserSerializer, GroupSerializer, EmployeeSerialize,
 from staff.models import Employee, Employee_Status, Team, TeamMate
 from expense.models import Expense_point, Contract, Contract_expense
 from fund.models import Fund, Fund_Item
+
+from datetime import date, datetime
+from dateutil.relativedelta import relativedelta
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -106,6 +111,14 @@ class FundViewSet(viewsets.ModelViewSet):
         BP = Expense_point.get_lastpoint_by_fund(pk)
         return JsonResponse(serializers.ExpensePOintSerializer(BP, many=True).data, safe=False) 
     
+    @action(methods=['get'], detail=False, url_path='stale', url_name='stale_fund')
+    def staleFunds(self, request, pk=None):
+        dateL=date.today()+ relativedelta(months=+3)
+        fund=Fund.objects.filter(Q(is_active=True) & Q(end_date__lte=dateL)).order_by('-end_date')
+        
+        return JsonResponse(serializers.FundStaleSerializer(fund, many=True).data, safe=False) 
+        
+    
 class ContractViewSet(viewsets.ModelViewSet):
     queryset = Contract.objects.all()
     serializer_class = serializers.ContractSerializer
@@ -117,7 +130,12 @@ class ContractViewSet(viewsets.ModelViewSet):
         t1=Contract_expense.objects.filter(contract=cont.pk)
         return JsonResponse(serializers.ContractExpenseSerializer_min(t1, many=True).data, safe=False) 
 
-
+    @action(methods=['get'], detail=False, url_path='stale', url_name='contract_stale')
+    def get_stale(self, request):
+        dateL=date.today()+ relativedelta(months=+3)
+        cont=Contract.objects.filter(Q(is_active=True) & Q(end_date__lte=dateL)).order_by('-end_date')
+        return JsonResponse(serializers.ContractSerializer(cont, many=True).data, safe=False) 
+        
 
 class BudgetPOintViewSet(viewsets.ModelViewSet):
     queryset = Expense_point.objects.all()

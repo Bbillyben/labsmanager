@@ -199,6 +199,17 @@ function projectFormatter(value, row, index, field){
     return response;
 }
 
+function dueDatePassed(value, row, index, field){
+    curr=new Date();
+    valDate=Date.parse(value);
+    console.log('date test :'+(curr.getTime()>valDate));
+    
+    if(curr.getTime()>valDate){
+        return '<span class="alert-danger">'+value+'</span>';
+    }
+    return value
+}
+
 
 
 // --------------------     Basic Table Sorter    ------------------- // 
@@ -210,4 +221,33 @@ function nameSorter(fieldA, fieldB){
     if (A <B) return -1;
       if (A > B) return 1;
       return 0;
+  }
+
+
+
+
+  // ------------------  ajax load direct --------------  //
+
+  function loadInTemplate(elt, url, data={}, callback=null){
+    csrftoken = getCookie('csrftoken');
+    defaults={
+        csrfmiddlewaretoken: csrftoken
+    }
+    var datas = $.extend(defaults, data);
+    $.ajax({
+        type:"GET",
+        url: url,
+        data:datas,
+        success: function( data )
+        {
+            elt.html(data);
+            if(callback)callback();
+        },
+        error:function( err )
+        {
+             $("body").html(err.responseText)
+            //console.log(JSON.stringify(err));
+        }
+    })
+
   }

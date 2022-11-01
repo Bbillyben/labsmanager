@@ -8,8 +8,10 @@ from django.views.generic.base import View
 from rest_framework.decorators import action
 
 from django.utils.functional import cached_property
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from view_breadcrumbs import BaseBreadcrumbMixin
+
+
 
 from project.models import Project
 from fund.models import Fund_Item, Fund
@@ -50,8 +52,67 @@ class FundLossCardView(LoginRequiredMixin, BaseBreadcrumbMixin, View):
             #print(' fu :'+str(fu.project.name)+" / "+str(fu.end_date)+" : "+str(sumA))
         context={'data':pDic,
                  'type':'line',
+                 'title':_("Project Loss Overview"),
+                 'action':[
+                        {'name':"", 'url':reverse('project_index'), 'icon':'fa-eye'}
+                    ]  
                  }  
         # return JsonResponse(context, safe=False)  
         return render(request, self.template_general, context)
     
+class fundStaleView(LoginRequiredMixin, BaseBreadcrumbMixin, View):
+    
+    def get(self, request, *args, **kwargs):
+        return HttpResponse(str(self.__class__.__name__)+' Main not yet defined!')
+    
+class fundStaleCardView(LoginRequiredMixin, BaseBreadcrumbMixin, View):
+    
+    template_general="dashboard/dashboard_table.html"
+    
+    def get(self, request, *args, **kwargs):
+        
+        context={
+            'url':reverse_lazy("api:fund-stale_fund"),
+            'title':_('Stale Fund'),
+            'columns':[
+                {'name':_('project'),'item':'project',  'formatter':'ProjectFormatter'},
+                {'name':_('funder'),'item':'funder'},
+                {'name':_('end date'),'item':'end_date', 'formatter':'dueDatePassed'},
+                {'name':_('Availability'),'item':'availability', 'formatter':'moneyFormatter'},
+            ], 
+            'action':[
+                {'name':"", 'url':reverse('project_index'), 'icon':'fa-eye'}
+            ]        
+        }
+        
+        return render(request, self.template_general, context)
 
+
+class contractstaleView(LoginRequiredMixin, BaseBreadcrumbMixin, View):
+    
+    def get(self, request, *args, **kwargs):
+        return HttpResponse(str(self.__class__.__name__)+' Main not yet defined!')
+    
+class contractstaleCardView(LoginRequiredMixin, BaseBreadcrumbMixin, View):
+    
+    template_general="dashboard/dashboard_table.html"
+    
+    def get(self, request, *args, **kwargs):
+        
+        context={
+            'url':reverse_lazy("api:contract-contract_stale"),
+            'title':_('Stale Contract'),
+            'columns':[
+                {'name':_('Employee'),'item':'employee',  'formatter':'employeeFormatter'},
+                {'name':_('Project'),'item':'fund.project', 'formatter':'ProjectFormatter'},
+                {'name':_('Institution'),'item':'fund.institution.short_name'},
+                {'name':_('Contract Type'),'item':'contract_type'},
+                {'name':_('end date'),'item':'end_date', 'formatter':'dueDatePassed'},
+                
+            ], 
+            'action':[
+                {'name':"", 'url':reverse('contract_index'), 'icon':'fa-eye'}
+            ]        
+        }
+        
+        return render(request, self.template_general, context)

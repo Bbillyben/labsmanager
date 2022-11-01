@@ -3,6 +3,7 @@ from django import template
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 import math
+import uuid
 register = template.Library()
 
 @register.simple_tag(takes_context=True)
@@ -45,3 +46,15 @@ def etpFormat(context, dynvarname):
     else:
          val="-" 
     return mark_safe(val)
+
+@register.simple_tag(name='makeId')
+def makeID(dynvarname):
+    """ Returns the value of dynvarname into the context """
+    strV=str(dynvarname).replace(" ", "_")
+    return strV.upper()
+
+
+@register.simple_tag(name='unikId')
+def unikId():
+    """ Returns the value of dynvarname into the context """
+    return uuid.uuid4().hex

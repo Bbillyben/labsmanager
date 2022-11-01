@@ -11,5 +11,5 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 class IndexView(LoginRequiredMixin, TemplateView):
     """View for InvenTree index page."""
-    template_name = 'labmanager/index.html'
+    template_name = 'dashboard/global_dashboard.html' #'labmanager/index.html'
     
