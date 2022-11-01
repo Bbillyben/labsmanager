@@ -1,7 +1,17 @@
-
+{% extends 'base.html'%}
 {% load i18n %}
 {% load static %}
 
+{% block page_title %}
+{% trans "LabManager Dashboard" %}
+{% endblock %}
+
+{% block breadcrumb_list %}
+{% endblock %}
+
+
+
+{% block content %}
 <div id='detail-panels'>
     <div class="panel" id="panel-project" style="display: block;">
         <div class="panel-heading">
@@ -10,23 +20,44 @@
                 
             </div>
         </div>
+        <!-- COnteneur -->
+        <div class="panel-content">
+            <div class="container" style="max-width: 100%; padding: 5px;">
+                <div class="row">
+                    <div class="col" id="detail-panel-left" >
+                        <div class="card" data-url="{% url 'loss_card' %}">
+*
+                        </div>
+                    </div><!-- end card panel left -->
+                    <div class="col" id="detail-panel-right">
+                        <div class="card"  data-url="{% url 'fundstale_card' %}">
 
+                        </div>
+                    </div><!-- end card panel left -->
+                </div><!-- end card row -->
+                {%include 'spacer.html' %}
+                <div class="row">
+                    <div class="col" id="detail-panel-left">
+                        <div class="card" data-url="{% url 'contractstale_card' %}">
+                        </div>
+                    </div><!-- end card panel left -->
+                    <div class="col" id="detail-panel-right">
+                        <div class="card">
+                        </div>
+                    </div><!-- end card panel left -->
+                </div><!-- end card row -->
+            </div><!-- end container-->
+        </div> <!-- end panel content -->
     </div>
-    <!-- COnteneur -->
-    <div class="panel-content">
-        <div class="container" style="max-width: 100%; padding: 5px;">
-            <div class="row">
-                <div class="col" id="detail-panel-left">
-                    
-                </div><!-- end card panel left -->
-                <div class="col" id="detail-panel-right">
-                </div><!-- end card panel left -->
-            </div>
-        </div><!-- end container-->
-    </div> <!-- end panel content -->
 </div>
 
+{% endblock %}
 
 {% block js_load %} 
-
+<script type='text/javascript' src="{% static 'js/dashboard_global.js' %}"></script>
+<script>
+$(document).ready(function () {
+    loadDashboardCards();
+})
+</script>
 {% endblock %}

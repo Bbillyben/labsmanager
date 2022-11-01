@@ -145,6 +145,24 @@ class FundItemSerialize(serializers.ModelSerializer):
         model = Fund_Item
         fields = ['pk', 'type', 'amount', 'fund']        
 
+class FundStaleSerializer(serializers.ModelSerializer):
+    availability=serializers.SerializerMethodField()
+    project=ProjectSerializer(many=False, read_only=True)
+    funder=serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Fund
+        fields=['pk', 'project', 'funder', 'end_date', 'availability',]
+        
+    def get_availability(self,obj):
+        avail=obj.get_available()
+        return avail['amount'].sum(axis=0, skipna=True)
+    def get_project(self,obj):
+        return obj.project.name
+    def get_funder(self, obj):
+        return obj.funder.short_name
+    
+    
 class FundProjectSerialize(serializers.ModelSerializer):
     funder=Fund_InstitutionSerializer(many=False, read_only=True)
     institution=InstitutionSerializer(many=False, read_only=True)

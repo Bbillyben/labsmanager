@@ -1,15 +1,12 @@
-{% extends 'base.html'%}
+{% extends 'dashboard/dashboard_card.html' %}
 {% load i18n %}
 {% load static %}
 
-{% block content %}
-<div class="card">
+{% block 'dash-content' %}
     <div class="col chart_card" id="c_chart">
         <canvas id="canvas">this is canvas</canvas>
     </div>
-</div>
-{% endblock %}
-{% block js_load %}
+
 <script type='text/javascript' src="{% static 'chart/chart.min.js' %}"></script>
 <script type='text/javascript' src="{% static 'chart/chartjs-adapter-date-fns.bundle.min.js' %}"></script>
 
@@ -19,7 +16,7 @@
 const data = {
   labels: [{{ data.labels|join:"," }}], //{%for d in data.labels %}{{d|date:'Y-m-d'}},{%endfor%}],
   datasets: [{
-    label: 'atest',
+    label: "{{ title }}",
     data: [{{ data.values|join:"," }}], //{%for d in data.values %}{{d}},{%endfor%}],
     fill: false,
     borderColor: 'rgb(75, 192, 192)',
