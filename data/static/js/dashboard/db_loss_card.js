@@ -19,8 +19,6 @@ function dblosscard_addBtnListener(){
 function dblosscard_radioListener(e){
     var typeG=$(this).attr('id').replace('tab', '').toLowerCase();
     var csrftoken = getCookie('csrftoken');
-    
-    //console.log("dblosscard_radioListener type :"+typeG)
     datasets=createDataSet(dataFrameLossCard, typeG, "end_date", "amount");
     dblosscard_updateGraph(datasets);
 }
@@ -61,12 +59,11 @@ function createDataSet(datas, setLabel, setXAxis, setAmount){
     var datasets=[];
     var indexDict={}
     if(setLabel in datas.schema.primaryKey){
-        //console.log(setLabel + " not in datas ");
         return null;
     }
     var i=0;
     var ds;
-    var seq = palette('cb-Pastel1', datas.data.length);
+    var seq = palette('all', Math.min(datas.data.length, 30));
   // cb-Paired cb-Pastel1
     for (var item in datas.data) {
         d=datas.data[item];
@@ -80,7 +77,7 @@ function createDataSet(datas, setLabel, setXAxis, setAmount){
             ds={
                 label: d[setLabel],
                 data: [],
-                backgroundColor: "#"+seq[i], 
+                backgroundColor: "#"+seq[i % seq.length], 
                 fill: true
             };
             datasets.push(ds);
@@ -97,21 +94,58 @@ function createDataSet(datas, setLabel, setXAxis, setAmount){
             ds.data[id]=v;
         }
      }
-     //console.log("dataset :"+datasets);
-     // sort et cumul 
-     for(var ds in datasets){
-        item=datasets[ds]
-        item.data = item.data.sort(compareDatasetDate);
-        curr=0;
-        for(i = 0 ; i< item.length; i++){
-            curr= item.data['y']+curr;
-            item.data['y']=curr;
-        }
-        datasets[ds]=item
-     }
-     //console.log(datasets);
+
+     datasets = makeItStackable(datasets, compareDatasetDate, true);
      return datasets;
     
+}
+
+function makeItStackable(datasets, sortFunction, stackValues=False){
+    // get all x axis
+    var labels=[]
+    for(var id in datasets){
+        item=datasets[id]
+        // item.data=item.data.sort(sortFunction)
+        curr=0
+        
+        for(i = 0 ; i< item.data.length; i++){
+            // labems
+            labI=item.data[i]['x']
+            if(!(labI in labels)){
+                labels.push(labI)
+            }
+            
+            // concat values 
+            if(stackValues){
+                curr= Math.abs(item.data[i]['y'])+curr;
+                item.data[i]['y']=curr;
+            }
+            
+        }
+        datasets[id]=item
+    }
+    labels=labels.sort()
+    for(var id in datasets){
+        items=datasets[id]['data']
+        addItem=[];
+        curr=0;
+
+        for(i in labels){
+            lab = labels[i]
+            ind=getIndexOf(lab,items,'x')
+            if(ind==-1){
+                addItem.push({'x':lab, 'y':curr});
+            }else{
+                curr=items[ind]['y'];
+            }
+        }
+        items=items.concat(addItem)
+        items=items.sort(sortFunction)
+        datasets[id]['data']=items
+    }
+    
+    return datasets
+
 }
 
 function getIndexOf(key, arr, arrKey){
