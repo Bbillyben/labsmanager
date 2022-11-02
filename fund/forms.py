@@ -4,7 +4,7 @@ from . import models
 from project.models import Project
 from django.utils.translation import gettext_lazy as _
 from django import forms
-
+from project.models import Project
 
 class FundItemModelForm(BSModalModelForm):
     class Meta:
@@ -38,6 +38,10 @@ class FundModelForm(BSModalModelForm):
                 queryset=models.Project.objects.all(),
                 widget=forms.HiddenInput
             )
+            proj = Project.objects.get(pk=kwargs['initial']['project'])
+            if proj:
+                self.base_fields['start_date'].initial = proj.start_date
+                self.base_fields['end_date'].initial = proj.end_date
         else:
             self.base_fields['project'] = forms.ModelChoiceField(
                 queryset=models.Project.objects.all(),
