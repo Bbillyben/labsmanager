@@ -33,7 +33,12 @@ class FundLossCardView(LoginRequiredMixin, BaseBreadcrumbMixin, View):
         import pandas as pd
         
         fund=Fund.objects.filter(Q(is_active=True)).order_by('end_date')
-        
+        if not fund:
+            context={'data':{},
+                 'type':'line',
+                 'title':_("Project Loss Overview"),
+                 }  
+            return render(request, self.template_general, )
         frames=[]
         for fu in fund:
             avail=fu.get_available()
