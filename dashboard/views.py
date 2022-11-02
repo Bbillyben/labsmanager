@@ -2,6 +2,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.utils.translation import gettext_lazy as _
+from django.utils.dateformat import format
+import time
+
 from django.db.models import Q
 
 from django.views.generic.base import View
@@ -24,40 +27,30 @@ class FundLossView(LoginRequiredMixin, BaseBreadcrumbMixin, View):
 
 class FundLossCardView(LoginRequiredMixin, BaseBreadcrumbMixin, View):  
     
-    template_general="dashboard/dasboard_simple.html" 
+    template_general="dashboard/dasboard_loss_card.html" 
     
     def get(self, request, *args, **kwargs):
+        import pandas as pd
         
         fund=Fund.objects.filter(Q(is_active=True)).order_by('end_date')
         
-        pDic={'labels':[],
-              'project':[],
-              'values':[],
-        }
-        prev=0
+        frames=[]
         for fu in fund:
             avail=fu.get_available()
-            sumA=abs(avail['amount'].sum(axis=0, skipna=True))
+            frames.append(avail)
             
-            if not (fu.end_date) in pDic['labels']:
-                pDic['labels'].append((fu.end_date))
-                pDic['project'].append(fu.project.name)
-                pDic['values'].append(sumA+prev)
-            else:
-                id=pDic['labels'].index((fu.end_date))
-                pDic['values'][id]+=sumA
-                if not fu.project.name in pDic['project'][id] :
-                    pDic['project'][id]+=', '+ fu.project.name
-            prev=pDic['values'][-1]
-            #print(' fu :'+str(fu.project.name)+" / "+str(fu.end_date)+" : "+str(sumA))
-        context={'data':pDic,
+        result = pd.concat(frames)
+        result= result.groupby(['project', 'funder','institution', 'type','end_date',]).sum().sort_values(by='end_date')
+        print(result)
+        dataTosend=result.to_json(orient='table')
+        
+        context={'data':dataTosend,
                  'type':'line',
                  'title':_("Project Loss Overview"),
                  'action':[
                         {'name':"", 'url':reverse('project_index'), 'icon':'fa-eye'}
                     ]  
                  }  
-        # return JsonResponse(context, safe=False)  
         return render(request, self.template_general, context)
     
 class fundStaleView(LoginRequiredMixin, BaseBreadcrumbMixin, View):

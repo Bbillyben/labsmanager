@@ -202,7 +202,7 @@ function projectFormatter(value, row, index, field){
 function dueDatePassed(value, row, index, field){
     curr=new Date();
     valDate=Date.parse(value);
-    console.log('date test :'+(curr.getTime()>valDate));
+    //console.log('date test :'+(curr.getTime()>valDate));
     
     if(curr.getTime()>valDate){
         return '<span class="alert-danger">'+value+'</span>';
