@@ -86,7 +86,7 @@ function activatePanel(label, panel_name, options={}) {
     }
 
     // Set the initial state (default = expanded)
-    var state = localStorage.getItem(`inventree-menu-state-${label}`) || 'expanded';
+    var state = 'expanded';
 
     setSidebarState(label, state);
 

@@ -1117,9 +1117,37 @@ col.column-Sum{
 .subheading h4{
     margin-left: 0.5rem;
     margin-top: 0.35rem;
+    font-size:1rem;
 }
 
 /* overrride bootstrap style */
 .list-group-item.active{
     background-color: #53825f !important;
 }
+
+
+/*   for tab radio button   */
+.tabs {
+    display: flex;
+  }
+  
+  .radiotab {
+    position: absolute;
+    opacity: 0;
+  }
+  
+  .radiolabel {
+    width: 100%;
+    background: #e5e5e5;
+    cursor: pointer;
+    text-align:center;
+  }
+  
+  .radiolabel:active {
+    background: var(--highlight-color);  
+  }
+  
+  .radiotab:checked + .radiolabel {
+    display: block;
+    background: var(--subheading-color); 
+  }

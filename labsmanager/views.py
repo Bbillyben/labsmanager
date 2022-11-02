@@ -10,6 +10,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 
 class IndexView(LoginRequiredMixin, TemplateView):
-    """View for InvenTree index page."""
+    """View for index page."""
     template_name = 'dashboard/global_dashboard.html' #'labmanager/index.html'
     

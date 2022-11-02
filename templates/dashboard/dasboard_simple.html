@@ -3,21 +3,20 @@
 {% load static %}
 
 {% block 'dash-content' %}
-    <div class="col chart_card" id="c_chart">
-        <canvas id="canvas">this is canvas</canvas>
-    </div>
+  <div class="col chart_card" id="c_chart">
+      <canvas id="canvas">this is canvas</canvas>
+  </div>
 
 <script type='text/javascript' src="{% static 'chart/chart.min.js' %}"></script>
 <script type='text/javascript' src="{% static 'chart/chartjs-adapter-date-fns.bundle.min.js' %}"></script>
 
 
 <script>
-
 const data = {
-  labels: [{{ data.labels|join:"," }}], //{%for d in data.labels %}{{d|date:'Y-m-d'}},{%endfor%}],
+  labels: [{{ data.labels|join:"," }}],
   datasets: [{
     label: "{{ title }}",
-    data: [{{ data.values|join:"," }}], //{%for d in data.values %}{{d}},{%endfor%}],
+    data: [{{ data.values|join:"," }}],
     fill: false,
     borderColor: 'rgb(75, 192, 192)',
     tension: 0.1
@@ -25,6 +24,7 @@ const data = {
 };
 
 $( document ).ready(function(){
+  
   var ctx = document.getElementById('canvas').getContext('2d');
   new Chart(ctx , {
     type: "{{type}}",
@@ -34,11 +34,7 @@ $( document ).ready(function(){
       scales: {
         x: {
           type:'time',
-          time: {
-            displayFormats: {
-                quarter: 'MMM YYYY'
-            }
-        }
+          parsing:'false',      
         }
       }
     }

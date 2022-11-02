@@ -74,12 +74,13 @@ class Fund(models.Model):
         from expense.models import Expense_point
         import pandas as pd
         
-        fi =Fund_Item.objects.filter(fund=self.pk).values_list('type__short_name', 'amount')
+        fi =Fund_Item.objects.filter(fund=self.pk).values_list('fund__project__name', 'fund__funder__short_name','fund__institution__short_name', 'type__short_name', 'fund__end_date', 'amount')
         exp=Expense_point.objects.filter(fund=self.pk)
         exp=Expense_point.get_lastpoint_by_fund_qs(exp)
-        expI= exp.values_list('type__short_name', 'amount')
+        expI= exp.values_list('fund__project__name', 'fund__funder__short_name','fund__institution__short_name', 'type__short_name','fund__end_date', 'amount')
         u = fi.union(expI)
-        cpd=pd.DataFrame.from_records(u, columns=['type','amount',])
+        cpd=pd.DataFrame.from_records(u, columns=['project', 'funder','institution', 'type','end_date', 'amount',])
+        # cpd = cpd.groupby('type').sum()
         return cpd        
         
     def __str__(self):
