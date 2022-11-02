@@ -32,7 +32,7 @@ class FundLossCardView(LoginRequiredMixin, BaseBreadcrumbMixin, View):
     def get(self, request, *args, **kwargs):
         import pandas as pd
         
-        fund=Fund.objects.filter(Q(is_active=True)).order_by('end_date')
+        fund=Fund.objects.filter(Q(is_active=True) & Q(project__status=True) ).order_by('end_date')
         if not fund:
             context={'data':{},
                  'type':'line',

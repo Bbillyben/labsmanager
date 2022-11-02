@@ -114,7 +114,7 @@ class FundViewSet(viewsets.ModelViewSet):
     @action(methods=['get'], detail=False, url_path='stale', url_name='stale_fund')
     def staleFunds(self, request, pk=None):
         dateL=date.today()+ relativedelta(months=+3)
-        fund=Fund.objects.filter(Q(is_active=True) & Q(end_date__lte=dateL)).order_by('-end_date')
+        fund=Fund.objects.filter(Q(is_active=True) & Q(project__status=True) & Q(end_date__lte=dateL)).order_by('-end_date')
         
         return JsonResponse(serializers.FundStaleSerializer(fund, many=True).data, safe=False) 
         
@@ -133,7 +133,7 @@ class ContractViewSet(viewsets.ModelViewSet):
     @action(methods=['get'], detail=False, url_path='stale', url_name='contract_stale')
     def get_stale(self, request):
         dateL=date.today()+ relativedelta(months=+3)
-        cont=Contract.objects.filter(Q(is_active=True) & Q(end_date__lte=dateL)).order_by('-end_date')
+        cont=Contract.objects.filter(Q(is_active=True)& Q(fund__project__status=True)  & Q(end_date__lte=dateL)).order_by('-end_date')
         return JsonResponse(serializers.ContractSerializer(cont, many=True).data, safe=False) 
         
 

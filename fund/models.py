@@ -47,6 +47,8 @@ class Fund_Item(models.Model):
     fund=models.ForeignKey('Fund', on_delete=models.CASCADE, verbose_name=_('Related Fund'))
     history = AuditlogHistoryField()
 
+    def __str__(self):
+        return f'{self.type.short_name} - {self.fund}'
 class Fund(models.Model):
     class Meta:
         """Metaclass defines extra model properties"""
