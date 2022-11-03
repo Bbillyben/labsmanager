@@ -4,14 +4,28 @@ from django.utils.translation import gettext_lazy as _
 from .forms import TeamMateForm
 
 from import_export import resources
+from import_export.admin import ImportExportModelAdmin
 
 
+# ressource for import export 
+class EmployeeResource(resources.ModelResource):
+    
+
+    class Meta:
+        model = Employee
+        skip_unchanged = True
+        report_skipped = True
+        
+        fields = ('id', 'first_name', 'last_name', 'birth_date','entry_date', 'exit_date', 'is_active',)
+        
+        
+# admin class
 class EmployeeStatusInline(admin.TabularInline):
     model = Employee_Status
     extra = 0
     
     
-class EmployeeAdmin(admin.ModelAdmin):
+class EmployeeAdmin(ImportExportModelAdmin):
     list_display = ('first_name', 'last_name',  'entry_date' , 'exit_date', 'is_active', 'get_user')
     fieldsets = (
         ('Employee', {
@@ -26,6 +40,7 @@ class EmployeeAdmin(admin.ModelAdmin):
     )
     inlines = [EmployeeStatusInline]
     list_filter=('entry_date' , 'exit_date')
+    resource_classes = [EmployeeResource]
      
     def get_user(self, obj):
         if obj.user:
@@ -54,11 +69,7 @@ class TeamAdmin(admin.ModelAdmin):
     inlines = [TeamMateInline]
     
     
-# ressource for import export 
-class EmployeeResource(resources.ModelResource):
 
-    class Meta:
-        model = Employee
      
 # Register your models here.
 admin.site.register(Employee, EmployeeAdmin)

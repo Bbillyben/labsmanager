@@ -149,10 +149,11 @@ class FundStaleSerializer(serializers.ModelSerializer):
     availability=serializers.SerializerMethodField()
     project=ProjectSerializer(many=False, read_only=True)
     funder=serializers.SerializerMethodField()
+    institution=serializers.SerializerMethodField()
     
     class Meta:
         model = Fund
-        fields=['pk', 'project', 'funder', 'end_date', 'availability',]
+        fields=['pk', 'project', 'funder', 'institution', 'end_date', 'availability',]
         
     def get_availability(self,obj):
         avail=obj.get_available()
@@ -161,6 +162,8 @@ class FundStaleSerializer(serializers.ModelSerializer):
         return obj.project.name
     def get_funder(self, obj):
         return obj.funder.short_name
+    def get_institution(self, obj):
+        return obj.institution.short_name
     
     
 class FundProjectSerialize(serializers.ModelSerializer):
