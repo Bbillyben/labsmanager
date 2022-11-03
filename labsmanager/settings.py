@@ -217,3 +217,9 @@ REST_FRAMEWORK = {
 }
 
 APPEND_SLASH = False  # prevent error for post request by ajax
+
+
+
+## Import export options
+
+IMPORT_EXPORT_USE_TRANSACTIONS = True

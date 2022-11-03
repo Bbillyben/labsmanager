@@ -75,6 +75,7 @@ class fundStaleCardView(LoginRequiredMixin, BaseBreadcrumbMixin, View):
             'columns':[
                 {'name':_('project'),'item':'project',  'formatter':'ProjectFormatter'},
                 {'name':_('funder'),'item':'funder'},
+                {'name':_('Institution'),'item':'institution'},
                 {'name':_('end date'),'item':'end_date', 'formatter':'dueDatePassed'},
                 {'name':_('Availability'),'item':'availability', 'formatter':'moneyFormatter'},
             ], 
