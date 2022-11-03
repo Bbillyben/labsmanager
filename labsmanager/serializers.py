@@ -299,11 +299,11 @@ class ProjectFullSerializer(serializers.ModelSerializer):
                   'fund','get_funds_amount', 
                   ]
     def get_participant(self,obj):
-        part = Participant.objects.filter(project = obj.pk, employee__user__is_active= True)
+        part = Participant.objects.filter(project = obj.pk, employee__is_active= True)
         return ParticipantProjectSerializer(part , many=True).data
     
     def get_participant_count(self,obj):
-        part = Participant.objects.filter(project = obj.pk, employee__user__is_active= True).count()
+        part = Participant.objects.filter(project = obj.pk, employee__is_active= True).count()
         return part
     
     def get_fund(self,obj):
