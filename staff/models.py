@@ -17,6 +17,7 @@ class Employee(models.Model):
         """Metaclass defines extra model properties"""
         verbose_name = _("Employee")
         verbose_name_plural = _("Employee")
+        ordering = ['first_name']
 
     """Model for employee"""
     first_name=models.CharField(max_length=40, blank=False, null=False)
@@ -60,7 +61,7 @@ class Employee(models.Model):
     @property
     def contracts_quotity(self):
         from expense.models import Contract
-        return Contract.objects.filter(Q(employee=self.pk) & ( Q(end_date__gte=timezone.now()) | Q(end_date=None))).aggregate(Sum('quotity'))["quotity__sum"]
+        return Contract.objects.filter(Q(employee=self.pk) &  Q(start_date__lte=timezone.now()) & ( Q(end_date__gte=timezone.now()) | Q(end_date=None))).aggregate(Sum('quotity'))["quotity__sum"]
 
     @property
     def projects(self):
@@ -112,6 +113,7 @@ class Employee_Type(models.Model):
     class Meta:
         """Metaclass defines extra model properties"""
         verbose_name = _("Employee Type")
+        ordering = ['name']
         
     shortname = models.CharField(max_length=10, verbose_name=_('Abbreviation'), unique=True)
     name = models.CharField(max_length=50, verbose_name=_('Name'), unique=True)

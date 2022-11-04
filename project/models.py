@@ -12,6 +12,7 @@ class Institution(models.Model):
     class Meta:
         """Metaclass defines extra model properties"""
         verbose_name = _("Lab Institution")
+        ordering = ['short_name']
         
     """List of institution public"""
     short_name= models.CharField(max_length=20, unique=True)
@@ -26,7 +27,7 @@ class Project(models.Model):
     class Meta:
         """Metaclass defines extra model properties"""
         verbose_name = _("project")
-        
+        ordering = ['name']
     name = models.CharField(max_length=50, verbose_name=_('Project Name'), unique=True)
     start_date=models.DateField(null=False, blank=False, verbose_name=_('Start Date'))
     end_date=models.DateField(null=True, blank=True, verbose_name=_('End Date'))

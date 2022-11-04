@@ -94,6 +94,7 @@ class Expense_point(models.Model):
 class Contract_type(models.Model):
     class Meta:
         verbose_name = _("Contract Type")
+        ordering = ['name']
     name = models.CharField(max_length=60, verbose_name=_('Type name'))
     
     def __str__(self):
