@@ -14,9 +14,10 @@ class Cost_Type(MPTTModel):
     class Meta:
         """Metaclass defines extra model properties"""
         verbose_name = _("Cost Type")
+        # ordering = ['short_name']
     
     class MPTTMeta:
-        order_insertion_by = ['name']
+        order_insertion_by = ['short_name']
                 
     parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
     short_name= models.CharField(max_length=10, verbose_name=_('Abbreviation'))
@@ -29,6 +30,7 @@ class Fund_Institution(models.Model):
     class Meta:
         """Metaclass defines extra model properties"""
         verbose_name = _("Funder Institution")
+        ordering = ['short_name']
         
     short_name= models.CharField(max_length=10, verbose_name=_('Funder abbreviation'))
     name = models.CharField(max_length=60, verbose_name=_('Funder Name'))
@@ -53,6 +55,7 @@ class Fund(models.Model):
     class Meta:
         """Metaclass defines extra model properties"""
         verbose_name = _("Fund")
+        ordering = ['project__name']
     project=models.ForeignKey(Project, on_delete=models.CASCADE, verbose_name=_('Funded Project'))
     funder=models.ForeignKey(Fund_Institution, on_delete=models.CASCADE, verbose_name=_('Fund Instituition'))
     institution=models.ForeignKey(Institution, on_delete=models.CASCADE, verbose_name=_('Manager Institution'))

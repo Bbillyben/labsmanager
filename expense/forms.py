@@ -19,26 +19,19 @@ class ContractModelForm(BSModalModelForm):
     def __init__(self, *args, **kwargs):
         if ('initial' in kwargs and 'employee' in kwargs['initial']):
             self.base_fields['employee'] = forms.ModelChoiceField(
-                queryset=Employee.objects.all(),
+                queryset=Employee.objects.all().order_by('first_name'),
                 widget=forms.HiddenInput
             )
         else:
             self.base_fields['employee'] = forms.ModelChoiceField(
-                queryset=Employee.objects.all(),
+                queryset=Employee.objects.all().order_by('first_name'),
             )
         if ('initial' in kwargs and 'project' in kwargs['initial']):
-            # self.base_fields['project'] = forms.ModelChoiceField(
-            #     queryset=Project.objects.all(),
-            #     widget=forms.HiddenInput
-            # )
             self.base_fields['fund'] = forms.ModelChoiceField(
                 queryset=Fund.objects.filter(project__in=kwargs['initial']['project']),
             )
 
         else:
-            # self.base_fields['project'] = forms.ModelChoiceField(
-            #     queryset=Project.objects.all(),
-            # )
             self.base_fields['fund'] = forms.ModelChoiceField(
                 queryset=Fund.objects.all(),
             )
