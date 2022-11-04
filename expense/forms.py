@@ -101,8 +101,7 @@ class ExpenseTimepointModelForm(BSModalModelForm):
                 queryset=Fund.objects.all(),
             )
         # set today as default entrey date
-        self.base_fields['entry_date'].initial = date.today()
-        
+        self.base_fields['entry_date'].initial = date.today()   
         
         super().__init__(*args, **kwargs)
         instance = getattr(self, 'instance', None)
@@ -110,3 +109,7 @@ class ExpenseTimepointModelForm(BSModalModelForm):
             self.fields['fund'].widget = forms.HiddenInput()
             self.fields['type'].disabled = True
             self.fields['value_date'].disabled = True
+            
+            
+    def clean_amount(self):
+        return -abs(self.cleaned_data['amount'])

@@ -34,6 +34,10 @@ class ParticipantModelForm(BSModalModelForm):
                 queryset=models.Project.objects.all(),
                 widget=forms.HiddenInput
             )
+            proj = models.Project.objects.get(pk=kwargs['initial']['project'])
+            if proj:
+                self.base_fields['start_date'].initial = proj.start_date
+                self.base_fields['end_date'].initial = proj.end_date
         else:
             self.base_fields['project'] = forms.ModelChoiceField(
                 queryset=models.Project.objects.all(),
@@ -45,7 +49,7 @@ class ParticipantModelForm(BSModalModelForm):
             )
         else:
             self.base_fields['employee'] = forms.ModelChoiceField(
-                queryset=Employee.objects.all(),
+                queryset=Employee.objects.filter(is_active=True),
             )
             
         super().__init__(*args, **kwargs)
