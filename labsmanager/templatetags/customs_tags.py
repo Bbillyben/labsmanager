@@ -2,6 +2,8 @@ from decimal import Decimal
 from django import template
 from django.urls import reverse
 from django.utils.safestring import mark_safe
+
+from settings.models import LMUserSetting
 import math
 import uuid
 register = template.Library()
@@ -58,3 +60,18 @@ def makeID(dynvarname):
 def unikId():
     """ Returns the value of dynvarname into the context """
     return uuid.uuid4().hex
+
+
+
+
+@register.simple_tag()
+def setting_object(key, *args, **kwargs):
+    """Return a setting object speciifed by the given key.
+    (Or return None if the setting does not exist)
+    if a user-setting was requested return that
+    """
+
+    if 'user' in kwargs:
+        return LMUserSetting.get_setting_object(key, user=kwargs['user'])
+    else:
+        raise Warning("User Is not set for User settings display")

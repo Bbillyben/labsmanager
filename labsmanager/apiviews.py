@@ -14,6 +14,8 @@ from fund.models import Fund, Fund_Item
 from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 
+from dashboard import utils
+
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -35,7 +37,7 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows Employee to be viewed or edited.
     """
-    queryset = Employee.objects.all()
+    queryset = Employee.objects.select_related('user').all()
     serializer_class = serializers.EmployeeSerialize
     permission_classes = [permissions.IsAuthenticated]
     
@@ -43,8 +45,8 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     
     @action(methods=['get'], detail=True,url_path='status', url_name='status')
     def status(self, request, pk=None):
-        emp = self.get_object()
-        status = Employee_Status.objects.filter(employee=emp.pk).order_by('end_date')
+        print('EmployeeViewSet / status :'+str(pk))
+        status = Employee_Status.objects.filter(employee=pk).order_by('end_date')
         return JsonResponse(serializers.EmployeeStatusSerialize(status,many=True).data, safe=False)
     
     @action(methods=['get'], detail=True,url_path='contracts', url_name='contracts')
@@ -113,8 +115,14 @@ class FundViewSet(viewsets.ModelViewSet):
     
     @action(methods=['get'], detail=False, url_path='stale', url_name='stale_fund')
     def staleFunds(self, request, pk=None):
-        dateL=date.today()+ relativedelta(months=+3)
-        fund=Fund.objects.filter(Q(is_active=True) & Q(project__status=True) & Q(end_date__lte=dateL)).order_by('-end_date')
+        q_objects = Q(is_active=True) & Q(project__status=True) # base Q objkect
+        slot = utils.getDashboardTimeSlot(request)
+        if 'from' in slot:
+            q_objects = q_objects & Q(end_date__gte=slot["from"])
+        if 'to' in slot:
+            q_objects = q_objects & Q(end_date__lte=slot["to"])
+            
+        fund=Fund.objects.filter( q_objects).order_by('-end_date')
         
         return JsonResponse(serializers.FundStaleSerializer(fund, many=True).data, safe=False) 
         

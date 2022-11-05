@@ -35,14 +35,14 @@ class Employee(models.Model):
     
     @property
     def is_team_leader(self):
-        teams=Team.objects.filter(leader=self.pk)
+        teams=Team.objects.filter(leader=self.pk).values("pk")
         if teams:
             return True
         return False
     
     @property
     def is_team_mate(self):
-        teams=TeamMate.objects.filter(employee=self.pk)
+        teams=TeamMate.objects.filter(employee=self.pk).values("pk")
         if teams:
             return True
         return False

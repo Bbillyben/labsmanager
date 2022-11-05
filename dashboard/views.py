@@ -14,10 +14,13 @@ from django.utils.functional import cached_property
 from django.urls import reverse, reverse_lazy
 from view_breadcrumbs import BaseBreadcrumbMixin
 
+from settings.models import LMUserSetting
 
 
 from project.models import Project
 from fund.models import Fund_Item, Fund
+from dashboard import utils
+
 
 class FundLossView(LoginRequiredMixin, BaseBreadcrumbMixin, View):
     
@@ -32,7 +35,14 @@ class FundLossCardView(LoginRequiredMixin, BaseBreadcrumbMixin, View):
     def get(self, request, *args, **kwargs):
         import pandas as pd
         
-        fund=Fund.objects.filter(Q(is_active=True) & Q(project__status=True) ).order_by('end_date')
+        q_objects = Q(is_active=True) & Q(project__status=True) # base Q objkect
+        slot = utils.getDashboardTimeSlot(request)
+        if 'from' in slot:
+            q_objects = q_objects & Q(end_date__gte=slot["from"])
+        if 'to' in slot:
+            q_objects = q_objects & Q(end_date__lte=slot["to"])
+            
+        fund=Fund.objects.filter(q_objects).order_by('end_date')
         if not fund:
             context={'data':{},
                  'type':'line',
