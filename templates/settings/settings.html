@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load customs_tags %}
+
+
+{% block breadcrumb_list %}
+{% endblock %}
+
+{% block sidebar %}
+{% include "settings/sidebar.html" %}
+{% endblock %}
+
+{% block content %}
+
+
+{% include "settings/dashboard_settings.html" %}
+
+
+{{ request.user.id|json_script:"user_id" }}
+{{ project.pk|json_script:"project_id" }}
+{% endblock %}
+
+
+{% block js_load %}
+<script type='text/javascript' src="{% static 'js/labsmanager.js' %}"></script>
+<script type='text/javascript' src="{% static 'js/api.js' %}"></script>
+<script type='text/javascript' src="{% static 'js/nav.js' %}"></script>
+<script type='text/javascript' src="{% static 'js/settings/settings.js' %}"></script>
+
+<script>
+    $(document).ready(function () {
+        enableSidebar('settings');
+        initSettingsPage();
+    })
+</script>
+{% endblock %}

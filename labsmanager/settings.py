@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     'project.apps.ProjectConfig',
     'fund.apps.FundConfig',
     'expense.apps.ExpenseConfig',
+    'settings.apps.SettingsConfig',
 ]
 
 MIDDLEWARE = [

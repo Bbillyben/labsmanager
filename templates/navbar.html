@@ -43,25 +43,17 @@
             <span class='fas fa-user'></span> <strong>{{ user.get_username }}</strong>
           </a>
           <ul class='dropdown-menu dropdown-menu-end labsmanager-navbar-menu'>
+            
             {% if user.is_authenticated %}
-            {% if user.is_staff %}
-            <li><a class='dropdown-item' href="{% url 'admin:index' %}"><span class="fas fa-user-shield"></span> {% trans "Admin" %}</a></li>
-            {% endif %}
-            <li><a class='dropdown-item' href="{% url 'logout' %}"><span class="fas fa-sign-out-alt"></span> {% trans "Logout" %}</a></li>
+              <li><a class='dropdown-item' href="{% url 'settings' %}"><span class="fas fa-gear"></span> {% trans "Settings" %}</a></li>
+              {% if user.is_staff %}
+                <li><a class='dropdown-item' href="{% url 'admin:index' %}"><span class="fas fa-user-shield"></span> {% trans "Admin" %}</a></li>
+              {% endif %}
+              <hr>
+              <li><a class='dropdown-item' href="{% url 'logout' %}"><span class="fas fa-sign-out-alt"></span> {% trans "Logout" %}</a></li>
             {% else %}
-            <li><a class='dropdown-item' href="{% url 'login' %}"><span class="fas fa-sign-in-alt"></span> {% trans "Login" %}</a></li>
-            {% endif %}
-            <hr>
-            {% comment %} <li id='launch-stats'>
-              <a class='dropdown-item' href='#'>
-                {% if system_healthy or not user.is_staff %}
-                <span class='fas fa-server'></span>
-                {% else %}
-                <span class='fas fa-server icon-red'></span>
-                {% endif %}
-                {% trans "System Information" %}
-              </a>
-            </li> {% endcomment %}
+              <li><a class='dropdown-item' href="{% url 'login' %}"><span class="fas fa-sign-in-alt"></span> {% trans "Login" %}</a></li>
+            {% endif %}            
           </ul>
         </li>
       </ul>

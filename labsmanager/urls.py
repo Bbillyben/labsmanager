@@ -18,6 +18,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path, re_path
 from .views import IndexView 
+from settings.apiviews import UserSettingsDetail
 from rest_framework import routers
 from . import apiviews #UserViewSet, GroupViewSet, EmployeeViewSet, ProjectViewSet, FundViewSet
 
@@ -30,7 +31,8 @@ urlpatterns = [
     path('project/', include('project.urls')),              # for project model
     path('fund/', include('fund.urls')),              # for project model
     path('expense/', include('expense.urls')),              # for project model
-    path('dashboard/', include('dashboard.urls'))
+    path('dashboard/', include('dashboard.urls')),
+    path('settings/', include('settings.urls'))
 ]
 #  Authentications : 
 urlpatterns += [
@@ -47,10 +49,11 @@ router.register(r'project', apiviews.ProjectViewSet, basename='project')
 router.register(r'fund', apiviews.FundViewSet, basename='fund')
 router.register(r'contract', apiviews.ContractViewSet, basename='contract')
 router.register(r'budget', apiviews.BudgetPOintViewSet, basename='budget')
-
+# router.register(r'settings', UserSettingsDetail.as_view(), basename='settings')
 
 urlpatterns += [
     path('api/', include((router.urls, 'api_app'), namespace='api')),
+    path('api/settings/', include('settings.urls_api')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
 
