@@ -9,6 +9,14 @@
       </div>
       <div class="navbar-collapse collapse" id="navbar-objects">
         <ul class="navbar-nav">
+          <!-- For Dashboard -->
+          <li class='nav-item'>
+            <a class='nav-link' href="{% url 'dashboard' %}">
+              <span class='fas fa-chart-area icon-header'></span>{% trans "Dashboard" %}
+            </a>
+          </li>
+          {% include 'liste_spacer.html' %}
+
           <!-- For Staff-->
           <li class='nav-item dropdown'>
             <a class='nav-link dropdown-toggle' href='#' id='buyMenuDropdown' role='button' data-bs-toggle='dropdown'>

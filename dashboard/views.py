@@ -1,3 +1,4 @@
+from django.views.generic.base import TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
@@ -21,7 +22,11 @@ from project.models import Project
 from fund.models import Fund_Item, Fund
 from dashboard import utils
 
-
+class DashboardView(LoginRequiredMixin, TemplateView):
+    """View for index page."""
+    template_name = 'dashboard/global_dashboard.html' #'labmanager/index.html
+    
+    
 class FundLossView(LoginRequiredMixin, BaseBreadcrumbMixin, View):
     
     def get(self, request, *args, **kwargs):
