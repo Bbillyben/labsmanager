@@ -1120,6 +1120,10 @@ col.column-Sum{
     font-size:1rem;
 }
 
+li.list-spacer{
+    border-right: 0.1rem solid var(--border-color);
+    margin: 0.5rem .25rem 0.5rem .25rem;
+}
 /* overrride bootstrap style */
 .list-group-item.active{
     background-color: #53825f !important;
