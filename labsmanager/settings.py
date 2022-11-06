@@ -220,6 +220,9 @@ REST_FRAMEWORK = {
 APPEND_SLASH = False  # prevent error for post request by ajax
 
 
+# Session 
+SESSION_COOKIE_AGE = 86400
+
 
 ## Import export options
 

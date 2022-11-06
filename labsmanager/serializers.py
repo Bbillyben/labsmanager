@@ -143,8 +143,14 @@ class FundItemSerialize(serializers.ModelSerializer):
     type=CostTypeSerialize(many=False, read_only=True)
     class Meta:
         model = Fund_Item
-        fields = ['pk', 'type', 'amount', 'fund']        
-
+        fields = ['pk', 'type', 'amount', 'fund']    
+            
+class FundItemSerialize_min(serializers.ModelSerializer):
+    type=CostTypeSerialize(many=False, read_only=True)
+    class Meta:
+        model = Fund_Item
+        fields = ['pk', 'type', 'amount',]  
+        
 class FundStaleSerializer(serializers.ModelSerializer):
     availability=serializers.SerializerMethodField()
     project=ProjectSerializer(many=False, read_only=True)
@@ -299,7 +305,7 @@ class ProjectFullSerializer(serializers.ModelSerializer):
                   'fund','get_funds_amount', 
                   ]
     def get_participant(self,obj):
-        part = Participant.objects.filter(project = obj.pk, employee__is_active= True)
+        part = Participant.objects.select_related('employee').filter(project = obj.pk, employee__is_active= True)
         return ParticipantProjectSerializer(part , many=True).data
     
     def get_participant_count(self,obj):
@@ -307,7 +313,7 @@ class ProjectFullSerializer(serializers.ModelSerializer):
         return part
     
     def get_fund(self,obj):
-        fund = Fund.objects.filter(project = obj.pk)
+        fund = Fund.objects.select_related('funder', 'institution').filter(project = obj.pk)
         return FundProjectSerialize(fund , many=True).data
     
     # def get_total_amount(self,obj):
