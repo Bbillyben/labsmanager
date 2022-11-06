@@ -42,11 +42,11 @@ class Project(models.Model):
     def get_funds_amount(self):
         from fund.models import Fund, Fund_Item
         fundP=Fund.objects.filter(project=self.pk).only('pk').all()
-        return Fund_Item.objects.filter(fund__in = fundP).aggregate(Sum('amount'))["amount__sum"]
+        return Fund_Item.objects.filter(fund__in = fundP).only('amount').aggregate(Sum('amount'))["amount__sum"]
     
     @property
     def get_total_participant_quotity(self):
-        parti=Participant.objects.filter(Q(project=self.pk) & (Q(end_date=None) | Q(end_date__gte=date.today())))
+        parti=Participant.objects.filter(Q(project=self.pk) & (Q(end_date=None) | Q(end_date__gte=date.today()))).only('quotity')
         return parti.aggregate(Sum('quotity'))["quotity__sum"]
     
     @property
@@ -54,7 +54,7 @@ class Project(models.Model):
         from expense.models import Contract
         from fund.models import Fund, Fund_Item
         fundP=Fund.objects.filter(project=self.pk).only('pk').all()
-        cont=Contract.objects.filter(Q(fund__in = fundP) & (Q(end_date=None) | Q(end_date__gte=date.today())))
+        cont=Contract.objects.filter(Q(fund__in = fundP) & (Q(end_date=None) | Q(end_date__gte=date.today()))).only('quotity')
         return cont.aggregate(Sum('quotity'))["quotity__sum"]   
     
     def __str__(self):

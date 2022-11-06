@@ -97,15 +97,15 @@ class ProjectViewSet(viewsets.ModelViewSet):
         return JsonResponse(serializers.ContractSerializer(contract, many=True).data, safe=False)
 
 class FundViewSet(viewsets.ModelViewSet):
-    queryset = Fund.objects.all()
+    queryset = Fund.objects.select_related('funder', 'institution').all()
     serializer_class = serializers.FundSerialize
     permission_classes = [permissions.IsAuthenticated]
 
     @action(methods=['get'], detail=True, url_path='items', url_name='items')
     def items(self, request, pk=None):
         fund = self.get_object()
-        t1=Fund_Item.objects.filter(fund=fund.pk)
-        return JsonResponse(serializers.FundItemSerialize(t1, many=True).data, safe=False)
+        t1=Fund_Item.objects.select_related('type').filter(fund=fund.pk)
+        return JsonResponse(serializers.FundItemSerialize_min(t1, many=True).data, safe=False)
     
     
     @action(methods=['get'], detail=True, url_path='expense_timepoint', url_name='expense_timepoint')
@@ -122,7 +122,7 @@ class FundViewSet(viewsets.ModelViewSet):
         if 'to' in slot:
             q_objects = q_objects & Q(end_date__lte=slot["to"])
             
-        fund=Fund.objects.filter( q_objects).order_by('-end_date')
+        fund=Fund.objects.select_related('project', 'funder', 'institution').filter( q_objects).order_by('-end_date')
         
         return JsonResponse(serializers.FundStaleSerializer(fund, many=True).data, safe=False) 
         
@@ -141,7 +141,7 @@ class ContractViewSet(viewsets.ModelViewSet):
     @action(methods=['get'], detail=False, url_path='stale', url_name='contract_stale')
     def get_stale(self, request):
         dateL=date.today()+ relativedelta(months=+3)
-        cont=Contract.objects.filter(Q(is_active=True)& Q(fund__project__status=True)  & Q(end_date__lte=dateL)).order_by('-end_date')
+        cont=Contract.objects.select_related('employee', 'fund', 'contract_type').filter(Q(is_active=True)& Q(fund__project__status=True)  & Q(end_date__lte=dateL)).order_by('-end_date')
         return JsonResponse(serializers.ContractSerializer(cont, many=True).data, safe=False) 
         
 
