@@ -93,28 +93,32 @@ def get_project_fund_overview(request, pk):
     cpd=pd.DataFrame.from_records(c, columns=['funder','institution', 'ref', "type","amount","source"])
     cpd["fund"]=cpd['funder']+" - "+cpd['institution']+ " ("+cpd['ref']+')'
     
-    piv=cpd.pivot_table(index="type", columns=["fund","source"], values="amount", aggfunc='sum', margins=True, margins_name='Sum',fill_value="-")
-    # print (cpd)
-    # print ("_____________________________________________________________________________")
-    # print (piv)
-    # print(piv)
-    # pd.concat([
-    #     y.append(y.sum().rename((x, 'Total')))
-    #     for x, y in piv.groupby(level=0) 
-    # ]).append(piv.sum().rename(('Grand', 'Total')))
-    # pd.concat([
-    #     y.append(y.sum().rename((x, 'Total')))
-    #     for x, y in piv.groupby(level=0)
-    # ])
-    for x, y in piv.columns:
-        print('x : '+str(x))
-        print('  -> y : '+str(y))
-        print('________________________________________________________________________________________________________')
+    piv=cpd.pivot_table(index="type", 
+                        columns=["fund","source"], 
+                        values="amount", 
+                        aggfunc='sum', 
+                        margins=True, 
+                        margins_name='Sum',
+                        fill_value="-",
+    )
+    piv = piv.rename_axis(None, axis=0)  
+    dfs = [] 
+    for c in piv.columns.get_level_values(0).unique():
+        if not c =="Sum":
+            s = piv.loc[:, c].sum(axis=1, skipna=False)
+            dfs.append(pd.DataFrame(s, index=s.index, columns=[(c, f"Total")]))
+    # concat them together, sort the columns:
+    out = pd.concat([piv, pd.concat(dfs, axis=1)], axis=1)
+    # out.loc['Column_Total']= out.sum(numeric_only=True, axis=0)
+    # out.loc[:,'Row_Total'] = out.sum(numeric_only=True, axis=1)
+    out = out[sorted(out.columns)]
     
+    # out.loc['Column_Total']= out.sum(numeric_only=True, axis=0)
+    # out.loc[:,'Row_Total'] = out.sum(numeric_only=True, axis=1)
     
-    PDUtils.applyColumnFormat(piv, PDUtils.moneyFormat)
+    PDUtils.applyColumnFormat(out, PDUtils.moneyFormat)
     
-    table=PDUtils.getBootstrapTable(piv)
+    table=PDUtils.getBootstrapTable(out)
       
     data = {'table':table}
     
