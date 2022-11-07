@@ -75,8 +75,9 @@ function adminActionFormatter(value, row, index, field){
 function contractsFormatter(value, row, index, field){
   //console.log('contractsFormatter : '+JSON.stringify(value)+" - row : "+JSON.stringify(row) + "  - index :"+index+ " - fiels :"+field+"  # allow :"+this.allow);
   response = '<ul>';
-  for (const item of value) {
-    if (item.end_date == null){
+  var d = new Date();
+  for (var item of value) {
+    if (item.end_date == null || new Date(item.end_date) > d){
       response+= '<li>'+item.fund.institution.short_name+ " / "+item.fund.project.name+" - "+item.fund.funder.short_name+" ("+quotityDisplay(item.quotity)+" - "+item.start_date+")"+"</li>";
     }
   }

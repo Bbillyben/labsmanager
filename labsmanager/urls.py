@@ -17,7 +17,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path, re_path
-from .views import IndexView 
+from .views import IndexView , redirectIndexView
 from settings.apiviews import UserSettingsDetail
 from rest_framework import routers
 from . import apiviews #UserViewSet, GroupViewSet, EmployeeViewSet, ProjectViewSet, FundViewSet
@@ -26,7 +26,7 @@ from . import apiviews #UserViewSet, GroupViewSet, EmployeeViewSet, ProjectViewS
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^index/', IndexView.as_view(), name='index'),
-    path('', IndexView.as_view(), name='index'),
+    path('', redirectIndexView.as_view(), name='index'),
     path('staff/', include('staff.urls'), name='staff'),                  # For Staff models
     path('project/', include('project.urls')),              # for project model
     path('fund/', include('fund.urls')),              # for project model

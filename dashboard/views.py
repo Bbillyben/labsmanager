@@ -22,10 +22,10 @@ from project.models import Project
 from fund.models import Fund_Item, Fund
 from dashboard import utils
 
-class DashboardView(LoginRequiredMixin, TemplateView):
+class DashboardView(LoginRequiredMixin, BaseBreadcrumbMixin, TemplateView):
     """View for index page."""
     template_name = 'dashboard/global_dashboard.html' #'labmanager/index.html
-    
+    crumbs = [("Dashboard","dashboard")]
     
 class FundLossView(LoginRequiredMixin, BaseBreadcrumbMixin, View):
     

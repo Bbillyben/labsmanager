@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'dbbackup',                     # https://django-dbbackup.readthedocs.io/en/master/installation.html
     'tabular_permissions',          # https://pypi.org/project/django-tabular-permissions/
     'import_export',                # https://django-import-export.readthedocs.io/en/latest/installation.html
+    'django_filters',               # https://django-filter.readthedocs.io/en/stable/guide/install.html
     
     # App
     'staff.apps.StaffConfig',
@@ -227,3 +228,9 @@ SESSION_COOKIE_AGE = 86400
 ## Import export options
 
 IMPORT_EXPORT_USE_TRANSACTIONS = True
+
+## aduit log
+AUDITLOG_DISABLE_ON_RAW_SAVE = True
+
+## breadcrumbs
+BREADCRUMBS_HOME_LABEL = '<i class="fas fa-bars"></i>'

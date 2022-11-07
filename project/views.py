@@ -19,7 +19,6 @@ from labsmanager.pandas_utils import PDUtils
 
 class ProjectIndexView(LoginRequiredMixin, BaseBreadcrumbMixin, TemplateView):
     template_name = 'project/project_base.html'
-    home_label = '<i class="fas fa-bars"></i>'
     model = Project
     crumbs = [("Project","project")]
     
@@ -27,7 +26,6 @@ class ProjectIndexView(LoginRequiredMixin, BaseBreadcrumbMixin, TemplateView):
     
 class ProjectView(LoginRequiredMixin, BaseBreadcrumbMixin, TemplateView):
     template_name = 'project/project_single.html'
-    home_label = '<i class="fas fa-bars"></i>'
     model = Project
     # crumbs = [("Project","project")]
     
@@ -65,7 +63,6 @@ def get_project_resume(request, pk):
     return render(request, 'project/project_desc_table.html', data)
 
 def get_project_fund_overview(request, pk):
-    
     fund=Fund.objects.filter(project=pk).values("pk")
     
     # get funitem related to funds
@@ -95,7 +92,25 @@ def get_project_fund_overview(request, pk):
     
     cpd=pd.DataFrame.from_records(c, columns=['funder','institution', 'ref', "type","amount","source"])
     cpd["fund"]=cpd['funder']+" - "+cpd['institution']+ " ("+cpd['ref']+')'
+    
     piv=cpd.pivot_table(index="type", columns=["fund","source"], values="amount", aggfunc='sum', margins=True, margins_name='Sum',fill_value="-")
+    # print (cpd)
+    # print ("_____________________________________________________________________________")
+    # print (piv)
+    # print(piv)
+    # pd.concat([
+    #     y.append(y.sum().rename((x, 'Total')))
+    #     for x, y in piv.groupby(level=0) 
+    # ]).append(piv.sum().rename(('Grand', 'Total')))
+    # pd.concat([
+    #     y.append(y.sum().rename((x, 'Total')))
+    #     for x, y in piv.groupby(level=0)
+    # ])
+    for x, y in piv.columns:
+        print('x : '+str(x))
+        print('  -> y : '+str(y))
+        print('________________________________________________________________________________________________________')
+    
     
     PDUtils.applyColumnFormat(piv, PDUtils.moneyFormat)
     

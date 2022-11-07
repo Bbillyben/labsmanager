@@ -1128,6 +1128,13 @@ li.list-spacer{
 .list-group-item.active{
     background-color: #53825f !important;
 }
+/* for list in table */
+.th-inner ul {
+	text-align: left;
+	font-size: 80%;
+	list-style: circle;
+	padding: 0.12rem;
+}
 
 
 /*   for tab radio button   */

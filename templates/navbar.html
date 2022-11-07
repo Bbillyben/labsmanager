@@ -9,13 +9,7 @@
       </div>
       <div class="navbar-collapse collapse" id="navbar-objects">
         <ul class="navbar-nav">
-          <!-- For Dashboard -->
-          <li class='nav-item'>
-            <a class='nav-link' href="{% url 'dashboard' %}">
-              <span class='fas fa-chart-area icon-header'></span>{% trans "Dashboard" %}
-            </a>
-          </li>
-          {% include 'liste_spacer.html' %}
+         
 
           <!-- For Staff-->
           <li class='nav-item dropdown'>
@@ -45,7 +39,13 @@
           </button>
         </li>
         -->
-
+        <!-- For Dashboard -->
+        <li class='nav-item'>
+          <a class='nav-link' href="{% url 'dashboard' %}">
+            <span class='fas fa-chart-area icon-header'></span>{% trans "Dashboard" %}
+          </a>
+        </li>
+        {% include 'liste_spacer.html' %}
         <li class='nav-item dropdown'>
           <a class='nav-link dropdown-toggle' href='#' id='userMenuDropdown' role='button' data-bs-toggle='dropdown'>
             <span class='fas fa-user'></span> <strong>{{ user.get_username }}</strong>
