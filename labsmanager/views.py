@@ -9,7 +9,15 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 # from allauth.account.views import LoginView
 # Create your views here.
 
+class redirectIndexView(LoginRequiredMixin, TemplateView):
+    template_name = 'labmanager/index.html' #'labmanager/index.html'
+    def get(self, request, *args, **kwargs): ## Redirect to dash board for the moment
+        return redirect('dashboard')
+    
 class IndexView(LoginRequiredMixin, TemplateView):
     """View for index page."""
-    template_name = 'dashboard/global_dashboard.html' #'labmanager/index.html'
+    template_name = 'labmanager/index.html' #'labmanager/index.html'
+    
+    # def get(self, request, *args, **kwargs): ## Redirect to dash board for the moment
+    #     return redirect('dashboard')
     

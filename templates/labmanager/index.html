@@ -1,23 +1,58 @@
-{% extends "base.html" %}
-{% load i18n %}
 {% load static %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
 
-{% block page_title %}
-{% trans "LabManager Index" %}
-{% endblock %}
+<link rel="icon" type="image/png" href="{% static 'img/labsmanager/labsmanager_icon_fav.png' %}" />
 
-{% block breadcrumb_list %}
-{% endblock %}
+<!-- CSS -->
+<link rel="stylesheet" href="{% static 'css/labsmanager.css' %}">
+<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'fontawesome/css/brands.min.css' %}">
+<link rel="stylesheet" href="{% static 'fontawesome/css/solid.min.css' %}">
 
-{% block sidebar %}
-{% endblock %}
+<link rel="stylesheet" href="{% static 'css/color-themes/default.css' %}">
 
-{% block content %}
 
-    {% include 'dashboard/global_dashboard.html' %}
 
-{% endblock %}
+<body class='login-screen' style='background: url({% static "img/labsmanager/lab_bg.jpg" %}); background-size: cover;'></body>
 
-{% block js_load %} 
- {% endblock %}
+    <div class='container-fluid'>
+        <div class='notification-area' id='alerts'>
+            <!-- Div for displayed alerts -->
+        </div>
+    </div>
+
+    <div class='main body-wrapper login-screen d-flex'>
+
+        <div class="liencont body-wrapper login-screen d-flex" style='width:75%; margin:auto;'>
+            <div class='login-container'>
+            test 21
+            </div>
+            <div class='login-container'>
+                test 21
+                </div>
+                <div class='login-container'>
+                    test 21
+                </div>
+        </div>
+    </div>
+
+<!-- Scripts -->
+<!-- base jquery -->
+
+<script type='text/javascript' src="{% static 'fontawesome/js/solid.min.js' %}"></script>
+<script type='text/javascript' src="{% static 'fontawesome/js/regular.min.js' %}"></script>
+<script type='text/javascript' src="{% static 'fontawesome/js/brands.min.js' %}"></script>
+<script type='text/javascript' src="{% static 'fontawesome/js/fontawesome.min.js' %}"></script>
+
+
+</body>
+</html>
