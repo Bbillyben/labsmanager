@@ -97,7 +97,9 @@ function moneyFormatter(value, row, index, field){
 }
 
 function basicBoolean(value, row, index, field){
-    return (value ? '<img src="/static/admin/img/icon-yes.svg" alt="True">' : '<img src="/static/admin/img/icon-no.svg" alt="False">');
+    response = (value ? '<img src="/static/admin/img/icon-yes.svg" alt="True">' : '<img src="/static/admin/img/icon-no.svg" alt="False">');
+    response += '<span style="display:none">'+ value+"</span>";
+    return response
 }
 
 function styleAlignMiddle(value, row, index, field){
