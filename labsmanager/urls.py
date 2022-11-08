@@ -26,7 +26,7 @@ from . import apiviews #UserViewSet, GroupViewSet, EmployeeViewSet, ProjectViewS
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^index/', IndexView.as_view(), name='index'),
-    path('', redirectIndexView.as_view(), name='index'),
+    path('', IndexView.as_view(), name='index'),
     path('staff/', include('staff.urls'), name='staff'),                  # For Staff models
     path('project/', include('project.urls')),              # for project model
     path('fund/', include('fund.urls')),              # for project model

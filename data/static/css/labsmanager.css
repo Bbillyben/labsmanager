@@ -15,6 +15,9 @@
 
     --headings-color: #c9e0cf;
     --subheading-color: #d1dbd3;
+
+    --icon-index-color:rgb(25, 150, 119);
+
 }
 
 main {
@@ -1162,3 +1165,63 @@ li.list-spacer{
     display: block;
     background: var(--subheading-color); 
   }
+
+
+
+  /*  For the index screen */
+  
+.index-screen {
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    font-family: 'Numans', sans-serif;
+    color: #eee;
+  }
+  .card.index-container{
+    align-self: center;
+    border-radius: 15px;
+    padding: 20px;
+    padding-bottom: 20px;
+    padding-bottom: 35px;
+    background-color: rgba(50, 50, 50, 0.75);
+    width: 100%;
+    max-width: 550px;
+    margin: auto;
+  }
+  .index-container:hover{
+    transform: scale(1.1);
+    transition: all linear 200ms;
+    z-index: 1;
+    box-shadow: 1px 1px 10px rgba(0,0,0,.3);
+    cursor: pointer;
+  }
+  .index-container:hover .icon-container .text,.index-container:hover .icon-container .icon{
+    color: var(--label-green);
+  }
+  .icon-container{
+    text-align: center;
+    
+  }
+  .icon-container .icon{
+    font-size: 8rem;
+  } 
+  .icon-container .text {
+    color: white;
+    font-weight: bold;
+    font-size: 2rem;
+  }
+/* .icon-container .text:hover {
+    color: var(--label-green);
+  } */
+  .icon-container .icon{
+    color: var(--icon-index-color);
+  } 
+  /* .icon-container .icon:hover{
+    color:var(--label-green);
+  }  */
+ 
+  .break {
+    flex-basis: 100%;
+    height: 0;
+  }
+  

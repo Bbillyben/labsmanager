@@ -23,26 +23,82 @@
 
 
 <body class='login-screen' style='background: url({% static "img/labsmanager/lab_bg.jpg" %}); background-size: cover;'></body>
-
-    <div class='container-fluid'>
-        <div class='notification-area' id='alerts'>
-            <!-- Div for displayed alerts -->
-        </div>
+{% if user.is_authenticated %}
+<nav class="navbar {% if sticky %}fixed-top{% endif %} navbar-expand-lg navbar-light">
+    <div class="container-fluid" style="text-align: end;">
+        <a class='dropdown-item' href="{% url 'logout' %}"><span class="fas fa-sign-out-alt"></span> {% trans "Logout" %}</a>
     </div>
+</nav>
+{% endif %}   
+<div class='main body-wrapper flex'>
+    <div class="liencont index-screen d-flex" style='width:75%; margin:auto;'>
+        <div class="row" style="width:100%;">
+            {% url 'employee_index' as urlCard %}
+            {% trans 'Employee' as txtCard %}
+            {% include 'labmanager/index_card.html' with url=urlCard icon='fa-circle-user' text=txtCard %}
 
-    <div class='main body-wrapper login-screen d-flex'>
 
-        <div class="liencont body-wrapper login-screen d-flex" style='width:75%; margin:auto;'>
-            <div class='login-container'>
-            test 21
-            </div>
-            <div class='login-container'>
-                test 21
-                </div>
-                <div class='login-container'>
-                    test 21
-                </div>
+            {% url 'project_index' as urlCard %}
+            {% trans 'Project' as txtCard %}
+            {% include 'labmanager/index_card.html' with url=urlCard icon='fa-flask' text=txtCard %}
+
+            {% url 'dashboard' as urlCard %}
+            {% trans 'Dashboard' as txtCard %}
+            {% include 'labmanager/index_card.html' with url=urlCard icon='fa-chart-area' text=txtCard %}
+            
+            {% if user.is_staff %}
+                <div class="break"></div>
+                {% url 'admin:index' as urlCard %}
+                {% trans 'Admin Site' as txtCard %}
+                {% include 'labmanager/index_card.html' with url=urlCard icon='fa-user-shield' text=txtCard %} 
+            {% endif %}
         </div>
+
+    
+
+
+    </div>
+</div>
+
+    <!-- <div class='main body-wrapper flex'>
+        <div class="liencont index-screen d-flex" style='width:75%; margin:auto;'>
+            <div class='index-container'>
+                <a href="{% url 'employee_index' %}">
+                    <div class="icon-container">
+                        <div class="icon employee"><i class="fa fa-circle-user"></i></div>
+                        <div class="text">{% trans 'Employees' %}</div>
+                    </div>
+                </a>
+            </div>
+            <div class='index-container'>
+                <a href="{% url 'project_index' %}">
+                    <div class="icon-container">
+                        <div class="icon employee"><i class="fa fa-flask"></i></div>
+                        <div class="text">{% trans 'Project' %}</div>
+                    </div>
+                </a>
+            </div>
+           
+            <div class='index-container'>
+                <a href="{% url 'dashboard' %}">
+                    <div class="icon-container">
+                        <div class="icon employee"><i class="fa fa-chart-area"></i></div>
+                        <div class="text">{% trans 'Dashboard' %}</div>
+                    </div>
+                </a>                
+            </div>
+            {% if user.is_staff %}
+                <div class='index-container'>
+                    <a href="{% url 'admin:index' %}">
+                        <div class="icon-container">
+                            <div class="icon employee"><i class="fa fa-user-shield"></i></div>
+                            <div class="text">{% trans 'Admin' %}</div>
+                        </div>
+                    </a>                
+                </div>
+            {% endif %}
+        </div> -->
+    
     </div>
 
 <!-- Scripts -->
