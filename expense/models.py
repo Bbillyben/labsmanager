@@ -8,6 +8,8 @@ from django.db.models import Q, Sum
 
 from labsmanager.models_utils import PERCENTAGE_VALIDATOR, NEGATIVE_VALIDATOR    
 
+from settings.models import LMUserSetting
+from dashboard import utils
 from auditlog.models import AuditlogHistoryField
 from auditlog.registry import auditlog
 
@@ -124,6 +126,11 @@ class Contract(models.Model):
             return exp.aggregate(Sum('amount'))["amount__sum"]
         return 0
     
+    @classmethod
+    def staleFilter(cls):
+        monthToGo=LMUserSetting.get_setting('DASHBOARD_CONTRACT_STALE_TO_MONTH')
+        maxDate=utils.getDateToStale(monthToGo)
+        return (Q(is_active=True) & Q(end_date__lte=maxDate))
     
     
 auditlog.register(Expense)

@@ -18,3 +18,6 @@ def getDashboardTimeSlot(request):
         slot["to"]=now + relativedelta(months=+nextMonth)
     
     return slot   
+
+def getDateToStale(monthToGo):
+    return datetime.now()+ relativedelta(months=+monthToGo)

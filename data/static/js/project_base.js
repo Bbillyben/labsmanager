@@ -2,18 +2,38 @@
 user_id = 0;
 project_id = 0;
 
-function initProjectBaseView(user_idA, project_idA){
+function initProjectBaseView(tableurl, user_idA, project_idA){
         
     user_id = user_idA;
     project_id = project_idA;
-    $('#project_main_table').bootstrapTable({
-        onLoadSuccess: function(){ updateAdminBtnHandler();},
-        onSearch: function(){ updateAdminBtnHandler();},
-        onSort: function(){ updateAdminBtnHandler();},
-        onToggle: function(){ updateAdminBtnHandler();},
-        onPageChange: function(){ updateAdminBtnHandler();},
-        }
-    );
+
+    var filters = loadTableFilters('project');
+
+    var options={
+        callback: updateAdminBtnHandler,
+        exportTypes: ['json', 'xml', 'csv', 'txt', 'excel'],
+        exportOptions: {
+            fileName:"Project_Export", 
+            ignoreColumn: ["admin_action"]
+        },
+        showExport: 'true', 
+        url:tableurl,
+        queryParams: filters,
+        name:'project',
+        
+    }
+    setupFilterList('project', $('#project_main_table'));
+    $('#project_main_table').labTable(options);
+
+
+    // $('#project_main_table').bootstrapTable({
+    //     onLoadSuccess: function(){ updateAdminBtnHandler();},
+    //     onSearch: function(){ updateAdminBtnHandler();},
+    //     onSort: function(){ updateAdminBtnHandler();},
+    //     onToggle: function(){ updateAdminBtnHandler();},
+    //     onPageChange: function(){ updateAdminBtnHandler();},
+    //     }
+    // );
 
     $("#project_create").modalForm({
         modalID: "#create-modal",

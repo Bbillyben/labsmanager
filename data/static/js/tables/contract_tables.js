@@ -1,20 +1,27 @@
 var callbackContract;
 var callbackContractExpense;
 
-function initializeContractsTable(callback_contract=undefined, callback_contractExpense=undefined){
+function initializeContractsTable(tableurl, callback_contract=undefined, callback_contractExpense=undefined){
     callbackContract=callback_contract;
     callbackContractExpense=callback_contractExpense;
 
-    $('#contract_table').bootstrapTable({
-        onLoadSuccess: function(){ updateContractBtnHandler();},
-        onSearch: function(){ updateContractBtnHandler();},
-        onSort: function(){  updateContractBtnHandler();},
-        onToggle: function(){ updateContractBtnHandler();},
-        onPageChange: function(){ updateContractBtnHandler();},
-    });
-    // $('#contract_table').labTable({
-    //     callback:updateContractBtnHandler,
-    // })
+    var filters = loadTableFilters('contract');
+    var options={
+            callback: updateContractBtnHandler,
+            exportTypes: ['json', 'xml', 'csv', 'txt', 'excel'],
+            exportOptions: {
+                fileName:"Contract_Export", 
+                ignoreColumn: ["admin_action"]
+            },
+            showExport: 'true', 
+            url:tableurl,
+            queryParams: filters,
+            name:'contract',
+            
+        }
+    setupFilterList('contract', $('#contract_table'));
+    $('#contract_table').labTable(options);
+
 }
 
 

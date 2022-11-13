@@ -13,6 +13,8 @@ from django.db.models import F
 
 from staff.models import Employee_Type
 from fund.models import Cost_Type
+from expense.models import Contract_type
+from fund.models import Fund_Institution
 # from allauth.account.views import LoginView
 # Create your views here.
 
@@ -35,17 +37,31 @@ def get_filters_lists(request, *args, **kwargs):
     data={}
     data['codes']=[]
     # for employee type list, use shortname
-    empType = Employee_Type.objects.values(key=F('pk'), value=F('name'))
+    empType = Employee_Type.objects.all().values(key=F('pk'), value=F('name'))
     data['codes'].append({
         'name':'employee_status',
         'data':empType,
     })
     
     # for cost type 
-    costType = Cost_Type.objects.values(key=F('pk'), value=F('name'))
+    costType = Cost_Type.objects.all().values(key=F('pk'), value=F('name'))
     data['codes'].append({
         'name':'cost_type',
         'data':costType,
+    })
+    
+    #for contract typ
+    contType=Contract_type.objects.all().values(key=F('pk'), value=F('name'))
+    data['codes'].append({
+        'name':'contract_type',
+        'data':contType,
+    })
+    
+    # for funder
+    fundIns=Fund_Institution.objects.all().values(key=F('pk'), value=F('name'))
+    data['codes'].append({
+        'name':'fund_institution',
+        'data':fundIns,
     })
     
     return render_to_string('status_codes.js', data)

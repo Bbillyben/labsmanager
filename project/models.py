@@ -7,7 +7,8 @@ from labsmanager.models_utils import PERCENTAGE_VALIDATOR
 from datetime import date
 from auditlog.models import AuditlogHistoryField
 from auditlog.registry import auditlog
-
+from settings.models import LMUserSetting
+from dashboard import utils
 class Institution(models.Model):
     class Meta:
         """Metaclass defines extra model properties"""
@@ -56,6 +57,12 @@ class Project(models.Model):
         fundP=Fund.objects.filter(project=self.pk).only('pk').all()
         cont=Contract.objects.filter(Q(fund__in = fundP) & (Q(end_date=None) | Q(end_date__gte=date.today()))).only('quotity')
         return cont.aggregate(Sum('quotity'))["quotity__sum"]   
+    
+    @classmethod
+    def staleFilter(cls):
+        monthToGo=LMUserSetting.get_setting('DASHBOARD_PROJECT_STALE_TO_MONTH')
+        maxDate=utils.getDateToStale(monthToGo)
+        return (Q(status=True) & Q(end_date__lte=maxDate))
     
     def __str__(self):
         """Return a string representation of the Status (for use in the admin interface)"""
