@@ -1,11 +1,18 @@
 from django.shortcuts import render
+from django.template.loader import render_to_string
+from django.http import HttpResponse
+from django.template.response import SimpleTemplateResponse
 from django.views.generic.base import TemplateView
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.template import RequestContext
 from django.shortcuts import render, redirect
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import F
 
+
+from staff.models import Employee_Type
+from fund.models import Cost_Type
 # from allauth.account.views import LoginView
 # Create your views here.
 
@@ -21,3 +28,37 @@ class IndexView(LoginRequiredMixin, TemplateView):
     # def get(self, request, *args, **kwargs): ## Redirect to dash board for the moment
     #     return redirect('dashboard')
     
+
+
+#   Get type list for filtering tables across labsmanager
+def get_filters_lists(request, *args, **kwargs):
+    data={}
+    data['codes']=[]
+    # for employee type list, use shortname
+    empType = Employee_Type.objects.values(key=F('pk'), value=F('name'))
+    data['codes'].append({
+        'name':'employee_status',
+        'data':empType,
+    })
+    
+    # for cost type 
+    costType = Cost_Type.objects.values(key=F('pk'), value=F('name'))
+    data['codes'].append({
+        'name':'cost_type',
+        'data':costType,
+    })
+    
+    return render_to_string('status_codes.js', data)
+    
+    # return render(request, 'status_codes.js', data, )
+    # str=""
+    # for item in data['codes']:
+    #     str += ' const '+item['name']+"Codes ={ "
+    #     for ob in item['data']:
+    #         str+= ' key :"'+str(ob['key'])+'" ,'
+    #         str+= ' value :"'+str(ob['value'])+'" ,'
+    #     str+= '} '
+    
+    
+    # return HttpResponse(str,content_type="application/x-javascript")
+    # return SimpleTemplateResponse('status_codes.js', data, content_type="application/x-javascript")

@@ -12,6 +12,9 @@ function initializeContractsTable(callback_contract=undefined, callback_contract
         onToggle: function(){ updateContractBtnHandler();},
         onPageChange: function(){ updateContractBtnHandler();},
     });
+    // $('#contract_table').labTable({
+    //     callback:updateContractBtnHandler,
+    // })
 }
 
 

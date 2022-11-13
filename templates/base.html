@@ -144,14 +144,22 @@
 <!-- Scripts -->
 <script type='text/javascript' src="{% static 'js/forms.js' %}"></script>
 <script type='text/javascript' src="{% static 'js/modals.js' %}"></script>
+<script type='text/javascript' src="{% static 'js/labsmanager/helper.js' %}"></script>
+<script type='text/javascript' src="{% static 'js/labsmanager/tables.js' %}"></script>
+<script type='text/javascript' src="{% static 'js/tables/tables_filters.js' %}"></script>
+<script type='text/javascript' src="{% static 'js/labsmanager/filters.js' %}"></script>
+
 <script type='text/javascript' src="{% static 'js/labsmanager.js' %}"></script>
 
 
 <script type='text/javascript'>
+    {% get_filter_lists %}
     $(document).ready(function () {
         $.extend($.fn.bootstrapTable.defaults.icons, {
             advancedSearchIcon: 'fa-chevron-down',
         });
+        console.log('this is te result');
+        console.log(JSON.stringify(employee_status_codes))
     })
 </script>
 
