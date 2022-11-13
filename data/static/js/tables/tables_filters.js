@@ -38,6 +38,51 @@ function getAvailableTableFilters(tableKey) {
             }
         };
     }
+    if (tableKey == 'contract') {
+        return {
+            
+            active: {
+                type: 'bool',
+                title: 'Active',
+            },
+            name: {
+                title: 'Employee Name',
+                description: 'Employee Name',
+            },
+            type:{
+                title : 'Contract Type',
+                options: contract_type_codes,
+            },
+            stale: {
+                type: 'bool',
+                title: 'Is Stale',
+            },
+
+        };
+    
+    }
+    if (tableKey == 'project') {
+        return {
+            
+            status: {
+                type: 'bool',
+                title: 'Active',
+            },
+            project_name: {
+                title: 'Project Name',
+                description: 'Project Name',
+            },
+            stale: {
+                type: 'bool',
+                title: 'Is Stale',
+            },
+            funder: {
+                title: 'Funder',
+                options: fund_institution_codes,
+            },
+
+        };
+    }
 
 
     // Finally, no matching key

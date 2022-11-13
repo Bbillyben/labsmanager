@@ -15,7 +15,7 @@
 
 
 {% include "settings/dashboard_settings.html" %}
-
+{% include "settings/stale_calculation_settings.html" %}
 
 {{ request.user.id|json_script:"user_id" }}
 {{ project.pk|json_script:"project_id" }}

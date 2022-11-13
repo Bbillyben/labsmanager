@@ -221,8 +221,8 @@
                         </div>
                         <div class="row">
                         
-                        {% url 'api:project-contracts' pk=project.pk as ContractDataURL %}
-                        {% include 'expense/contract_table.html' with datatype="project" dataURL=ContractDataURL %}
+                        
+                        {% include 'expense/contract_table.html' with datatype="project" %}
                         
                         </div>
                     </div>
@@ -257,7 +257,7 @@ $(document).ready(function () {
     user_id = JSON.parse(document.getElementById('user_id').textContent);
     project_id = JSON.parse(document.getElementById('project_id').textContent);
     initProjectSingleView(user_id, project_id);
-    initializeContractsTable(update_project);
+    initializeContractsTable(tableurl="{% url 'api:project-contracts' pk=project.pk  %}", update_project);
     initializeFundTable(null, update_project)
     enableSidebar('project')
 })

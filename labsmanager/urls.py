@@ -21,8 +21,8 @@ from .views import IndexView , redirectIndexView, get_filters_lists
 from settings.apiviews import UserSettingsDetail
 from rest_framework import routers
 from . import apiviews #UserViewSet, GroupViewSet, EmployeeViewSet, ProjectViewSet, FundViewSet
-
-
+from expense import apiviews as contractApiViews
+from project import apiviews as projectApiViews
 urlpatterns = [
     path('filter_code_list', get_filters_lists, name='filter_code_list'),
     path('admin/', admin.site.urls),
@@ -46,10 +46,10 @@ router = routers.DefaultRouter()
 router.register(r'users', apiviews.UserViewSet, basename='user')
 router.register(r'groups', apiviews.GroupViewSet, basename='groups')
 router.register(r'employee', apiviews.EmployeeViewSet, basename='employee')
-router.register(r'project', apiviews.ProjectViewSet, basename='project')
+router.register(r'project', projectApiViews.ProjectViewSet, basename='project')
 router.register(r'fund', apiviews.FundViewSet, basename='fund')
-router.register(r'contract', apiviews.ContractViewSet, basename='contract')
-router.register(r'budget', apiviews.BudgetPOintViewSet, basename='budget')
+router.register(r'contract', contractApiViews.ContractViewSet, basename='contract')
+router.register(r'budget', contractApiViews.BudgetPOintViewSet, basename='budget')
 # router.register(r'settings', UserSettingsDetail.as_view(), basename='settings')
 
 urlpatterns += [

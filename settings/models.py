@@ -725,6 +725,18 @@ class LMUserSetting(BaseLabsManagerSetting):
             'default': 0,
             'validator': [int, MinValueValidator(0)]
         },
+        'DASHBOARD_CONTRACT_STALE_TO_MONTH': {
+            'name': _('Contract Stale month'),
+            'description': _('Number of month to get in stale scope from now'),
+            'default': 3,
+            'validator': [int, MinValueValidator(0)]
+        },
+        'DASHBOARD_PROJECT_STALE_TO_MONTH': {
+            'name': _('Project Stale month'),
+            'description': _('Number of month to get in stale scope from now'),
+            'default': 3,
+            'validator': [int, MinValueValidator(0)]
+        },
     }
     class Meta:
         """Meta options for LabsManagerUserSetting."""

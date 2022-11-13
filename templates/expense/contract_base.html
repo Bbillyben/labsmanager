@@ -37,7 +37,7 @@
 
         <div class="panel-content">
             <!-- Table should be loaded here -->
-            {% include 'expense/contract_table.html' with datatype="all" dataURL='/api/contract/' %}
+            {% include 'expense/contract_table.html' with datatype="all" %}
         </div>
     </div>
 </div>
@@ -58,7 +58,7 @@
 $(document).ready(function () {
     user_id = JSON.parse(document.getElementById('user_id').textContent);
     initContractBaseView(user_id);
-    initializeContractsTable();
+    initializeContractsTable(tableurl='/api/contract/');
 })
 </script>
 

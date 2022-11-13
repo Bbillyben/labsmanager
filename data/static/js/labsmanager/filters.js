@@ -28,7 +28,8 @@
 function defaultFilters() {
     return {
         employee: 'active=1',
-        projects: 'active=1',
+        project: 'active=1',
+        contract: 'active=1',
     };
 }
 

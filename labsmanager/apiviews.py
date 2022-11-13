@@ -16,7 +16,11 @@ from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 
 from dashboard import utils
+from labsmanager.utils import str2bool
 from staff.filters import EmployeeFilter
+from expense.filters import ContractFilter
+
+
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -152,26 +156,4 @@ class FundViewSet(viewsets.ModelViewSet):
         return JsonResponse(serializers.FundStaleSerializer(fund, many=True).data, safe=False) 
         
     
-class ContractViewSet(viewsets.ModelViewSet):
-    queryset = Contract.objects.all()
-    serializer_class = serializers.ContractSerializer
-    permission_classes = [permissions.IsAuthenticated]
-    
-    @action(methods=['get'], detail=True, url_path='contract_expense', url_name='contract_expense')
-    def items(self, request, pk=None):
-        cont = self.get_object()
-        t1=Contract_expense.objects.filter(contract=cont.pk)
-        return JsonResponse(serializers.ContractExpenseSerializer_min(t1, many=True).data, safe=False) 
-
-    @action(methods=['get'], detail=False, url_path='stale', url_name='contract_stale')
-    def get_stale(self, request):
-        dateL=date.today()+ relativedelta(months=+3)
-        cont=Contract.objects.select_related('employee', 'fund', 'contract_type').filter(Q(is_active=True)& Q(fund__project__status=True)  & Q(end_date__lte=dateL)).order_by('-end_date')
-        return JsonResponse(serializers.ContractSerializer(cont, many=True).data, safe=False) 
-        
-
-class BudgetPOintViewSet(viewsets.ModelViewSet):
-    queryset = Expense_point.objects.all()
-    permission_classes = [permissions.IsAuthenticated]
-    serializer_class = serializers.ExpensePOintSerializer
     
