@@ -17,13 +17,14 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path, re_path
-from .views import IndexView , redirectIndexView
+from .views import IndexView , redirectIndexView, get_filters_lists
 from settings.apiviews import UserSettingsDetail
 from rest_framework import routers
 from . import apiviews #UserViewSet, GroupViewSet, EmployeeViewSet, ProjectViewSet, FundViewSet
 
 
 urlpatterns = [
+    path('filter_code_list', get_filters_lists, name='filter_code_list'),
     path('admin/', admin.site.urls),
     re_path(r'^index/', IndexView.as_view(), name='index'),
     path('', IndexView.as_view(), name='index'),

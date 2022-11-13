@@ -6,6 +6,7 @@ from django.db.models import Q
 from project.models import Participant, Project
 from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
+from django_filters import rest_framework as filters
 from . import serializers  # UserSerializer, GroupSerializer, EmployeeSerialize, EmployeeStatusSerialize, ContractEmployeeSerializer, TeamSerializer, ParticipantSerializer, ProjectSerializer
 from staff.models import Employee, Employee_Status, Team, TeamMate
 from expense.models import Expense_point, Contract, Contract_expense
@@ -15,7 +16,7 @@ from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 
 from dashboard import utils
-
+from staff.filters import EmployeeFilter
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -40,7 +41,31 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     queryset = Employee.objects.select_related('user').all()
     serializer_class = serializers.EmployeeSerialize
     permission_classes = [permissions.IsAuthenticated]
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = EmployeeFilter
     
+    def filter_queryset(self, queryset):
+        params = self.request.query_params
+        print("[EmployeeViewSet.filter_queryset] start filtering")
+        queryset = super().filter_queryset(queryset)
+
+        is_active = params.get('active', None)
+        print("[EmployeeViewSet.filter_queryset] is_active:"+str(is_active))
+        if is_active:
+            queryset = queryset.filter(is_active=is_active)
+        
+        name = params.get('name', None)
+        print("[EmployeeViewSet.filter_queryset] name:"+str(name))
+        if name:
+            queryset = queryset.filter( Q(first_name__icontains=name) | Q(last_name__icontains=name))
+             
+        empStatus = params.get('status', None)
+        print("[EmployeeViewSet.filter_queryset] empStatus:"+str(empStatus))
+        if empStatus:
+            inS=Employee_Status.objects.filter(type=empStatus).values('employee')
+            queryset = queryset.filter(pk__in=inS)
+        
+        return queryset
     
     
     @action(methods=['get'], detail=True,url_path='status', url_name='status')

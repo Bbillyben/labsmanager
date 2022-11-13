@@ -75,3 +75,8 @@ def setting_object(key, *args, **kwargs):
         return LMUserSetting.get_setting_object(key, user=kwargs['user'])
     else:
         raise Warning("User Is not set for User settings display")
+
+@register.simple_tag()
+def get_filter_lists( *args, **kwargs):
+    from labsmanager.views import get_filters_lists
+    return get_filters_lists(None, safe=False)
