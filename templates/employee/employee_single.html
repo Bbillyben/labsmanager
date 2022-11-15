@@ -24,7 +24,7 @@
             <div class="d-flex flex-wrap">
                 <h4>{% trans 'Employee' %} : {{ employee }}</h4>
                 <span class="flex" style="flex-grow: 1;"></span>
-                {% if perms.staff.can_change %}
+                {% if perms.staff.change_employee %}
                 <div class="btn-group" role="group">
                     <button id="employee-options" class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" title="Employee Actions" aria-expanded="false">
                         <i class="fas fa-flask"></i>
@@ -114,11 +114,13 @@
             <div class="d-flex flex-wrap">
                 <h4>{% trans 'Contracts' %}</h4>
                 <span class="flex" style="flex-grow: 1;"></span>
+                {% if perms.expense.add_contract_expense %}
                 <div class="btn-group" role="group">
                     <button type="button" class="btn btn-secondary" id="add_contract" title="Add Item" data-employee="{{ employee.pk }}" >
                         <span class='fas fa-plus'></span>
                     </button>
-                </div>             
+                </div>  
+                {% endif %}           
             </div>
         </div>
         <div class="panel-content"></div>
@@ -154,11 +156,13 @@
                 <div class="d-flex flex-wrap">
                     <h4>{% trans 'Projects Participation' %}</h4>
                     <span class="flex" style="flex-grow: 1;"></span>
+                    {% if perms.project.add_project %}
                     <div class="btn-group" role="group">
                         <button type="button" class="btn btn-secondary" id="add_project" title="Create New Project">
                             <span class='fa fa-plus'></span>
                         </button>
-                    </div>             
+                    </div>  
+                    {% endif %}              
                 </div>
             </div>
             <div class="panel-content">
