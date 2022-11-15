@@ -53,6 +53,19 @@ function getAvailableTableFilters(tableKey) {
                 title : 'Contract Type',
                 options: contract_type_codes,
             },
+            project_name: {
+                title: 'Project Name',
+                description: 'Project Name',
+            },
+            funder: {
+                title: 'Funder',
+                options: fund_institution_codes,
+            },
+            institution_name: {
+                title: 'Institution Name',
+                description: 'Institution Name',
+                options: institution_codes,
+            },
             stale: {
                 type: 'bool',
                 title: 'Is Stale',
@@ -72,14 +85,24 @@ function getAvailableTableFilters(tableKey) {
                 title: 'Project Name',
                 description: 'Project Name',
             },
-            stale: {
-                type: 'bool',
-                title: 'Is Stale',
+            participant_name: {
+                title: 'Participant Name',
+                description: 'Participant Name',
+            },
+            institution_name: {
+                title: 'Institution Name',
+                description: 'Institution Name',
+                options: institution_codes,
             },
             funder: {
                 title: 'Funder',
                 options: fund_institution_codes,
             },
+            stale: {
+                type: 'bool',
+                title: 'Is Stale',
+            },
+            
 
         };
     }

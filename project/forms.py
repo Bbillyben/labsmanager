@@ -66,3 +66,31 @@ class ParticipantModelForm(BSModalModelForm):
             raise ValidationError(_('Exit Date (%s) should be later than entry date (%s) ') % (self.cleaned_data['end_date'], self.cleaned_data['start_date']))
         return self.cleaned_data['end_date']
 
+class InstitutionModelForm(BSModalModelForm):
+    class Meta:
+        model = models.Institution_Participant
+        fields = ['project', 'institution','status',]
+        
+    def __init__(self, *args, **kwargs):
+        if ('initial' in kwargs and 'project' in kwargs['initial']):
+            self.base_fields['project'].widget= forms.HiddenInput()
+            # proj = models.Project.objects.get(pk=kwargs['initial']['project'])
+            # if proj:
+            #     self.base_fields['start_date'].initial = proj.start_date
+            #     self.base_fields['end_date'].initial = proj.end_date
+        else:
+            self.base_fields['project'] = forms.ModelChoiceField(
+                queryset=models.Project.objects.all(),
+            )
+        if ('initial' in kwargs and 'institution' in kwargs['initial']):
+            self.base_fields['institution'].widget= forms.HiddenInput()
+        else:
+            self.base_fields['institution'] = forms.ModelChoiceField(
+                queryset=models.Institution.objects.all(),
+            )
+            
+        super().__init__(*args, **kwargs)
+        # instance = getattr(self, 'instance', None)
+        # if instance and instance.pk:
+        #     self.fields['employee'].widget = forms.HiddenInput()
+        #     self.fields['project'].widget = forms.HiddenInput()

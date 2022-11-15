@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from django.urls import reverse, reverse_lazy
 from django.shortcuts import render
 from . import models
-from .forms import ProjectModelForm, ParticipantModelForm
+from .forms import ProjectModelForm, ParticipantModelForm, InstitutionModelForm
 
 
 # Update
@@ -68,6 +68,25 @@ class ParticipantCreateView(LoginRequiredMixin, BSModalCreateView):
             form = self.form_class(initial={'project': kwargs['pk']})
         elif 'employee' in kwargs:
             form = self.form_class(initial={'employee': kwargs['employee']})
+        else:
+            form = self.form_class()
+        
+        context = {'form': form}
+        return render(request, self.template_name , context)
+    
+class InstitutionCreateView(LoginRequiredMixin, BSModalCreateView):
+    template_name = 'form_base.html'
+    form_class = InstitutionModelForm
+    success_message = 'Success: Project was updated.'
+    success_url = reverse_lazy('project_index')
+    label_confirm = "Confirm"
+    model = models.Institution_Participant
+
+    def get(self, request, *args, **kwargs):
+        if 'pk' in kwargs:
+            form = self.form_class(initial={'project': kwargs['pk']})
+        elif 'institution' in kwargs:
+            form = self.form_class(initial={'institution': kwargs['institution']})
         else:
             form = self.form_class()
         

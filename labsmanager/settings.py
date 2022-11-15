@@ -72,6 +72,7 @@ INSTALLED_APPS = [
     'fund.apps.FundConfig',
     'expense.apps.ExpenseConfig',
     'settings.apps.SettingsConfig',
+    
 ]
 
 MIDDLEWARE = [

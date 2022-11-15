@@ -4,7 +4,7 @@ from rest_framework import serializers
 from staff.models import Employee, Employee_Status, Employee_Type, Team, TeamMate
 from expense.models import Expense_point, Contract, Contract_expense, Contract_type
 from fund.models import Fund, Cost_Type, Fund_Item, Fund_Institution
-from project.models import Project, Institution, Participant
+from project.models import Project, Institution, Participant,Institution_Participant
 from django.db.models import Sum
 
 
@@ -83,14 +83,22 @@ class ContractTypeSerializer(serializers.ModelSerializer):
 # --------------------------------------------------------------------------------------- #
 
 
-        
+  
+class Institution_ProjectParticipantSerializer(serializers.ModelSerializer):
+    institution=InstitutionSerializer(many=False, read_only=True)
+    status_name=serializers.CharField(source='get_status_display')
+    
+    class Meta:
+        model = Institution_Participant
+        fields = ['pk', 'institution','status', 'status_name'] 
+               
 class Institution_ParticipantSerializer(serializers.ModelSerializer):
-     project=ProjectSerializer(many=False, read_only=True)
-     institution=InstitutionSerializer(many=False, read_only=True)
-     
-     class Meta:
-        model = Institution
-        fields = ['pk', 'project', 'institution', 'type_part', 'status']  
+    project=ProjectSerializer(many=False, read_only=True)
+    institution=InstitutionSerializer(many=False, read_only=True)
+    
+    class Meta:
+        model = Institution_Participant
+        fields = ['pk', 'project', 'institution', 'status']  
 
 class ParticipantSerializer(serializers.ModelSerializer):
     status=serializers.SerializerMethodField()
@@ -283,18 +291,19 @@ class TeamSerializer(serializers.ModelSerializer):
         
 class ParticipantProjectSerializer(serializers.ModelSerializer):
     employee=EmployeeSerialize_Min(many = False, read_only = True)
-    status=serializers.SerializerMethodField()
+    status_name=serializers.SerializerMethodField()
     class Meta:
         model = Participant
-        fields = ['pk', 'employee', 'start_date', 'end_date', 'status', 'quotity' ]
+        fields = ['pk', 'employee', 'start_date', 'end_date', 'status', 'status_name', 'quotity' ]
     
-    def get_status(self,obj):
+    def get_status_name(self,obj):
         return obj.get_status_display()
 
 class ProjectFullSerializer(serializers.ModelSerializer):
     participant = serializers.SerializerMethodField() 
     participant_count=serializers.SerializerMethodField()
     fund=serializers.SerializerMethodField() 
+    institution=serializers.SerializerMethodField()
     # total_amount= serializers.SerializerMethodField()
     
     
@@ -302,6 +311,7 @@ class ProjectFullSerializer(serializers.ModelSerializer):
         model = Project
         fields = ['pk', 'name', 'start_date', 'start_date', 'end_date', 'status', 
                   'participant', 'participant_count',
+                  'institution', 
                   'fund','get_funds_amount', 
                   ]
     def get_participant(self,obj):
@@ -315,6 +325,10 @@ class ProjectFullSerializer(serializers.ModelSerializer):
     def get_fund(self,obj):
         fund = Fund.objects.select_related('funder', 'institution').filter(project = obj.pk)
         return FundProjectSerialize(fund , many=True).data
+    
+    def get_institution(self,obj):
+        ip = Institution_Participant.objects.filter(project = obj.pk)
+        return Institution_ProjectParticipantSerializer(ip , many=True).data
     
     # def get_total_amount(self,obj):
     #     fund = Fund.objects.filter(project = obj.pk)
