@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from django.db.models import Q
 
-from project.models import Participant, Project
+from project.models import Participant, Project, Institution_Participant
 from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
 from django_filters import rest_framework as filters
@@ -49,13 +49,32 @@ class ProjectViewSet(viewsets.ModelViewSet):
         if funder is not None :
             pjF=Fund.objects.filter(funder=funder).values('project')
             queryset = queryset.filter(pk__in=pjF)
+            
+        participant_name= params.get('participant_name', None)  
+        print("[ProjectViewSet.filter_queryset] participant_name:"+str(participant_name))   
+        if participant_name is not None :
+            pjP=Participant.objects.filter(Q(employee__first_name__icontains=participant_name) | Q(employee__last_name__icontains=participant_name)).values('project')
+            queryset = queryset.filter(pk__in=pjP)
+        
+        institution_name= params.get('institution_name', None)  
+        print("[ProjectViewSet.filter_queryset] institution_name:"+str(institution_name))   
+        if institution_name is not None :
+            pjI=Institution_Participant.objects.filter(institution=institution_name).values('project')
+            queryset = queryset.filter(pk__in=pjI)
+        
         return queryset
         
-    @action(methods=['get'], detail=True, url_path='participant', url_name='praticipant')
+    @action(methods=['get'], detail=True, url_path='participant', url_name='participant')
     def participant(self, request, pk=None):
         proj = self.get_object()
         t1=Participant.objects.filter(project=proj.pk)
         return JsonResponse(serializers.ParticipantProjectSerializer(t1, many=True).data, safe=False)
+
+    @action(methods=['get'], detail=True, url_path='institution', url_name='institution')
+    def institution(self, request, pk=None):
+        proj = self.get_object()
+        t1=Institution_Participant.objects.filter(project=proj.pk)
+        return JsonResponse(serializers.Institution_ProjectParticipantSerializer(t1, many=True).data, safe=False)
 
     @action(methods=['get'], detail=True, url_path='funds', url_name='funds')
     def funds(self, request, pk=None):

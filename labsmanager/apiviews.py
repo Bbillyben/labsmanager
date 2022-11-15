@@ -102,28 +102,6 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         
         return JsonResponse(serializers.ParticipantSerializer(t1, many=True).data, safe=False)
     
-class ProjectViewSet(viewsets.ModelViewSet):
-    queryset = Project.objects.all()
-    serializer_class = serializers.ProjectFullSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    @action(methods=['get'], detail=True, url_path='participant', url_name='praticipant')
-    def participant(self, request, pk=None):
-        proj = self.get_object()
-        t1=Participant.objects.filter(project=proj.pk)
-        return JsonResponse(serializers.ParticipantProjectSerializer(t1, many=True).data, safe=False)
-
-    @action(methods=['get'], detail=True, url_path='funds', url_name='funds')
-    def funds(self, request, pk=None):
-        proj = self.get_object()
-        t1=Fund.objects.filter(project=proj.pk)
-        return JsonResponse(serializers.FundProjectSerialize(t1, many=True).data, safe=False)   
-    
-    @action(methods=['get'], detail=True,url_path='contracts', url_name='contracts')
-    def contracts(self,request, pk=None):
-        fund=Fund.objects.filter(project=pk).values('pk')        
-        contract=Contract.objects.filter(fund__in=fund).order_by('end_date')
-        return JsonResponse(serializers.ContractSerializer(contract, many=True).data, safe=False)
 
 class FundViewSet(viewsets.ModelViewSet):
     queryset = Fund.objects.select_related('funder', 'institution').all()

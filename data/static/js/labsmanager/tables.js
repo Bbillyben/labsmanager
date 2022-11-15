@@ -314,6 +314,7 @@ function ParticipantFormatter(value, row, index, field){
         value=[{"employee":value}];
     }
     response = "";
+    value = value.sort(leaderSorter);
     for (const item of value) {
         //console.log("item :"+JSON.stringify(item));
         if (item.employee.is_active == true){
@@ -329,6 +330,27 @@ function ParticipantFormatter(value, row, index, field){
         }
       }
       return response;
+}
+
+function InstitutionParticipantFormatter(value, row, index, field){
+    if(!isIterable(value)){
+        value=[{"institution":value}];
+    }
+    response = "";
+    value = value.sort(leaderSorter);
+    for (const item of value) {
+        //console.log("item :"+JSON.stringify(item));
+
+            tm =""+item.institution.short_name;
+            if(item.status == "c"){
+                tm+= '<sup><i class="fas fa-star icon-spaced" style="color: coral" title="team leader"></i></sup>';
+            }
+            //tm+="</a>";
+            response+= (response.length > 1 ? ', ' : '') + tm;
+      }
+      return response;
+
+
 }
 
 
@@ -391,3 +413,15 @@ function nameSorter(fieldA, fieldB){
       if (A > B) return 1;
       return 0;
   }
+function leaderSorter(fA, fB){
+    //console.log( "[leaderSorter] :"+fA.employee.user_name+"("+fA.status+")  "+fB.employee.user_name+"("+fB.status+")");
+    A=fA.status;
+    B=fB.status;
+    if(A == "l" || A =="c")return -1;
+    if(B == "l" || B =="c")return 1;
+    if(A == "cl" && B!="l")return -1;
+    if(B == "cl" && A!="l")return 1;
+    if(!A && B) return -1;
+    if(A && !B)return 1;
+    return 0;
+}

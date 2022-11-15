@@ -29,5 +29,7 @@ urlpatterns += [
     
     path('ajax/participant/<pk>/udpate', views_modal.ParticipantUpdateView.as_view(), name='update_participant'),  
     path('ajax/participant/<pk>/delete', views_modal.ParticipantDeleteView.as_view(), name='delete_participant'),  
+    
+    path('ajax/<pk>/institution/add', views_modal.InstitutionCreateView.as_view(), name='add_institution'),
 
 ]

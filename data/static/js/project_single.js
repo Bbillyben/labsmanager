@@ -36,6 +36,10 @@ function initProjectSingleView(user_idA, project_idA){
         onToggle: function(){ updateParticipantBtnHandler();},
         onPageChange: function(){ updateParticipantBtnHandler();},
     });
+    $('#project_institution_table').bootstrapTable();
+    // $('#project_institution_table').labTable({
+    //     disablePagination:true,
+    // })
 
 
     $('#add_participant').modalForm({
@@ -54,6 +58,24 @@ function initProjectSingleView(user_idA, project_idA){
             dataElementId: '#employee_dec_table',
             dataKey: 'table',
             addModalFormFunction: updateParticipant,
+        }
+    })
+    $('#add_institution_participant').modalForm({
+        modalID: "#create-modal",
+        modalContent: ".modal-content",
+        modalForm: ".modal-content form",
+        formURL: '/project/ajax/'+project_id+'/institution/add',
+        isDeleteForm: false,
+        errorClass: ".form-validation-warning",
+        asyncUpdate: true,
+        asyncSettings: {
+            directUpdate: true,
+            closeOnSubmit: true,
+            successMessage: "Project Updated",
+            dataUrl: '/api/employee/',
+            dataElementId: '#employee_dec_table',
+            dataKey: 'table',
+            addModalFormFunction: updateInstitution,
         }
     })
 
@@ -175,6 +197,9 @@ function update_project(){
 
 function updateParticipant(){
     $('#project_participant_table').bootstrapTable('refresh');
+}
+function updateInstitution(){
+    $('#project_institution_table').bootstrapTable('refresh');
 }
 function updateParticipantBtnHandler(){
     $(".edit_participant").each(function () {

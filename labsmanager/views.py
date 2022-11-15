@@ -15,6 +15,7 @@ from staff.models import Employee_Type
 from fund.models import Cost_Type
 from expense.models import Contract_type
 from fund.models import Fund_Institution
+from project.models import Institution
 # from allauth.account.views import LoginView
 # Create your views here.
 
@@ -63,6 +64,14 @@ def get_filters_lists(request, *args, **kwargs):
         'name':'fund_institution',
         'data':fundIns,
     })
+    
+    # for Institution
+    inst=Institution.objects.all().values(key=F('pk'), value=F('short_name'))
+    data['codes'].append({
+        'name':'institution',
+        'data':inst,
+    })
+    
     
     return render_to_string('status_codes.js', data)
     

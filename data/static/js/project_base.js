@@ -61,7 +61,7 @@ function updateProjectTable(){
 }
 function updateAdminBtnHandler(){
     $(".edit_project").each(function () {
-        console.log("updateProjectTable :"+this);
+        //console.log("updateProjectTable :"+this);
         $(this).modalForm({
             modalID: "#create-modal",
             modalContent: ".modal-content",

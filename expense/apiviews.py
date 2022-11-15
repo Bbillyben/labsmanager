@@ -11,6 +11,8 @@ from expense.models import Expense_point, Contract, Contract_expense
 from labsmanager.utils import str2bool
 from staff.filters import EmployeeFilter
 from expense.filters import ContractFilter
+from project.models import Project
+from fund.models import Fund
 
 class BudgetPOintViewSet(viewsets.ModelViewSet):
     queryset = Expense_point.objects.all()
@@ -43,6 +45,25 @@ class ContractViewSet(viewsets.ModelViewSet):
         print("[ContractViewSet.filter_queryset] type:"+str(typeC))
         if typeC :
             queryset = queryset.filter(contract_type=typeC)
+            
+            
+        pname = params.get('project_name', None)
+        print("[ContractViewSet.filter_queryset] name:"+str(pname))
+        if pname:
+            pjFund=Fund.objects.filter(project__name__icontains=pname).values('pk')
+            queryset = queryset.filter(fund__in=pjFund)
+            
+        funder = params.get('funder', None)  
+        print("[ContractViewSet.filter_queryset] funder:"+str(funder))   
+        if funder is not None :
+            pjF=Fund.objects.filter(funder=funder).values('pk')
+            queryset = queryset.filter(fund__in=pjF)
+            
+        institution_name= params.get('institution_name', None)  
+        print("[ContractViewSet.filter_queryset] institution_name:"+str(institution_name))   
+        if institution_name is not None :
+            pjI=Fund.objects.filter(institution=institution_name).values('pk')
+            queryset = queryset.filter(fund__in=pjI)
         
         isStale = params.get('stale', None)
         print("[ContractViewSet.filter_queryset] isStale:"+str(isStale))
