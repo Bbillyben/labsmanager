@@ -28,7 +28,7 @@ class ContractModelForm(BSModalModelForm):
             )
         if ('initial' in kwargs and 'project' in kwargs['initial']):
             self.base_fields['fund'] = forms.ModelChoiceField(
-                queryset=Fund.objects.filter(project__in=kwargs['initial']['project']),
+                queryset=Fund.objects.filter(project=kwargs['initial']['project']),
             )
 
         else:
