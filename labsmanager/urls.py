@@ -23,6 +23,8 @@ from rest_framework import routers
 from . import apiviews #UserViewSet, GroupViewSet, EmployeeViewSet, ProjectViewSet, FundViewSet
 from expense import apiviews as contractApiViews
 from project import apiviews as projectApiViews
+from fund import apiviews as fundApiViews
+
 urlpatterns = [
     path('filter_code_list', get_filters_lists, name='filter_code_list'),
     path('admin/', admin.site.urls),
@@ -47,7 +49,8 @@ router.register(r'users', apiviews.UserViewSet, basename='user')
 router.register(r'groups', apiviews.GroupViewSet, basename='groups')
 router.register(r'employee', apiviews.EmployeeViewSet, basename='employee')
 router.register(r'project', projectApiViews.ProjectViewSet, basename='project')
-router.register(r'fund', apiviews.FundViewSet, basename='fund')
+router.register(r'fund', fundApiViews.FundViewSet, basename='fund')
+router.register(r'funditem', fundApiViews.FundItemViewSet, basename='funditem')
 router.register(r'contract', contractApiViews.ContractViewSet, basename='contract')
 router.register(r'budget', contractApiViews.BudgetPOintViewSet, basename='budget')
 # router.register(r'settings', UserSettingsDetail.as_view(), basename='settings')

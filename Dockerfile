@@ -45,7 +45,7 @@ RUN pip install --disable-pip-version-check -U -r base_requirements.txt
 
 # Copy source code
 COPY labsmanager ${LAB_HOME}/labsmanager
-
+COPY tasks.py ${LAB_HOME}/tasks.py
 COPY requirements.txt ${LAB_HOME}/requirements.txt
 COPY gunicorn.conf.py ${LAB_HOME}/gunicorn.conf.py
 

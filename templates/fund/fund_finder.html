@@ -37,7 +37,62 @@
             </div>
             <div class='row' style=" padding-top: 5px;">
                 <div class='col'>
-                    row for table
+                    <div id='tracking-table-toolbar_funditem'>
+                        <div class='btn-group'>
+                            {% include "filter_list.html" with id="funditem" %}
+                        </div>
+                    </div>
+                    <table
+                        class='table table-striped table-condensed'
+                        id="fund_main_table"
+                        data-toolbar='#tracking-table-toolbar_funditem'
+                        data-url="/api/funditem/"
+                        >
+                        <thead class="">
+                            <tr>
+                                <th data-sortable="true" class="th-inner sortable both" data-field="fund.project" data-sorter="nameSorter" data-formatter="ProjectFormatter">
+                                    {% trans 'Project' %}
+                                </th>
+                                <th data-sortable="true" class="th-inner sortable both" data-field="fund.funder.short_name">
+                                    {% trans 'funder' %}
+                                </th>
+                                <th data-sortable="true" class="th-inner sortable both" data-field="fund.institution" data-formatter="InstitutionParticipantFormatter">
+                                    {% trans 'Institution' %}
+                                </th>
+                                <th data-sortable="true" class="th-inner sortable both" data-field="fund.start_date" data-formatter="">
+                                    {% trans 'Start Date' %}
+                                </th>
+                                <th data-sortable="true" class="th-inner sortable both" data-field="fund.end_date" data-formatter="">
+                                    {% trans 'End Date' %}
+                                </th>
+                                <th data-sortable="true" class="th-inner sortable both" data-field="type.name" data-formatter="">
+                                    {% trans 'Type' %}
+                                </th>
+                                <th data-sortable="true" class="th-inner sortable both" data-field="fund.ref" data-formatter="">
+                                    {% trans 'Ref' %}
+                                </th>
+
+                                <th data-sortable="true" class="th-inner sortable both" data-field="amount" data-formatter="moneyFormatter">
+                                    {% trans 'Amount' %}
+                                </th>
+                                <th data-sortable="true" class="th-inner sortable both" data-field="expense" data-formatter="moneyFormatter">
+                                    {% trans 'Expense' %}
+                                </th>
+                                <th data-sortable="true" class="th-inner sortable both" data-field="available" data-formatter="moneyFormatter_alert">
+                                    {% trans 'Available' %}
+                                </th>
+                                <th data-sortable="true" class="th-inner sortable both" data-field="fund.is_active" data-formatter="basicBoolean">
+                                    {% trans 'Is Active' %}
+                                </th>
+
+
+
+                            </tr>
+                        </thead>
+                        <tbody>
+        
+                        </tbody>
+                    </table>
                 </div>                
             </div>
         </div>
@@ -46,7 +101,7 @@
         
 
 
-{{ project.pk|json_script:"project_id" }}
+{{ request.user.id|json_script:"user_id" }}
 {% endblock %}
 
 

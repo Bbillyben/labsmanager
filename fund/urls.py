@@ -32,6 +32,6 @@ urlpatterns += [
     path('ajax/expense_timepoint/<pk>/update', views_modal.ExpenseTimepointUpdateView.as_view(), name='add_fundexpensetimepoint_open'),
     path('ajax/expense_timepoint/<pk>/delete', views_modal.ExpenseTimepointDeleteView.as_view(), name='add_fundexpensetimepoint_open'), 
     
-    path('/finder', views.FundFinderView.as_view(), name='fund_finder'),   
+    path('finder', views.FundFinderView.as_view(), name='fund_finder'), 
    
 ]
