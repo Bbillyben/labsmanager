@@ -2,8 +2,10 @@ from tabnanny import verbose
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
+from django.db.models import Sum
 
 from project.models import Project, Institution
+from labsmanager.mixin import LabsManagerBudgetMixin
 
 from mptt.models import MPTTModel, TreeForeignKey
 
@@ -38,20 +40,20 @@ class Fund_Institution(models.Model):
     def __str__(self):
         return f'{self.short_name}'
     
-class Fund_Item(models.Model):
+class Fund_Item(LabsManagerBudgetMixin):
     class Meta:
         """Metaclass defines extra model properties"""
         verbose_name = _("Fund Line")
         unique_together = ('type', 'fund',)
         
     type=models.ForeignKey(Cost_Type, on_delete=models.CASCADE, verbose_name=_('Type'))
-    amount=models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Amount'))
+    # amount=models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Amount'))
     fund=models.ForeignKey('Fund', on_delete=models.CASCADE, verbose_name=_('Related Fund'))
     history = AuditlogHistoryField()
 
     def __str__(self):
         return f'{self.type.short_name} - {self.fund}'
-class Fund(models.Model):
+class Fund(LabsManagerBudgetMixin):
     class Meta:
         """Metaclass defines extra model properties"""
         verbose_name = _("Fund")
@@ -68,6 +70,26 @@ class Fund(models.Model):
     @property
     def getId(self):
         return f'{self.project.name} | {self.funder.short_name} -> {self.institution.short_name}'
+    
+    def calculate(self):
+        print('[Fund]-calculate :'+str(self))
+        from expense.models import Expense_point
+        # get all fund_items
+        fi= Fund_Item.objects.filter(fund=self.pk)
+        if fi:
+            self.amount= fi.aggregate(Sum('amount'))["amount__sum"]
+        else:
+            self.amount=0
+        
+        # get all expense
+        exp=Expense_point.objects.filter(fund=self.pk)
+        exp=Expense_point.get_lastpoint_by_fund_qs(exp)
+        sumEP=0
+        for etp in exp:
+            sumEP+=etp.amount
+            fiS=fi.filter(type=etp.type).update(expense=etp.amount)  # update the corresponding Fund_item
+        self.expense=sumEP
+        self.save()
     
     def clean_end_date(self):
         ## print("EXIT DATE CLEAN Fund Model :"+str(self.cleaned_data))

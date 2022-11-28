@@ -18,22 +18,6 @@ class PDUtils():
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     """ Formatters Utils """
     @classmethod
     def moneyFormat(self, dynvarname):
@@ -43,3 +27,12 @@ class PDUtils():
         else:
             val="-" 
         return val
+        
+    @classmethod
+    def highlight_max(cls, s):
+        is_neg = s < 0
+        return ['color: red;' if cell else 'color:black' for cell in is_neg]
+
+    @classmethod
+    def style_negative(cls, v, props=''):
+        return props if v < 0 else None

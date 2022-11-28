@@ -99,13 +99,12 @@ def get_project_fund_overview(request, pk):
                         aggfunc='sum', 
                         margins=True, 
                         margins_name='Sum',
-                        fill_value="-",
     )
     piv = piv.rename_axis(None, axis=0)  
     dfs = [] 
     for c in piv.columns.get_level_values(0).unique():
         if not c =="Sum":
-            s = piv.loc[:, c].sum(axis=1, skipna=False)
+            s = piv.loc[:, c].sum(axis=1, skipna=True)
             dfs.append(pd.DataFrame(s, index=s.index, columns=[(c, f"Total")]))
     # concat them together, sort the columns:
     out = pd.concat([piv, pd.concat(dfs, axis=1)], axis=1)
@@ -117,6 +116,8 @@ def get_project_fund_overview(request, pk):
     # out.loc[:,'Row_Total'] = out.sum(numeric_only=True, axis=1)
     
     PDUtils.applyColumnFormat(out, PDUtils.moneyFormat)
+    # out.style.apply(PDUtils.highlight_max)
+    out.style.applymap(PDUtils.style_negative, props='color:red;')
     
     table=PDUtils.getBootstrapTable(out)
       

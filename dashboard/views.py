@@ -61,7 +61,6 @@ class FundLossCardView(LoginRequiredMixin, BaseBreadcrumbMixin, View):
             
         result = pd.concat(frames)
         result= result.groupby(['project', 'funder','institution', 'type','end_date',]).sum().sort_values(by='end_date')
-        print(result)
         dataTosend=result.to_json(orient='table')
         
         context={'data':dataTosend,

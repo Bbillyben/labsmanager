@@ -165,7 +165,6 @@ class TeamMate(models.Model):
         if inuser:
             raise ValidationError(_('Already in Team'))
         isLeader = Team.objects.filter(Q(pk=self.team.pk), Q(leader=self.employee))
-        print(isLeader)
         if isLeader:
             raise ValidationError(_('Is Team leader'))
         

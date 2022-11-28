@@ -22,21 +22,17 @@ class ProjectViewSet(viewsets.ModelViewSet):
     
     def filter_queryset(self, queryset):
         params = self.request.query_params
-        print("[ProjectViewSet.filter_queryset] start filtering")
         queryset = super().filter_queryset(queryset)
         
         status = params.get('status', None)
-        print("[ProjectViewSet.filter_queryset] status:"+str(status))
         if status:
             queryset = queryset.filter(status=status)
         
         pname = params.get('project_name', None)
-        print("[ProjectViewSet.filter_queryset] name:"+str(pname))
         if pname:
             queryset = queryset.filter(name__icontains=pname)
             
         isStale = params.get('stale', None)
-        print("[ProjectViewSet.filter_queryset] isStale:"+str(isStale))
         
         if isStale is not None :
             if str2bool(isStale):
@@ -44,20 +40,22 @@ class ProjectViewSet(viewsets.ModelViewSet):
             else:
                 queryset = queryset.exclude(Project.staleFilter())
         
-        funder = params.get('funder', None)  
-        print("[ProjectViewSet.filter_queryset] funder:"+str(funder))   
+        funder = params.get('funder', None)   
         if funder is not None :
             pjF=Fund.objects.filter(funder=funder).values('project')
             queryset = queryset.filter(pk__in=pjF)
             
-        participant_name= params.get('participant_name', None)  
-        print("[ProjectViewSet.filter_queryset] participant_name:"+str(participant_name))   
+        fundref = params.get('fundref', None)   
+        if fundref is not None :
+            pjFr=Fund.objects.filter(ref__icontains=fundref).values('project')
+            queryset = queryset.filter(pk__in=pjFr)
+            
+        participant_name= params.get('participant_name', None)   
         if participant_name is not None :
             pjP=Participant.objects.filter(Q(employee__first_name__icontains=participant_name) | Q(employee__last_name__icontains=participant_name)).values('project')
             queryset = queryset.filter(pk__in=pjP)
         
         institution_name= params.get('institution_name', None)  
-        print("[ProjectViewSet.filter_queryset] institution_name:"+str(institution_name))   
         if institution_name is not None :
             pjI=Institution_Participant.objects.filter(institution=institution_name).values('project')
             queryset = queryset.filter(pk__in=pjI)

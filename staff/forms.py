@@ -37,7 +37,6 @@ class EmployeeModelForm(BSModalModelForm):
             self.fields['last_name'].disabled = True
             
     def clean_exit_date(self):
-        # print("EXIT DATE CLEAN"+str(self.cleaned_data))
         if( self.cleaned_data['exit_date'] != None and self.cleaned_data['entry_date'] > self.cleaned_data['exit_date']):
             raise ValidationError(_('Exit Date (%s) should be later than entry date (%s) ') % (self.cleaned_data['exit_date'], self.cleaned_data['entry_date']))
         return self.cleaned_data['exit_date']
@@ -59,7 +58,6 @@ class EmployeeStatusForm(BSModalModelForm):
             self.fields['type'].disabled = True
     
     def clean_end_date(self):
-        # print("End DATE CLEAN"+str(self.cleaned_data))
         if( self.cleaned_data['end_date'] != None and (self.cleaned_data['start_date'] == None or self.cleaned_data['start_date'] > self.cleaned_data['end_date'])):
             raise ValidationError(_('End Date (%s) should be later than start date (%s) ') % (self.cleaned_data['end_date'], self.cleaned_data['start_date']))
         return self.cleaned_data['end_date']

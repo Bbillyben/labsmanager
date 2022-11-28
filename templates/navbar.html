@@ -12,7 +12,7 @@
          
 
           <!-- For Staff-->
-          <li class='nav-item dropdown'>
+          {% comment %} <li class='nav-item dropdown'>
             <a class='nav-link dropdown-toggle' href='#' id='buyMenuDropdown' role='button' data-bs-toggle='dropdown'>
               <span class='fas fa-user-circle icon-header'></span>{% trans "Staff" %}
             </a>
@@ -20,12 +20,31 @@
               <li><a class='dropdown-item' href="{% url 'employee_index' %}"><span class='fas fa-user icon-header'></span>{% trans "Employee" %}</a></li>
               <li><a class='dropdown-item' href="{% url 'contract_index' %}"><span class='fas fa-users icon-header'></span>{% trans "Contracts" %}</a></li>
             </ul>
+          </li> {% endcomment %}
+
+          <!-- For Employee-->
+          <li class='nav-item'>
+            <a class='nav-link' href="{% url 'employee_index' %}">
+              <span class='fas fa-user icon-header'></span>{% trans "Employee" %}
+            </a>
+          </li>
+          <!-- For Contract-->
+          <li class='nav-item'>
+            <a class='nav-link' href="{% url 'contract_index' %}">
+              <span class='fas fa-file-signature icon-header'></span>{% trans "Contracts" %}
+            </a>
           </li>
 
           <!-- For Project-->
           <li class='nav-item'>
             <a class='nav-link' href="{% url 'project_index' %}">
               <span class='fas fa-flask icon-header'></span>{% trans "Projects" %}
+            </a>
+          </li>
+          <!-- For Fund Items-->
+          <li class='nav-item'>
+            <a class='nav-link' href="{% url 'fund_finder' %}">
+              <span class='fas fa-filter-circle-dollar icon-header'></span>{% trans "Funds Finder" %}
             </a>
           </li>
 

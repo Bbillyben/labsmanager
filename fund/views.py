@@ -50,7 +50,13 @@ def get_fund_global_overview(request, pk):
         
     cpd=pd.DataFrame.from_records(c, columns=["type","amount","source"])
     piv=cpd.pivot_table(index="type", columns="source", values="amount", aggfunc='sum', margins=True, margins_name='Sum')
-
+    
     data = {'df': piv, 'title':'overview', 'table_id':'fund_overview_table'}  
     
     return render(request, 'pandas/basic_table.html', data)
+
+class FundFinderView(BaseBreadcrumbMixin, TemplateView):
+    
+    template_name = "fund/fund_finder.html"
+    crumbs = [("Fund Finder","fund finder")]
+    

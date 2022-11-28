@@ -18,7 +18,6 @@ class ProjectModelForm(BSModalModelForm):
             self.fields['name'].disabled = True
             
     def clean_end_date(self):
-        # print("EXIT DATE CLEAN"+str(self.cleaned_data))
         if( self.cleaned_data['end_date'] != None and (self.cleaned_data['start_date'] == None or self.cleaned_data['start_date'] > self.cleaned_data['end_date'])):
             raise ValidationError(_('Exit Date (%s) should be later than entry date (%s) ') % (self.cleaned_data['end_date'], self.cleaned_data['start_date']))
         return self.cleaned_data['end_date']
@@ -61,7 +60,6 @@ class ParticipantModelForm(BSModalModelForm):
         
             
     def clean_end_date(self):
-        # print("EXIT DATE CLEAN"+str(self.cleaned_data))
         if( self.cleaned_data['end_date'] != None and (self.cleaned_data['start_date'] == None or self.cleaned_data['start_date'] > self.cleaned_data['end_date'])):
             raise ValidationError(_('Exit Date (%s) should be later than entry date (%s) ') % (self.cleaned_data['end_date'], self.cleaned_data['start_date']))
         return self.cleaned_data['end_date']

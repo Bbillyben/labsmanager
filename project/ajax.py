@@ -15,22 +15,18 @@ def ajax_project(request):
     else:
         raise Exception("Only get and Post are processed") 
     
-    print("[ajax_project] :"+ datas['action_type'])
-    
     if datas['action_type'] == 'activate_project_true':
         pkU=datas['pk']
         proj = Project.objects.get(pk=pkU)
         if proj:
             proj.status = True
             proj.save()
-            print("activate_project_true :"+str(proj)+" -  "+str(pkU))
     elif datas['action_type'] == 'activate_project_false':
         pkU=datas['pk']
         proj = Project.objects.get(pk=pkU)
         if proj:
             proj.status = False
-            proj.save()
-            print("activate_project_false :"+str(proj)+" -  "+str(pkU))  
+            proj.save() 
     else:
         print("================== >>>>  AJAX STAFF COMMAND NOT FOUDN "+datas['action_type']+"  <<<< ==============================")
         
