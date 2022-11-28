@@ -144,14 +144,14 @@ class FundSerialize(serializers.ModelSerializer):
     project=ProjectSerializer(many=False, read_only=True)
     class Meta:
         model = Fund
-        fields = ['pk', 'project', 'funder', 'institution', 'ref', 'is_active','amount', 'expense',] 
+        fields = ['pk', 'project', 'funder', 'institution', 'ref','start_date', 'end_date', 'is_active','amount', 'expense','available',] 
           
 class FundItemSerialize(serializers.ModelSerializer):
     fund=FundSerialize(many=False, read_only=True)
     type=CostTypeSerialize(many=False, read_only=True)
     class Meta:
         model = Fund_Item
-        fields = ['pk', 'type', 'amount', 'fund', 'expense',]    
+        fields = ['pk', 'type', 'fund','amount',  'expense','available',]    
             
 class FundItemSerialize_min(serializers.ModelSerializer):
     type=CostTypeSerialize(many=False, read_only=True)

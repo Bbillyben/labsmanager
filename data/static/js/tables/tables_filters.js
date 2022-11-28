@@ -110,6 +110,49 @@ function getAvailableTableFilters(tableKey) {
         };
     }
 
+    if (tableKey == 'funditem') {
+        return {
+            fund_type:{
+                title:'Type',
+                description: 'general type',
+                options: cost_type_codes,
+            },
+            available:{
+                title:'Available Amount',
+                description: 'minimum amount available',
+            },
+            active: {
+                type: 'bool',
+                title: 'Active',
+            },
+            project_name: {
+                title: 'Project Name',
+                description: 'Project Name',
+            },
+            participant_name: {
+                title: 'Participant Name',
+                description: 'Participant Name',
+            },
+            institution_name: {
+                title: 'Institution Name',
+                description: 'Institution Name',
+                options: institution_codes,
+            },
+            funder: {
+                title: 'Funder',
+                options: fund_institution_codes,
+            },
+            fundref:{
+                title: 'Fund Ref'
+            },
+            stale: {
+                type: 'bool',
+                title: 'Is Stale',
+            },
+        };
+        
+    }
+
 
     // Finally, no matching key
     return {};

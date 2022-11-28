@@ -55,8 +55,11 @@ def get_fund_global_overview(request, pk):
     
     return render(request, 'pandas/basic_table.html', data)
 
+
 class FundFinderView(BaseBreadcrumbMixin, TemplateView):
     
     template_name = "fund/fund_finder.html"
     crumbs = [("Fund Finder","fund finder")]
+    
+        
     

@@ -30,6 +30,7 @@ function defaultFilters() {
         employee: 'active=1',
         project: 'active=1',
         contract: 'active=1',
+        funditem: 'active=1',
     };
 }
 

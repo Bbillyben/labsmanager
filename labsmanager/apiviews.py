@@ -98,35 +98,5 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         return JsonResponse(serializers.ParticipantSerializer(t1, many=True).data, safe=False)
     
 
-class FundViewSet(viewsets.ModelViewSet):
-    queryset = Fund.objects.select_related('funder', 'institution').all()
-    serializer_class = serializers.FundSerialize
-    permission_classes = [permissions.IsAuthenticated]
 
-    @action(methods=['get'], detail=True, url_path='items', url_name='items')
-    def items(self, request, pk=None):
-        fund = self.get_object()
-        t1=Fund_Item.objects.select_related('type').filter(fund=fund.pk)
-        return JsonResponse(serializers.FundItemSerialize_min(t1, many=True).data, safe=False)
-    
-    
-    @action(methods=['get'], detail=True, url_path='expense_timepoint', url_name='expense_timepoint')
-    def fundBudgetPOint(self, request, pk=None):
-        BP = Expense_point.get_lastpoint_by_fund(pk)
-        return JsonResponse(serializers.ExpensePOintSerializer(BP, many=True).data, safe=False) 
-    
-    @action(methods=['get'], detail=False, url_path='stale', url_name='stale_fund')
-    def staleFunds(self, request, pk=None):
-        q_objects = Q(is_active=True) & Q(project__status=True) # base Q objkect
-        slot = utils.getDashboardTimeSlot(request)
-        if 'from' in slot:
-            q_objects = q_objects & Q(end_date__gte=slot["from"])
-        if 'to' in slot:
-            q_objects = q_objects & Q(end_date__lte=slot["to"])
-            
-        fund=Fund.objects.select_related('project', 'funder', 'institution').filter( q_objects).order_by('-end_date')
-        
-        return JsonResponse(serializers.FundStaleSerializer(fund, many=True).data, safe=False) 
-        
-    
     
