@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load static %}
+{% load customs_tags %}
+
+{% block page_title %}
+{% trans "LabManager Fund Finder" %}
+{% endblock %}
+
+{% block breadcrumb_list %}
+{% endblock %}
+
+{% block sidebar %}
+
+{% endblock %}
+
+{% block content %}
+
+<div id='detail-panels'>
+    <div class="panel" id="panel-stock" style="display: block;">
+        <div class="panel-heading">
+            <div class="d-flex flex-wrap">
+                <h4>{% trans 'Fund Finder' %}</h4>
+            </div>
+        </div>
+
+        <div class="panel-content" >
+            <div class='row' style=" padding-top: 5px;">
+                <div class='col'>
+                    row for form
+                </div>
+            </div>
+            <div class='row' style=" padding-top: 5px;">
+                <div class='col'>
+                    <div class='row-separator'></div>
+                </div>                
+            </div>
+            <div class='row' style=" padding-top: 5px;">
+                <div class='col'>
+                    row for table
+                </div>                
+            </div>
+        </div>
+    </div><!-- panel -->
+</div><!-- detail panel-->
+        
+
+
+{{ project.pk|json_script:"project_id" }}
+{% endblock %}
+
+
+{% block js_load %}
+<script type='text/javascript' src="{% static 'js/fund_finder.js' %}"></script>
+<script>
+$(document).ready(function () {
+    user_id = JSON.parse(document.getElementById('user_id').textContent);
+    initFundFinder(user_id);
+})
+</script>
+
+{% endblock %}

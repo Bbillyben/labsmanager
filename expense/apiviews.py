@@ -28,45 +28,45 @@ class ContractViewSet(viewsets.ModelViewSet):
     
     def filter_queryset(self, queryset):
         params = self.request.query_params
-        print("[ContractViewSet.filter_queryset] start filtering")
+          # print("[ContractViewSet.filter_queryset] start filtering")
         queryset = super().filter_queryset(queryset)
         
         is_active = params.get('active', None)
-        print("[ContractViewSet.filter_queryset] is_active:"+str(is_active))
+          # print("[ContractViewSet.filter_queryset] is_active:"+str(is_active))
         if is_active:
             queryset = queryset.filter(is_active=is_active)
         
         name = params.get('name', None)
-        print("[ContractViewSet.filter_queryset] name:"+str(name))
+          # print("[ContractViewSet.filter_queryset] name:"+str(name))
         if name:
             queryset = queryset.filter( Q(employee__first_name__icontains=name) | Q(employee__last_name__icontains=name))
         
         typeC = params.get('type', None)
-        print("[ContractViewSet.filter_queryset] type:"+str(typeC))
+          # print("[ContractViewSet.filter_queryset] type:"+str(typeC))
         if typeC :
             queryset = queryset.filter(contract_type=typeC)
             
             
         pname = params.get('project_name', None)
-        print("[ContractViewSet.filter_queryset] name:"+str(pname))
+          # print("[ContractViewSet.filter_queryset] name:"+str(pname))
         if pname:
             pjFund=Fund.objects.filter(project__name__icontains=pname).values('pk')
             queryset = queryset.filter(fund__in=pjFund)
             
         funder = params.get('funder', None)  
-        print("[ContractViewSet.filter_queryset] funder:"+str(funder))   
+          # print("[ContractViewSet.filter_queryset] funder:"+str(funder))   
         if funder is not None :
             pjF=Fund.objects.filter(funder=funder).values('pk')
             queryset = queryset.filter(fund__in=pjF)
             
         institution_name= params.get('institution_name', None)  
-        print("[ContractViewSet.filter_queryset] institution_name:"+str(institution_name))   
+          # print("[ContractViewSet.filter_queryset] institution_name:"+str(institution_name))   
         if institution_name is not None :
             pjI=Fund.objects.filter(institution=institution_name).values('pk')
             queryset = queryset.filter(fund__in=pjI)
         
         isStale = params.get('stale', None)
-        print("[ContractViewSet.filter_queryset] isStale:"+str(isStale))
+          # print("[ContractViewSet.filter_queryset] isStale:"+str(isStale))
         
         if isStale is not None :
             if str2bool(isStale):

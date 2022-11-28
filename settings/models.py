@@ -239,9 +239,7 @@ class BaseLabsManagerSetting(models.Model):
         }
 
         # Filter by user
-        print('get_setting_object kwargs :'+str(kwargs))
         user = kwargs.get('user', None)
-        print('è----> user :'+str(user))
 
         if user is not None:
             filters['user'] = user

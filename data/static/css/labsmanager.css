@@ -855,6 +855,10 @@ input[type="submit"] {
     padding: 10px;
 }
 
+.row-separator{
+    border-bottom:solid var(--headings-color) 0.1rem;
+}
+
 .card-thumb {
     max-width: 64px;
     max-height: 64px;

@@ -70,6 +70,12 @@
                         <th data-sortable="true" class="th-inner sortable both" data-field="get_funds_amount" data-formatter="moneyFormatter">
                             {% trans 'Total Fund' %}
                         </th>
+                        <th data-sortable="true" class="th-inner sortable both" data-field="get_funds_expense" data-formatter="moneyFormatter">
+                            {% trans 'Total Expense' %}
+                        </th>
+                        <th data-sortable="true" class="th-inner sortable both" data-field="get_funds_available" data-formatter="moneyFormatter_alert">
+                            {% trans 'Total Available' %}
+                        </th>
                         <th data-sortable="true" class="th-inner sortable both" data-field="status" data-formatter="basicBoolean" data-cell-style="styleAlignMiddle" >
                             {% trans 'Status' %}
                         </th>

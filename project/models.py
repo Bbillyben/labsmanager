@@ -41,9 +41,21 @@ class Project(models.Model):
     
     @property
     def get_funds_amount(self):
-        from fund.models import Fund, Fund_Item
-        fundP=Fund.objects.filter(project=self.pk).only('pk').all()
-        return Fund_Item.objects.filter(fund__in = fundP).only('amount').aggregate(Sum('amount'))["amount__sum"]
+        from fund.models import Fund
+        return Fund.objects.filter(project=self.pk).aggregate(Sum('amount'))["amount__sum"]
+    @property
+    def get_funds_expense(self):
+        from fund.models import Fund
+        return Fund.objects.filter(project=self.pk).aggregate(Sum('expense'))["expense__sum"]
+    @property
+    def get_funds_available(self):
+        from fund.models import Fund
+        fs = Fund.objects.filter(project=self.pk)
+        sumA=0
+        for f in fs:
+            sumA+= f.available
+            
+        return sumA
     
     @property
     def get_total_participant_quotity(self):

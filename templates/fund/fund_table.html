@@ -28,6 +28,12 @@ data-url={{ dataURL }}
         <th data-sortable="true" class="th-inner sortable both" data-field="amount" data-formatter="moneyFormatter">
             {% trans 'Total Amount' %}
         </th>
+        <th data-sortable="true" class="th-inner sortable both" data-field="expense" data-formatter="moneyFormatter">
+            {% trans 'Total Expense' %}
+        </th>
+        <th data-sortable="true" class="th-inner sortable both" data-field="available" data-formatter="moneyFormatter_alert">
+            {% trans 'Available' %}
+        </th>
         <th data-sortable="true" class="th-inner sortable both" data-field="is_active" data-formatter="basicBoolean">
             {% trans 'Active' %}
         </th>

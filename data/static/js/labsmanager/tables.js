@@ -274,6 +274,12 @@ function quotityAlertFormatter(value, row, index, field){
 function moneyFormatter(value, row, index, field){
     return moneyDisplay(value);
 }
+function moneyFormatter_alert(value, row, index, field){
+    response = '<span class="'+(value < 0 ? "text-danger":'')+'">';
+    response+=moneyDisplay(value);
+    response+='</span>';
+    return response;
+}
 
 function employeeFormatter(value, row, index, field){
     if(!isIterable(value)){
@@ -378,7 +384,8 @@ function FundFormatter(value, row, index, field){
     for (const item of value) {
         response +="<li>"+item.funder.short_name;
         response+=" - "+item.institution.short_name;
-        response+=" ("+moneyDisplay(item.amount)+")"
+        response+=" ("+item.ref;
+        response+=" - "+moneyDisplay(item.amount)+")"
         response+="</li>";
       }
       response += "</ul>";

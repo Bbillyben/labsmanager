@@ -98,6 +98,9 @@ function getAvailableTableFilters(tableKey) {
                 title: 'Funder',
                 options: fund_institution_codes,
             },
+            fundref:{
+                title: 'Fund Ref'
+            },
             stale: {
                 type: 'bool',
                 title: 'Is Stale',

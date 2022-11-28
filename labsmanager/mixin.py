@@ -2,6 +2,8 @@ from collections import OrderedDict
 from typing import List
 
 from django.http import JsonResponse
+from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from django_tables2 import Column, SingleTableMixin, Table
 
@@ -37,8 +39,6 @@ class TableViewMixin(SingleTableMixin):
         response = super().get(self, request, *args, **kwargs)
         
         if 'json' in request.GET:
-            print("====================================================> IS JSON")
-            print(self.get_table())
             table: Table = self.get_table()
 
             data = [
@@ -49,3 +49,21 @@ class TableViewMixin(SingleTableMixin):
             return JsonResponse(data, safe=False)
         else:
             return response
+        
+        
+        
+class LabsManagerBudgetMixin(models.Model):
+    class Meta:
+        abstract = True
+        
+    amount=models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Amount'), default=0, null=True)
+    expense=models.DecimalField(max_digits=12, decimal_places=2, verbose_name=_('Expense'), default=0, null=True)
+    
+    @property
+    def available(self):
+        return self.amount + self.expense
+    
+    def clean_expense(self):
+        if self.cleaned_data['expense']>0:
+            self.cleaned_data['expense']=-self.cleaned_data['expense']
+        return self.cleaned_data['expense']

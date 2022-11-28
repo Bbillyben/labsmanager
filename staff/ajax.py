@@ -21,14 +21,12 @@ def ajax_staff(request):
         if user:
             user.is_active = True
             user.save()
-            print("activate_user_true :"+str(user)+" -  "+str(pkU))
     elif datas['action_type'] == 'activate_user_false':
         pkU=datas['pk']
         user = Employee.objects.get(pk=pkU)
         if user:
             user.is_active = False
-            user.save()
-            print("activate_user_false :"+str(user)+" -  "+str(pkU))  
+            user.save() 
     else:
         print("================== >>>>  AJAX STAFF COMMAND NOT FOUDN "+datas['action_type']+"  <<<< ==============================")
         

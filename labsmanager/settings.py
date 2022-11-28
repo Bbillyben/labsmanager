@@ -155,12 +155,9 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 if os.environ.get("CSRF_TRUSTED_ORIGINS"):
-    print("================ Trustes Origins : ")
-    print(os.environ.get("CSRF_TRUSTED_ORIGINS"))
     CSRF_TRUSTED_ORIGINS =  os.environ.get("CSRF_TRUSTED_ORIGINS").split()
 else:
     CSRF_TRUSTED_ORIGINS=[]
-print('final : '+str(CSRF_TRUSTED_ORIGINS))
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/

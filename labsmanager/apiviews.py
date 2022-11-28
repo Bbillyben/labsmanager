@@ -50,21 +50,17 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     
     def filter_queryset(self, queryset):
         params = self.request.query_params
-        print("[EmployeeViewSet.filter_queryset] start filtering")
         queryset = super().filter_queryset(queryset)
 
         is_active = params.get('active', None)
-        print("[EmployeeViewSet.filter_queryset] is_active:"+str(is_active))
         if is_active:
             queryset = queryset.filter(is_active=is_active)
         
         name = params.get('name', None)
-        print("[EmployeeViewSet.filter_queryset] name:"+str(name))
         if name:
             queryset = queryset.filter( Q(first_name__icontains=name) | Q(last_name__icontains=name))
              
         empStatus = params.get('status', None)
-        print("[EmployeeViewSet.filter_queryset] empStatus:"+str(empStatus))
         if empStatus:
             inS=Employee_Status.objects.filter(type=empStatus).values('employee')
             queryset = queryset.filter(pk__in=inS)
@@ -74,7 +70,6 @@ class EmployeeViewSet(viewsets.ModelViewSet):
     
     @action(methods=['get'], detail=True,url_path='status', url_name='status')
     def status(self, request, pk=None):
-        print('EmployeeViewSet / status :'+str(pk))
         status = Employee_Status.objects.filter(employee=pk).order_by('end_date')
         return JsonResponse(serializers.EmployeeStatusSerialize(status,many=True).data, safe=False)
     

@@ -32,7 +32,7 @@ class Expense(models.Model):
         blank=False,
         default='e', verbose_name=_('Status'),
     )
-    fund_item = models.ForeignKey(Fund, on_delete=models.CASCADE, verbose_name=_('Related Fund'))
+    fund_item = models.ForeignKey(Fund, on_delete=models.CASCADE, verbose_name=_('Related Fund'), related_name='tot_expense')
     history = AuditlogHistoryField()
     
     def __str__(self):
@@ -78,10 +78,10 @@ class Expense_point(models.Model):
     @classmethod
     def get_lastpoint_by_fund_qs(cls, ExpensePointItems):
         # get cost type
-        cts=Cost_Type.objects.all()
+        cts=Cost_Type.objects.all().values('pk')
         bp = Expense_point.objects.none()
         for ct in cts:
-            bpT=ExpensePointItems.filter(type=ct.pk).order_by('-value_date').first()
+            bpT=ExpensePointItems.filter(type=ct['pk']).order_by('-value_date').first()
             if bpT:
                 bp= bp.union(ExpensePointItems.filter(pk=bpT.pk))
         return bp 
