@@ -3,7 +3,7 @@ var project_id = 0;
 
 function initFundFinder(user_idA){
     user_id=user_idA;
-    var filters = loadTableFilters('project');
+    var filters = loadTableFilters('funditem');
 
     var options={
         queryParams: filters,
