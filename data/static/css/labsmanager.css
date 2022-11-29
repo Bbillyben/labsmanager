@@ -1228,4 +1228,32 @@ li.list-spacer{
     flex-basis: 100%;
     height: 0;
   }
-  
+
+
+  /* for index card */
+.card a:link {text-decoration: none;}
+.card a:visited  {text-decoration: none;}
+.card a:hover  {text-decoration: none;}
+.card a:active  {text-decoration: none;}
+
+.card .lab-card-link{
+    display: table;
+    width: 100%;
+    height: 3em;
+    text-align: center;
+    background-color:var(--headings-color);
+    color: white;
+    font-weight: bold;
+    font-size: larger
+  }
+  .card .lab-card-link span{
+    display: table-cell;
+    vertical-align: middle;
+  }
+  .lab-card:hover{
+    transform: scale(1.03);
+    transition: all linear 200ms;
+    z-index: 1;
+    box-shadow: 1px 1px 10px rgba(0,0,0,.3);
+    cursor: pointer;
+  }
