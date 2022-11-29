@@ -1231,10 +1231,10 @@ li.list-spacer{
 
 
   /* for index card */
-.card a:link {text-decoration: none;}
-.card a:visited  {text-decoration: none;}
-.card a:hover  {text-decoration: none;}
-.card a:active  {text-decoration: none;}
+.lab-card-col a:link {text-decoration: none;}
+.lab-card-col a:visited  {text-decoration: none;}
+.lab-card-col a:hover  {text-decoration: none;}
+.lab-card-col a:active  {text-decoration: none;}
 
 .card .lab-card-link{
     display: table;
