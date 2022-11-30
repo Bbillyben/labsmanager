@@ -6,20 +6,17 @@ function initializeContractsTable(tableurl, callback_contract=undefined, callbac
     callbackContractExpense=callback_contractExpense;
 
     var filters = loadTableFilters('contract');
+    var filterOption={
+        download:true,
+    }
     var options={
             callback: updateContractBtnHandler,
-            exportTypes: ['json', 'xml', 'csv', 'txt', 'excel'],
-            exportOptions: {
-                fileName:"Contract_Export", 
-                ignoreColumn: ["admin_action"]
-            },
-            showExport: 'true', 
             url:tableurl,
             queryParams: filters,
             name:'contract',
             
         }
-    setupFilterList('contract', $('#contract_table'));
+    setupFilterList('contract', $('#contract_table'), '#filter-list-contract', filterOption );
     $('#contract_table').labTable(options);
 
 }
