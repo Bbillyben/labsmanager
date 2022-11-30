@@ -61,8 +61,82 @@ function convertQueryParameters(params, filters) {
     return params;
 }
 
+/**
+ * Return a standard list of export format options *
+ */
+ function exportFormatOptions() {
+    return [
+        {
+            value: 'csv',
+            display_name: 'CSV',
+        },
+        {
+            value: 'tsv',
+            display_name: 'TSV',
+        },
+        {
+            value: 'xls',
+            display_name: 'XLS',
+        },
+        {
+            value: 'xlsx',
+            display_name: 'XLSX',
+        },
+    ];
+}
 
+/**
+ * Download data from a table, via the API.
+ * This requires a number of conditions to be met:
+ *
+ * - The API endpoint supports data download (on the server side)
+ * - The table is "flat" (does not support multi-level loading, etc)
+ * - The table has been loaded using the inventreeTable() function, not bootstrapTable()
+ *   (Refer to the "reloadTableFilters" function to see why!)
+ */
+ function downloadTableData(table, opts={}) {
 
+    // Extract table configuration options
+    var table_options = table.bootstrapTable('getOptions');
+
+    var url = table_options.url;
+
+    if (!url) {
+        console.error('downloadTableData could not find "url" parameter.');
+    }
+
+    var query_params = table_options.query_params || {};
+
+    url += '?';
+
+    constructFormBody({}, {
+        title: opts.title || 'Export Table Data',
+        fields: {
+            format: {
+                label: 'Format',
+                help_text: 'Select File Format',
+                required: true,
+                type: 'choice',
+                value: 'csv',
+                choices: exportFormatOptions(),
+            }
+        },
+        onSubmit: function(fields, form_options) {
+            var format = getFormFieldValue('format', fields['format'], form_options);
+
+            // Hide the modal
+            $(form_options.modal).modal('hide');
+
+            for (const [key, value] of Object.entries(query_params)) {
+                url += `${key}=${value}&`;
+            }
+
+            url += `export=${format}`;
+
+            location.href = url;
+        }
+    });
+}
 
 /*
  * Reload a table which has already been made into a bootstrap table.

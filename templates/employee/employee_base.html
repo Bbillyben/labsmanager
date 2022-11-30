@@ -232,21 +232,24 @@ $(document).ready(function () {
     //     advancedSearchIcon: 'fa-chevron-down',
     // });
     var filters = loadTableFilters('employee');
+    var filterOption={
+        download:true,
+    }
     var options={
         callback: SetCliCListenerStaff,
-        exportTypes: ['json', 'xml', 'csv', 'txt', 'excel'],
-        exportOptions: {
-            fileName:"Employees_Export", 
-            ignoreColumn: ["admin_action"]
-        },
-        showExport: 'true', 
+        // exportTypes: ['json', 'xml', 'csv', 'txt', 'excel'],
+        // exportOptions: {
+        //     fileName:"Employees_Export", 
+        //     ignoreColumn: ["admin_action"]
+        // },
+        // showExport: 'true', 
         url:"/api/employee/",
         queryParams: filters,
         name:'employee',
         
     }
     
-    setupFilterList('employee', $('#employee_main_table'));
+    setupFilterList('employee', $('#employee_main_table'), '#filter-list-employee',  filterOption);
 
     $('#employee_main_table').labTable(options);
        

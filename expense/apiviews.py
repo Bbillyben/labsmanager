@@ -6,7 +6,8 @@ from rest_framework.decorators import action
 from django_filters import rest_framework as filters
 from labsmanager import serializers  # UserSerializer, GroupSerializer, EmployeeSerialize, EmployeeStatusSerialize, ContractEmployeeSerializer, TeamSerializer, ParticipantSerializer, ProjectSerializer
 from expense.models import Expense_point, Contract, Contract_expense
-
+from .resources import ContractResource
+from labsmanager.helpers import DownloadFile
 
 from labsmanager.utils import str2bool
 from staff.filters import EmployeeFilter
@@ -20,7 +21,7 @@ class BudgetPOintViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ExpensePOintSerializer
     
 class ContractViewSet(viewsets.ModelViewSet):
-    queryset = Contract.objects.all()
+    queryset = Contract.objects.select_related('employee', 'fund', 'contract_type').all()
     serializer_class = serializers.ContractSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = (filters.DjangoFilterBackend,)
@@ -75,6 +76,21 @@ class ContractViewSet(viewsets.ModelViewSet):
                 queryset = queryset.exclude(Contract.staleFilter())
         return queryset
     
+    def list(self, request, *args, **kwargs):
+        export = request.GET.get('export', None)
+        if export is not None:
+            qs = self.filter_queryset(self.get_queryset())
+            return self.download_queryset(qs, export)
+        return super().list( request, *args, **kwargs)
+    
+    def download_queryset(self, queryset, export_format):
+        """Download the filtered queryset as a data file"""
+        dataset = ContractResource().export(queryset=queryset)
+        filedata = dataset.export(export_format)
+        filename = f"Contract.{export_format}"
+        return DownloadFile(filedata, filename)
+        # return JsonResponse('not a test', safe=False)
+        
     @action(methods=['get'], detail=True, url_path='contract_expense', url_name='contract_expense')
     def items(self, request, pk=None):
         cont = self.get_object()

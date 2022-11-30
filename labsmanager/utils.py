@@ -1,4 +1,7 @@
 
+from django.db.models import Q
+from datetime import datetime
+
 
 def str2bool(text, test=True):
     """Test if a string 'looks' like a boolean value.
@@ -22,3 +25,9 @@ def is_bool(text):
         return True
     else:
         return False
+    
+    
+def getDateFilter():
+    now = datetime.now()
+    fi = (Q(end_date__gte=now) | Q(end_date=None))
+    return fi

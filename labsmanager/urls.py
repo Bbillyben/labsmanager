@@ -24,6 +24,7 @@ from . import apiviews #UserViewSet, GroupViewSet, EmployeeViewSet, ProjectViewS
 from expense import apiviews as contractApiViews
 from project import apiviews as projectApiViews
 from fund import apiviews as fundApiViews
+from staff import apiviews as staffApiViews
 
 urlpatterns = [
     path('filter_code_list', get_filters_lists, name='filter_code_list'),
@@ -47,7 +48,7 @@ urlpatterns += [
 router = routers.DefaultRouter()
 router.register(r'users', apiviews.UserViewSet, basename='user')
 router.register(r'groups', apiviews.GroupViewSet, basename='groups')
-router.register(r'employee', apiviews.EmployeeViewSet, basename='employee')
+router.register(r'employee', staffApiViews.EmployeeViewSet, basename='employee')
 router.register(r'project', projectApiViews.ProjectViewSet, basename='project')
 router.register(r'fund', fundApiViews.FundViewSet, basename='fund')
 router.register(r'funditem', fundApiViews.FundItemViewSet, basename='funditem')
