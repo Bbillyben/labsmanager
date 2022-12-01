@@ -10,10 +10,11 @@ from expense.models import Contract
 from fund.models import Fund
 from labsmanager.utils import str2bool
 from .filters import ProjectFilter
-
+from .resources import ProjectResource
+from labsmanager.helpers import DownloadFile
 
 class ProjectViewSet(viewsets.ModelViewSet):
-    queryset = Project.objects.all()
+    queryset = Project.objects.prefetch_related('participant_project').all()
     serializer_class = serializers.ProjectFullSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = (filters.DjangoFilterBackend,)
@@ -61,7 +62,23 @@ class ProjectViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(pk__in=pjI)
         
         return queryset
-        
+    
+    
+    def list(self, request, *args, **kwargs):
+        export = request.GET.get('export', None)
+        if export is not None:
+            qs = self.filter_queryset(self.get_queryset())
+            return self.download_queryset(qs, export)
+        return super().list( request, *args, **kwargs)
+    
+    def download_queryset(self, queryset, export_format):
+        """Download the filtered queryset as a data file"""
+        dataset = ProjectResource().export(queryset=queryset)
+        filedata = dataset.export(export_format)
+        filename = f"Projects.{export_format}"
+        return DownloadFile(filedata, filename)
+        # return JsonResponse('not a test', safe=False)
+            
     @action(methods=['get'], detail=True, url_path='participant', url_name='participant')
     def participant(self, request, pk=None):
         proj = self.get_object()

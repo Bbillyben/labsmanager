@@ -100,7 +100,7 @@ class Institution_Participant(models.Model):
 
 class Participant(models.Model):
 
-    project = models.ForeignKey(Project, on_delete=models.CASCADE, verbose_name=_('Project'))
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, verbose_name=_('Project'), related_name='participant_project')
     employee =  models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name=_('Employee'))
     start_date=models.DateField(null=False, blank=False, verbose_name=_('Start Date'))
     end_date=models.DateField(null=True, blank=True, verbose_name=_('End Date'))
