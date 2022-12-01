@@ -8,21 +8,24 @@ function initProjectBaseView(tableurl, user_idA, project_idA){
     project_id = project_idA;
 
     var filters = loadTableFilters('project');
+    var filterOption={
+        download:true,
+    }
 
     var options={
         callback: updateAdminBtnHandler,
-        exportTypes: ['json', 'xml', 'csv', 'txt', 'excel'],
-        exportOptions: {
-            fileName:"Project_Export", 
-            ignoreColumn: ["admin_action"]
-        },
-        showExport: 'true', 
+        // exportTypes: ['json', 'xml', 'csv', 'txt', 'excel'],
+        // exportOptions: {
+        //     fileName:"Project_Export", 
+        //     ignoreColumn: ["admin_action"]
+        // },
+        // showExport: 'true', 
         url:tableurl,
         queryParams: filters,
         name:'project',
         
     }
-    setupFilterList('project', $('#project_main_table'));
+    setupFilterList('project', $('#project_main_table'),'#filter-list-project', filterOption);
     $('#project_main_table').labTable(options);
 
 

@@ -10,6 +10,10 @@ from .models import Fund, Fund_Item
 from dashboard import utils
 from expense.models import Expense_point
 from project.filters import ProjectFilter
+from project.models import Participant
+from .resources import FundItemResource
+from labsmanager.helpers import DownloadFile
+
 class FundViewSet(viewsets.ModelViewSet):
     queryset = Fund.objects.select_related('funder', 'institution').all()
     serializer_class = serializers.FundSerialize
@@ -40,13 +44,26 @@ class FundViewSet(viewsets.ModelViewSet):
         fund=Fund.objects.select_related('project', 'funder', 'institution').filter( q_objects).order_by('-end_date')
         
         return JsonResponse(serializers.FundStaleSerializer(fund, many=True).data, safe=False) 
-from project.models import Participant
+
 class FundItemViewSet(viewsets.ModelViewSet):
     queryset = Fund_Item.objects.select_related('fund').all()
     serializer_class = serializers.FundItemSerialize
     permission_classes = [permissions.IsAuthenticated]        
     filter_backends = (filters.DjangoFilterBackend,)
     
+    def list(self, request, *args, **kwargs):
+        export = request.GET.get('export', None)
+        if export is not None:
+            qs = self.filter_queryset(self.get_queryset())
+            return self.download_queryset(qs, export)
+        return super().list( request, *args, **kwargs)
+    
+    def download_queryset(self, queryset, export_format):
+        """Download the filtered queryset as a data file"""
+        dataset = FundItemResource().export(queryset=queryset)
+        filedata = dataset.export(export_format)
+        filename = f"FundItems.{export_format}"
+        return DownloadFile(filedata, filename)
     
     def filter_queryset(self, queryset):
         params = self.request.GET
@@ -57,7 +74,6 @@ class FundItemViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(type=fund_type)
         
         available = params.get('available', None)
-        print('available :'+str(available))
         if available is not None:
             queryset=queryset.annotate(availableT=F('amount')+F('expense'))
             queryset = queryset.filter(Q(availableT__gte=int(available)))
