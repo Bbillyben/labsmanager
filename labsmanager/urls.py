@@ -26,6 +26,8 @@ from project import apiviews as projectApiViews
 from fund import apiviews as fundApiViews
 from staff import apiviews as staffApiViews
 
+from django.conf.urls.i18n import i18n_patterns
+
 urlpatterns = [
     path('filter_code_list', get_filters_lists, name='filter_code_list'),
     path('admin/', admin.site.urls),
