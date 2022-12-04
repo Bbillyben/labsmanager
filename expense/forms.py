@@ -49,7 +49,7 @@ class ContractModelForm(BSModalModelForm):
     
     def clean_is_active(self):
         if self.cleaned_data['is_active']==False and (self.cleaned_data['end_date']==None):
-             raise ValidationError(_('If A Contract is turn inactive, it should have a end Dat '))
+             raise ValidationError(_('If A Contract is turn inactive, it should have a end Date'))
         return self.cleaned_data['is_active']
     
 class ContractExpenseModelForm(BSModalModelForm):

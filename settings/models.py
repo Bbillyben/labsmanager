@@ -749,7 +749,7 @@ class LMUserSetting(BaseLabsManagerSetting):
         max_length=50,
         blank=False,
         unique=False,
-        help_text=_('Settings key (must be unique - case insensitive'),
+        help_text=_('Settings key (must be unique - case insensitive)'),
     )
 
     user = models.ForeignKey(

@@ -112,7 +112,7 @@ class Participant(models.Model):
         default='p', 
         verbose_name=_('Status'),        
     )
-    quotity = models.DecimalField(max_digits=4, decimal_places=3, default=0, validators=PERCENTAGE_VALIDATOR, verbose_name=_('Time qutotity'))
+    quotity = models.DecimalField(max_digits=4, decimal_places=3, default=0, validators=PERCENTAGE_VALIDATOR, verbose_name=_('Time quotity'))
     history = AuditlogHistoryField()
     
     class Meta:
