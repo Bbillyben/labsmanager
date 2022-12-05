@@ -100,7 +100,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'django.template.context_processors.request',
             ],
             'libraries':{
                 'customs_tags': 'labsmanager.templatetags.customs_tags',
@@ -108,6 +107,10 @@ TEMPLATES = [
             }
         },
     },
+]
+
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
 ]
 
 WSGI_APPLICATION = 'labsmanager.wsgi.application'
@@ -170,6 +173,11 @@ TIME_ZONE = 'Europe/Paris'
 USE_I18N = True
 
 USE_TZ = True
+
+LANGUAGES = [
+    ('en','English'),
+    ('fr', 'Français')
+]
 
 
 # Static files (CSS, JavaScript, Images)

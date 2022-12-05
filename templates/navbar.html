@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load view_breadcrumbs %}
 
+{% get_current_language as LANGUAGE_CODE %}
 <nav class="navbar {% if sticky %}fixed-top{% endif %} navbar-expand-lg navbar-light">
     <div class="container-fluid">
       <div class="navbar-header clearfix content-heading">
@@ -47,8 +48,10 @@
               <span class='fas fa-filter-circle-dollar icon-header'></span>{% trans "Funds Finder" %}
             </a>
           </li>
+          
 
         </ul>
+
       </div>
       <ul class='navbar-nav flex-row'>
   
@@ -80,8 +83,11 @@
               <li><a class='dropdown-item' href="{% url 'logout' %}"><span class="fas fa-sign-out-alt"></span> {% trans "Logout" %}</a></li>
             {% else %}
               <li><a class='dropdown-item' href="{% url 'login' %}"><span class="fas fa-sign-in-alt"></span> {% trans "Login" %}</a></li>
-            {% endif %}            
+            {% endif %}    
+              <hr>     
+              <li><div class='dropdown-item' ><span class="fas fa-flag"></span>{{LANGUAGE_CODE}}</div></li>   
           </ul>
+
         </li>
       </ul>
     
