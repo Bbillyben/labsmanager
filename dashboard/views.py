@@ -20,6 +20,7 @@ from settings.models import LMUserSetting
 
 from project.models import Project
 from fund.models import Fund_Item, Fund
+from endpoints.models import Milestones
 from dashboard import utils
 
 class DashboardView(LoginRequiredMixin, BaseBreadcrumbMixin, TemplateView):
@@ -125,6 +126,32 @@ class contractstaleCardView(LoginRequiredMixin, BaseBreadcrumbMixin, View):
             ], 
             'action':[
                 {'name':"", 'url':reverse('contract_index'), 'icon':'fa-eye'}
+            ]        
+        }
+        
+        return render(request, self.template_general, context)
+
+
+class MilestonesCardView(LoginRequiredMixin, BaseBreadcrumbMixin, View):  
+    
+    template_general="dashboard/dashboard_table.html" 
+    
+    def get(self, request, *args, **kwargs):
+               
+        
+          
+        context={
+            'url':reverse_lazy("api:milestones-milestones_stale"),
+            'title':_('Stale Milestones'),
+            'columns':[
+                {'name':_('Project'),'item':'project',  'formatter':'projectFormatter'},
+                {'name':_('Name'),'item':'name'},
+                {'name':_('Description'),'item':'desc'},
+                {'name':_('Type'),'item':'get_type_display'},
+                {'name':_('Deadline'),'item':'deadline_date', 'formatter':'dueDatePassed'},
+                
+            ], 
+            'action':[
             ]        
         }
         

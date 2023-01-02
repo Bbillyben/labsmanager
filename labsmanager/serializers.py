@@ -5,6 +5,8 @@ from staff.models import Employee, Employee_Status, Employee_Type, Team, TeamMat
 from expense.models import Expense_point, Contract, Contract_expense, Contract_type
 from fund.models import Fund, Cost_Type, Fund_Item, Fund_Institution
 from project.models import Project, Institution, Participant,Institution_Participant
+from endpoints.models import Milestones
+
 from django.db.models import Sum
 
 
@@ -77,7 +79,13 @@ class ContractTypeSerializer(serializers.ModelSerializer):
         model = Contract_type
         fields = ['pk', 'name',]  
 
-
+# >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>    APP Endpoint
+class MilestonesSerializer(serializers.ModelSerializer):
+    project=ProjectSerializer(many=False, read_only=True)
+    class Meta:
+        model = Milestones
+        fields = ['pk', 'name', 'deadline_date', 'quotity', 'status', 'desc', 'type', 'get_type_display', 'project']  
+        
 # --------------------------------------------------------------------------------------- #
 # ---------------------------    APP PROJECT / SERIALISZER    --------------------------- #
 # --------------------------------------------------------------------------------------- #

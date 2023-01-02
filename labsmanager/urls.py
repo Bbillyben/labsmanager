@@ -25,6 +25,7 @@ from expense import apiviews as contractApiViews
 from project import apiviews as projectApiViews
 from fund import apiviews as fundApiViews
 from staff import apiviews as staffApiViews
+from endpoints import apiviews as endPointApiViews
 
 from django.conf.urls.i18n import i18n_patterns
 
@@ -38,7 +39,8 @@ urlpatterns = [
     path('fund/', include('fund.urls')),              # for project model
     path('expense/', include('expense.urls')),              # for project model
     path('dashboard/', include('dashboard.urls')),
-    path('settings/', include('settings.urls'))
+    path('settings/', include('settings.urls')),
+    path('milestones/', include('endpoints.urls')),
 ]
 #  Authentications : 
 urlpatterns += [
@@ -56,6 +58,7 @@ router.register(r'fund', fundApiViews.FundViewSet, basename='fund')
 router.register(r'funditem', fundApiViews.FundItemViewSet, basename='funditem')
 router.register(r'contract', contractApiViews.ContractViewSet, basename='contract')
 router.register(r'budget', contractApiViews.BudgetPOintViewSet, basename='budget')
+router.register(r'milestones', endPointApiViews.MilestonesViewSet, basename='milestones')
 # router.register(r'settings', UserSettingsDetail.as_view(), basename='settings')
 
 urlpatterns += [
