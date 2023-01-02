@@ -157,8 +157,41 @@
     </div>
 </div>
 
+<!-- ######################################    MILESTONES PANEL ############################################### -->
 
-    <!-- ######################################    FUND PANEL ############################################### -->
+<div class="panel-hidden panel-visible" id="panel-project-milestone" style="display: block;">
+    <div id='detail-panels'> 
+        <div class="panel" id="panel-project-fund1" style="display: block;">
+
+            <div class="panel-heading">
+                <div class="d-flex flex-wrap">
+                    <h4>{% trans 'project Milestones' %}</h4>
+                    <span class="flex" style="flex-grow: 1;"></span>   
+                
+                    <div class="btn-group" role="group">
+    
+                        {% if perms.endpoints.add_milestones %}
+                        <button type="button" class="btn btn-secondary" id="add_milestones" title="Add Item" data-pjPk="{{ project.pk }}" data-form-url="{% url 'create_project_milestones' project=project.pk %}" >
+                            <span class='fa fas fa-plus'></span>
+                        </button>
+                        {% endif %}
+                    </div>             
+                </div>
+            </div>
+            <div class="panel-content">
+                <div class="row" style=" padding-top: 5px;">
+                    <div class="col">
+                        <div class="card" id="milestones_project_list">
+                            {% include 'endpoints/milestones_table.html' with datatype="project" %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ######################################    FUND PANEL ############################################### -->
 <div class="panel-hidden panel-visible" id="panel-project-fund" style="display: block;">
     <div id='detail-panels'> 
         <div class="panel" id="panel-project-fund1" style="display: block;">
@@ -294,6 +327,7 @@
 
 {% block js_load %}
 <script type='text/javascript' src="{% static 'js/project_single.js' %}"></script>
+<script type='text/javascript' src="{% static 'js/tables/milestones_table.js' %}"></script>
 <script type='text/javascript' src="{% static 'js/tables/contract_tables.js' %}"></script>
 <script type='text/javascript' src="{% static 'js/tables/fund_tables.js' %}"></script>
 <script type='text/javascript' src="{% static 'js/nav.js' %}"></script>
@@ -302,9 +336,14 @@ $(document).ready(function () {
     user_id = JSON.parse(document.getElementById('user_id').textContent);
     project_id = JSON.parse(document.getElementById('project_id').textContent);
     initProjectSingleView(user_id, project_id);
+
+    initializeMilestoneTable(tableurl="{% url 'api:milestones-project' pj_pk=project.pk  %}", 'project', update_project)
+
     initializeContractsTable(tableurl="{% url 'api:project-contracts' pk=project.pk  %}", update_project);
     initializeFundTable(null, update_project)
     enableSidebar('project')
+
+
 })
 </script>
 

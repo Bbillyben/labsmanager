@@ -10,6 +10,9 @@
 {% endblock %}
 
 
+{% block sidebar %}
+    {% include 'dashboard/dashboard_sidebar.html' %}
+{% endblock %}
 
 {% block content %}
 <div id='detail-panels'>
@@ -22,42 +25,95 @@
         </div>
         <!-- COnteneur -->
         <div class="panel-content">
-            <div class="container" style="max-width: 100%; padding: 5px;">
-                <div class="row">
-                    <div class="col" id="detail-panel-left" >
-                        <div class="card" data-url="{% url 'loss_card' %}">
-*
-                        </div>
-                    </div><!-- end card panel left -->
-                    <div class="col" id="detail-panel-right">
-                        <div class="card"  data-url="{% url 'fundstale_card' %}">
-
-                        </div>
-                    </div><!-- end card panel left -->
-                </div><!-- end card row -->
-                {%include 'spacer.html' %}
-                <div class="row">
-                    <div class="col" id="detail-panel-left">
-                        <div class="card" data-url="{% url 'contractstale_card' %}">
-                        </div>
-                    </div><!-- end card panel left -->
-                    <div class="col" id="detail-panel-right">
-                        <div class="card">
-                        </div>
-                    </div><!-- end card panel left -->
-                </div><!-- end card row -->
-            </div><!-- end container-->
-        </div> <!-- end panel content -->
+            
     </div>
 </div>
 
+<!-- ######################################    FUND  ############################################### -->
+<div class="panel-hidden panel-visible" id="panel-dash-fund" style="display: block;">
+    <div id='detail-panels'> 
+        <div class="panel" id="panel-project-fund1" style="display: block;">
+
+            <div class="panel-heading">
+                <div class="d-flex flex-wrap">
+                    <h4>{% trans 'Fund' %}</h4>             
+                </div>
+            </div>
+            <div class="panel-content">
+                <div class="container" style="max-width: 100%; padding: 5px;">
+                    <div class="row">
+                        <div class="col" id="detail-panel-left" >
+                            <div class="card" data-url="{% url 'loss_card' %}">
+    *
+                            </div>
+                        </div><!-- end card panel left -->
+                        <div class="col" id="detail-panel-right">
+                            <div class="card"  data-url="{% url 'fundstale_card' %}">
+    
+                            </div>
+                        </div><!-- end card panel left -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ######################################    Contract  ############################################### -->
+<div class="panel-hidden panel-visible" id="panel-dash-contract" style="display: block;">
+    <div id='detail-panels'> 
+        <div class="panel" id="panel-project-contract" style="display: block;">
+
+            <div class="panel-heading">
+                <div class="d-flex flex-wrap">
+                    <h4>{% trans 'Contract' %}</h4>             
+                </div>
+            </div>
+            <div class="panel-content">
+                <div class="container" style="max-width: 100%; padding: 5px;">
+                    <div class="row">
+                        <div class="col" id="detail-panel-left">
+                            <div class="card" data-url="{% url 'contractstale_card' %}">
+                            </div>
+                        </div><!-- end card panel left -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ######################################    Milestones  ############################################### -->
+<div class="panel-hidden panel-visible" id="panel-dash-milestone" style="display: block;">
+    <div id='detail-panels'> 
+        <div class="panel" id="panel-project-milestones" style="display: block;">
+
+            <div class="panel-heading">
+                <div class="d-flex flex-wrap">
+                    <h4>{% trans 'Milestones' %}</h4>             
+                </div>
+            </div>
+            <div class="panel-content">
+                <div class="container" style="max-width: 100%; padding: 5px;">
+                    <div class="row">
+                        <div class="col" id="detail-panel-left">
+                            <div class="card" data-url="{% url 'milestones_card' %}">
+                            </div>
+                        </div><!-- end card panel left -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block js_load %} 
 <script type='text/javascript' src="{% static 'js/dashboard_global.js' %}"></script>
+<script type='text/javascript' src="{% static 'js/nav.js' %}"></script>
 <script>
 $(document).ready(function () {
     loadDashboardCards();
+
+    enableSidebar('dash')
 })
 </script>
 {% endblock %}

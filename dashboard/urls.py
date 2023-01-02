@@ -11,4 +11,6 @@ urlpatterns = [
     path('contractstale', views.contractstaleView.as_view(), name='contractstale'),
     path('contractstale/card', views.contractstaleCardView.as_view(), name='contractstale_card'),
     
+    path('milestones/card', views.MilestonesCardView.as_view(), name='milestones_card'),
+    
 ]
