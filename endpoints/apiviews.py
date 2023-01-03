@@ -24,10 +24,8 @@ class MilestonesViewSet(viewsets.ModelViewSet):
     
     @action(methods=['get'], detail=False, url_path='milestones_stale', url_name='milestones_stale')
     def milestones_stale(self, request, pj_pk=None, pk=None):
-        print("----------------------------------->>>>>>>>>>>> hjohjkiohoik 2")
         q_objects = Q(status=False) & Q(project__status=True) # base Q objkect
         slot = utils.getDashboardMilestonesTimeSlot(request)
-        print('stale Milestone slots : '+str(slot))
         if 'from' in slot:
             q_objects = q_objects & Q(deadline_date__gte=slot["from"])
         if 'to' in slot:
