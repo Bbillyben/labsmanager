@@ -335,7 +335,7 @@ class BaseLabsManagerSetting(models.Model):
 
             # Cast to boolean if necessary
             if setting.is_bool():
-                value = LabsManager.utils.str2bool(value)
+                value = labsmanager.utils.str2bool(value)
 
             # Cast to integer if necessary
             if setting.is_int():
@@ -783,6 +783,18 @@ class LMUserSetting(BaseLabsManagerSetting):
             'description': _('Fund ratio consumption to report project in dahsboard'),
             'default': '0.1',
             'validator': [DecimalValidator(max_digits=2, decimal_places=2) ]
+        },
+        'DASHBOARD_FUND_CONSOMATION_USE_STALE_PERIOD': {
+            'name': _('Use project Stale period for Consumption'),
+            'description': _('use Project Stale month scope period for under consommation calculation'),
+            'default': False,
+            'validator': bool,
+        },
+        'DASHBOARD_FUND_CONSOMATION_LINEAR_RATIO': {
+            'name': _('Use Project Duration to estimate under consumption'),
+            'description': _('use Project start date and consumption ratio to estimate current theorical consumption'),
+            'default': True,
+            'validator': bool,
         },
         
     }

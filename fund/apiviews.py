@@ -1,5 +1,7 @@
 from django.http import JsonResponse
-from django.db.models import Q, F
+from django.db.models import Q, F, ExpressionWrapper, fields
+from django.db.models.functions import Cast, Coalesce
+from datetime import datetime
 
 from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
@@ -50,18 +52,39 @@ class FundViewSet(viewsets.ModelViewSet):
     @action(methods=['get'], detail=False, url_path='noconsumption_fund', url_name='noconsumption_fund')
     def noConsumationFunds(self, request, pk=None):
         q_objects = Q(is_active=True) & Q(project__status=True) # base Q objkect
-        slot = utils.getDashboardTimeSlot(request)
-        if 'from' in slot:
-            q_objects = q_objects & Q(end_date__gte=slot["from"])
-        if 'to' in slot:
-            q_objects = q_objects & Q(end_date__lte=slot["to"])
         
-        # q_objects = q_objects & Q(expense=0)
+         # get the settings
+        minConsump = LMUserSetting.get_setting('DASHBOARD_FUND_CONSOMATION_RATIO',user=request.user)
+        userStalePeriod= LMUserSetting.get_setting('DASHBOARD_FUND_CONSOMATION_USE_STALE_PERIOD',user=request.user)
+        periodRatio= LMUserSetting.get_setting('DASHBOARD_FUND_CONSOMATION_LINEAR_RATIO',user=request.user)
+        print("noConsumationFunds")
+        print(" - minConsump :"+str(minConsump))
+        print(" - userStalePeriod :"+str(userStalePeriod))
+        print(" - periodRatio :"+str(periodRatio))
+        if userStalePeriod:
+            slot = utils.getDashboardTimeSlot(request)
+            if 'from' in slot:
+                q_objects = q_objects & Q(end_date__gte=slot["from"])
+            if 'to' in slot:
+                q_objects = q_objects & Q(end_date__lte=slot["to"])
         f=Fund.objects.annotate(ratio=-F('expense')/(F('amount')+1))
+        
+        if periodRatio:
+            print("ok")
+            f=f.annotate(duration=Cast(datetime.now(),fields.DateField()) - F('start_date'))
+            f=f.annotate(total_duration=F('end_date') - F('start_date'))
+            f=f.annotate(duration_quotity=Cast(F('duration') / F('total_duration'), fields.FloatField()))
+            # f=f.annotate(duration_quotity=ExpressionWrapper(Cast(F('duration'), fields.IntegerField()) / Cast(F('total_duration'), fields.IntegerField()), fields.FloatField()))
+
+            # f=f.annotate(time_ratio=F('ratio') / F('duration_quotity'))
+            q_objects =q_objects & Q(ratio__lte=minConsump) # q_objects & ( Q(ratio__lte=minConsump) | Q(time_ratio__lte=0.9))
+        else:
+            q_objects = q_objects & Q(ratio__lte=minConsump)
+        # q_objects = q_objects & Q(expense=0)
+        
         
         # get the settings
         minConsump = LMUserSetting.get_setting('DASHBOARD_FUND_CONSOMATION_RATIO',user=request.user)
-        
         
         q_objects = q_objects & Q(ratio__lte=minConsump)
         
