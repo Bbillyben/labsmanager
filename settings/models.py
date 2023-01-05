@@ -781,7 +781,7 @@ class LMUserSetting(BaseLabsManagerSetting):
         'DASHBOARD_FUND_CONSOMATION_RATIO': {
             'name': _('Fund ratio consumption'),
             'description': _('Fund ratio consumption to report project in dahsboard'),
-            'default': 0.1,
+            'default': '0.1',
             'validator': [DecimalValidator(max_digits=2, decimal_places=2) ]
         },
         
