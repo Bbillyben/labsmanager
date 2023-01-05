@@ -5,6 +5,8 @@ urlpatterns = [
     path('fundloss', views.FundLossView.as_view(), name='loss'),
     path('fundloss/card', views.FundLossCardView.as_view(), name='loss_card'),
     
+    path('fundconsumption/card', views.FundConsumptionCardView.as_view(), name='consumption_card'),
+    
     path('fundstale', views.fundStaleView.as_view(), name='fundstale'),
     path('fundstale/card', views.fundStaleCardView.as_view(), name='fundstale_card'),
     

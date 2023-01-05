@@ -119,6 +119,7 @@ function editSetting(key, options={}) {
                     value: response.value,
                 }
             };
+            console.log("editSetting - "+JSON.stringify(fields));
 
             // Foreign key lookup available!
             if (response.type == 'related field') {
@@ -139,18 +140,23 @@ function editSetting(key, options={}) {
                 method: 'PATCH',
                 title: options.title,
                 processResults: function(data, fields, opts) {
-
+                    console.log("processResults :");
+                    console.log("data.type :"+JSON.stringify(data.type));
                     switch (data.type) {
-                    case 'boolean':
-                        // Convert to boolean value
-                        data.value = data.value.toString().toLowerCase() == 'true';
-                        break;
-                    case 'integer':
-                        // Convert to integer value
-                        data.value = parseInt(data.value.toString());
-                        break;
-                    default:
-                        break;
+                        case 'boolean':
+                            // Convert to boolean value
+                            data.value = data.value.toString().toLowerCase() == 'true';
+                            break;
+                        case 'integer':
+                            // Convert to integer value
+                            data.value = parseInt(data.value.toString());
+                            break;
+                        case 'decimal':
+                            // Convert to integer value
+                            data.value = parseFloat(data.value.toString());
+                            break;
+                        default:
+                            break;
                     }
 
                     return data;

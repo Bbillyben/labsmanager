@@ -153,7 +153,20 @@ class FundSerialize(serializers.ModelSerializer):
     class Meta:
         model = Fund
         fields = ['pk', 'project', 'funder', 'institution', 'ref','start_date', 'end_date', 'is_active','amount', 'expense','available',] 
-          
+
+class FundConsumptionSerialize(serializers.ModelSerializer):
+    funder=Fund_InstitutionSerializer(many=False, read_only=True)
+    institution=InstitutionSerializer(many=False, read_only=True)
+    project=ProjectSerializer(many=False, read_only=True)
+    ratio=serializers.SerializerMethodField()
+    class Meta:
+        model = Fund
+        fields = ['pk', 'project', 'funder', 'institution', 'ref','start_date', 'end_date', 'is_active','amount', 'expense','available','ratio',] 
+    
+    def get_ratio(self,obj):
+        if obj.amount  and int(obj.amount)>0:
+            return abs(obj.expense/obj.amount)
+        return '-'
 class FundItemSerialize(serializers.ModelSerializer):
     fund=FundSerialize(many=False, read_only=True)
     type=CostTypeSerialize(many=False, read_only=True)

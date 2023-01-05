@@ -7,7 +7,7 @@ from django.contrib.sites.models import Site
 from django.core.cache import cache
 from django.core.exceptions import AppRegistryNotReady, ValidationError
 from django.core.validators import (MaxValueValidator, MinValueValidator,
-                                    URLValidator)
+                                    URLValidator, DecimalValidator)
 from django.db import models, transaction
 from django.db.utils import IntegrityError, OperationalError
 from django.urls import reverse
@@ -18,9 +18,9 @@ from django.contrib.auth.models import User
 
 import labsmanager.utils
 import labsmanager.ready
-
+from labsmanager.models_utils import PERCENTAGE_VALIDATOR
 ### Largely copyed from Inventree : https://github.com/Inventree/Inventree/blob/b50a6826efd8a8e832da43fed0239558fd473e17/LabsManager/common/models.py#L102
-
+from decimal import Decimal
 
 class BaseLabsManagerSetting(models.Model):
     """An base LabsManagerSetting object is a key:value pair used for storing single values (e.g. one-off settings values)."""
@@ -468,7 +468,15 @@ class BaseLabsManagerSetting(models.Model):
                 raise ValidationError({
                     'value': _('Value must be an integer value'),
                 })
-
+        if isinstance(validator, DecimalValidator):
+            try:
+                # Coerce into an integer value
+                value = Decimal(value)
+            except (ValueError, TypeError):
+                raise ValidationError({
+                    'value': _('Value must be an Decimal value'),
+                })
+             
         # If a list of validators is supplied, iterate through each one
         if type(validator) in [list, tuple]:
             for v in validator:
@@ -628,6 +636,9 @@ class BaseLabsManagerSetting(models.Model):
 
         elif self.is_model():
             return 'related field'
+        
+        elif self.is_decimal():
+            return 'decimal'
 
         else:
             return 'string'
@@ -650,6 +661,12 @@ class BaseLabsManagerSetting(models.Model):
         validator = self.__class__.get_setting_validator(self.key, **self.get_kwargs())
 
         return self.__class__.validator_is_int(validator)
+    
+    def is_decimal(self,):
+        """Check if the setting is required to be an integer value."""
+        validator = self.__class__.get_setting_validator(self.key, **self.get_kwargs())
+
+        return self.__class__.validator_is_decimal(validator)
 
     @classmethod
     def validator_is_int(cls, validator):
@@ -660,6 +677,19 @@ class BaseLabsManagerSetting(models.Model):
         if type(validator) in [list, tuple]:
             for v in validator:
                 if v == int:
+                    return True
+
+        return False
+    
+    @classmethod
+    def validator_is_decimal(cls, validator):
+        """Return if validator is for int."""
+        if  isinstance(validator, DecimalValidator):
+            return True
+
+        if type(validator) in [list, tuple]:
+            for v in validator:
+                if isinstance(v, DecimalValidator):
                     return True
 
         return False
@@ -747,6 +777,12 @@ class LMUserSetting(BaseLabsManagerSetting):
             'description': _('Number of month to get in stale scope from now'),
             'default': 3,
             'validator': [int, MinValueValidator(0)]
+        },
+        'DASHBOARD_FUND_CONSOMATION_RATIO': {
+            'name': _('Fund ratio consumption'),
+            'description': _('Fund ratio consumption to report project in dahsboard'),
+            'default': 0.1,
+            'validator': [DecimalValidator(max_digits=2, decimal_places=2) ]
         },
         
     }
