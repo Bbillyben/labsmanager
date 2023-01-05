@@ -22,7 +22,7 @@
         {% include "settings/setting_boolean.html" %}
         {% else %}
         <div id='setting-{{ setting.pk }}'>
-            <span id='setting-value-{{ setting.pk }}-{{ setting.typ }}' fieldname='{{ setting.key.upper }}'>
+            <span id='setting-value-{{ setting.pk }}-{{ setting.type }}' fieldname='{{ setting.key.upper }}'>
                 {% if setting.value %}
                 {% if setting.is_choice %}
                 <strong>{{ setting.as_choice }}</strong>

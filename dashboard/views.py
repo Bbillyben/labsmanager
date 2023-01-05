@@ -101,7 +101,31 @@ class fundStaleCardView(LoginRequiredMixin, BaseBreadcrumbMixin, View):
         
         return render(request, self.template_general, context)
 
-
+class FundConsumptionCardView(LoginRequiredMixin, BaseBreadcrumbMixin, View):
+    template_general="dashboard/dashboard_table.html"
+    
+    def get(self, request, *args, **kwargs):
+        
+        context={
+            'url':reverse_lazy("api:fund-noconsumption_fund"),
+            'title':_('No-Consumption Fund'),
+            'columns':[
+                {'name':_('project'),'item':'project',  'formatter':'ProjectFormatter'},
+                {'name':_('funder'),'item':'funder.short_name'},
+                {'name':_('Institution'),'item':'institution.short_name'},
+                {'name':_('Consumption Ratio'),'item':'ratio','formatter':'quotityFormatter'},
+                {'name':_('end date'),'item':'end_date', 'formatter':'dueDatePassed'},
+                {'name':_('Total Fund'),'item':'amount', 'formatter':'moneyFormatter'},
+                {'name':_('Total Expense'),'item':'expense', 'formatter':'moneyFormatter'},
+                {'name':_('Availability'),'item':'available', 'formatter':'moneyFormatter'},
+            ], 
+            'action':[
+                {'name':"", 'url':reverse('project_index'), 'icon':'fa-eye'}
+            ]        
+        }
+        
+        return render(request, self.template_general, context)
+    
 class contractstaleView(LoginRequiredMixin, BaseBreadcrumbMixin, View):
     
     def get(self, request, *args, **kwargs):
