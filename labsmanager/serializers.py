@@ -171,13 +171,16 @@ class FundConsumptionSerialize(serializers.ModelSerializer):
         return '-'
     
     def get_time_ratio(self,obj):
+        if not obj.amount  or  int(obj.amount)<=0:
+            return '-'
         try:
             sd = obj.start_date
             se = obj.end_date
             sn = datetime.now().date()   
             d1=sn-sd
             d2=se-sd
-            r = (d1.days)/(d2.days)
+            r = min((d1.days)/(d2.days), 1)
+            #r = abs(float(obj.expense)/(float(obj.amount) * rd ))
         except TypeError:
             r = "-"
         return r
